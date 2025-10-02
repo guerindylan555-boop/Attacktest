@@ -24,13 +24,13 @@ class MaynDriveAPI:
         'local_2': 'http://10.0.2.2:8082',
     }
     
-    def __init__(self, environment: str = 'production', timeout: int = 30):
+    def __init__(self, environment: str = 'production', timeout: int = 10):
         """
         Initialize the MaynDrive API client
         
         Args:
             environment: One of 'production', 'staging', 'local_1', 'local_2'
-            timeout: Request timeout in seconds
+            timeout: Request timeout in seconds (default 10s for faster failure)
         """
         self.base_url = self.ENVIRONMENTS.get(environment, self.ENVIRONMENTS['production'])
         self.timeout = timeout
