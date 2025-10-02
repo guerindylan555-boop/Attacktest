@@ -76,8 +76,12 @@ class MaynDriveAPI:
             # Try to parse JSON response
             try:
                 data = response.json()
-            except:
-                data = {'raw_response': response.text}
+            except ValueError:
+                # Not JSON - likely HTML error page or plain text
+                data = {
+                    'raw_response': response.text[:500],  # Limit response text
+                    'content_type': response.headers.get('content-type', 'unknown')
+                }
             
             if response.status_code in [200, 201]:
                 return True, data
@@ -85,11 +89,28 @@ class MaynDriveAPI:
                 return False, {
                     'status_code': response.status_code,
                     'error': data,
-                    'message': response.text
+                    'message': response.text[:500] if response.text else response.reason
                 }
                 
+        except requests.exceptions.Timeout:
+            return False, {
+                'error': 'Request timeout',
+                'type': 'TimeoutError',
+                'message': f'Request to {url} timed out after {self.timeout} seconds'
+            }
+        except requests.exceptions.ConnectionError as e:
+            return False, {
+                'error': 'Connection failed',
+                'type': 'ConnectionError', 
+                'message': f'Cannot connect to API server at {self.base_url}. Server may be down or unreachable.',
+                'details': str(e)
+            }
         except requests.exceptions.RequestException as e:
-            return False, {'error': str(e), 'type': type(e).__name__}
+            return False, {
+                'error': str(e),
+                'type': type(e).__name__,
+                'message': f'Request error: {str(e)}'
+            }
     
     # ========== Authentication Methods ==========
     

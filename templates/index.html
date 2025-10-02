@@ -488,7 +488,21 @@
                     body: JSON.stringify({ email, password })
                 });
 
-                const data = await response.json();
+                let data;
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    // Handle non-JSON responses (like "Bad Gateway")
+                    const text = await response.text();
+                    data = {
+                        error: text || `HTTP ${response.status} Error`,
+                        message: `API server returned: ${text || response.statusText}`,
+                        vulnerable: false
+                    };
+                }
+                
                 displayResults(exploitType, data);
                 loadLog();
             } catch (error) {
@@ -528,7 +542,21 @@
                         body: JSON.stringify({ email, password })
                     });
 
-                    const data = await response.json();
+                    let data;
+                    const contentType = response.headers.get('content-type');
+                    
+                    if (contentType && contentType.includes('application/json')) {
+                        data = await response.json();
+                    } else {
+                        // Handle non-JSON responses
+                        const text = await response.text();
+                        data = {
+                            error: text || `HTTP ${response.status} Error`,
+                            message: `API server returned: ${text || response.statusText}`,
+                            vulnerable: false
+                        };
+                    }
+                    
                     allResults.push({ exploit, data });
                 } catch (error) {
                     allResults.push({ exploit, error: error.message });
