@@ -7,6 +7,9 @@ urllib3>=2.0.0
 # Flask web application
 flask>=3.0.0
 
+# Production WSGI server
+gunicorn>=21.2.0
+
 # JWT token handling
 PyJWT>=2.8.0
 
