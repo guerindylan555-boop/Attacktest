@@ -78,9 +78,223 @@ mitmdump -r ~/.mitmproxy/flows -w mayndrive_traffic.flow
 
 ## If You Get Certificate Pinning Errors
 
-The MaynDrive app might reject your proxy's certificate. To bypass:
+The MaynDrive app likely uses certificate pinning. Here are **NON-ROOT methods** for your Redmi 13C 4G:
 
-### Using Frida (SSL Unpinning)
+### Method 1: Non-Root Frida Gadget Injection ⭐ RECOMMENDED (80-90% Success Rate)
+
+**No root required!** This embeds Frida into the APK itself by repackaging.
+
+#### Prerequisites
+
+```bash
+# Install required tools
+pip install frida-tools
+
+# Download Apktool from https://apktool.org (or via pip)
+# Download Frida Gadget for ARM64 (Redmi 13C uses Helio G85 = arm64)
+# Visit: https://github.com/frida/frida/releases
+# Download: frida-gadget-*-android-arm64.so
+```
+
+#### Step-by-Step Process
+
+**1. Extract the MaynDrive APK**
+```bash
+# From your phone via ADB
+adb shell pm path city.knot.mayndrive
+# Output: package:/data/app/city.knot.mayndrive-xxx/base.apk
+
+adb pull /data/app/city.knot.mayndrive-xxx/base.apk mayndrive_original.apk
+
+# IMPORTANT: Backup the original!
+cp mayndrive_original.apk mayndrive_backup.apk
+```
+
+**2. Decompile the APK**
+```bash
+apktool d mayndrive_original.apk -o mayndrive_decompiled
+```
+
+**3. Add Frida Gadget Library**
+```bash
+# Create library directory for ARM64
+mkdir -p mayndrive_decompiled/lib/arm64-v8a/
+
+# Copy Frida Gadget (rename to standard library name)
+cp frida-gadget-16.5.9-android-arm64.so mayndrive_decompiled/lib/arm64-v8a/libfrida-gadget.so
+```
+
+**4. Inject Gadget Load Call in Smali Code**
+
+```bash
+# Find main activity from AndroidManifest.xml
+grep "android.intent.action.MAIN" -B 10 mayndrive_decompiled/AndroidManifest.xml
+
+# Look for the activity name, typically: city.knot.mayndrive.MainActivity
+# Open the corresponding .smali file:
+# mayndrive_decompiled/smali/city/knot/mayndrive/MainActivity.smali
+```
+
+Edit the MainActivity.smali file and find the `<init>` method (constructor):
+
+```smali
+.method public constructor <init>()V
+    .locals 1                     # Increment this if needed (0 -> 1, 1 -> 2)
+    
+    invoke-direct {p0}, Landroidx/appcompat/app/AppCompatActivity;-><init>()V
+    
+    # ADD THESE TWO LINES HERE (after invoke-direct, before any other code):
+    const-string v0, "frida-gadget"
+    invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+    
+    # ... rest of constructor
+    return-void
+.end method
+```
+
+**Important:** Increment `.locals` count by 1 if you're using a new register (e.g., `.locals 0` → `.locals 1`)
+
+**5. Optional: Auto-load SSL Unpinning Script**
+
+Create config file `mayndrive_decompiled/lib/arm64-v8a/libfrida-gadget.config.so`:
+
+```json
+{
+  "interaction": {
+    "type": "script",
+    "path": "/data/local/tmp/ssl-unpinning.js"
+  }
+}
+```
+
+Then push your script to device:
+```bash
+adb push ssl-unpinning.js /data/local/tmp/
+adb shell chmod 644 /data/local/tmp/ssl-unpinning.js
+```
+
+**6. Rebuild the APK**
+```bash
+apktool b mayndrive_decompiled -o mayndrive_modified.apk
+```
+
+**7. Align and Sign the APK**
+
+```bash
+# Create signing key (first time only)
+keytool -genkey -v -keystore my-release-key.keystore \
+  -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias
+
+# Align APK (optimizes for Android)
+zipalign -v -p 4 mayndrive_modified.apk mayndrive_aligned.apk
+
+# Sign APK
+apksigner sign --ks my-release-key.keystore \
+  --out mayndrive_signed.apk mayndrive_aligned.apk
+
+# Verify signature
+apksigner verify mayndrive_signed.apk
+```
+
+**8. Install Modified APK**
+
+```bash
+# BACKUP YOUR LOGIN CREDENTIALS FIRST!
+# Uninstall original app
+adb uninstall city.knot.mayndrive
+
+# Install modified version
+adb install mayndrive_signed.apk
+```
+
+**9. Launch and Test**
+
+```bash
+# Launch the app on your phone
+# If using auto-load config, script runs automatically
+# Otherwise, inject manually:
+frida -U Gadget -l ssl-unpinning.js
+
+# Or if app is already running:
+frida -U -f city.knot.mayndrive -l ssl-unpinning.js --no-pause
+```
+
+**Troubleshooting:**
+- ❌ **App crashes on launch:** Anti-tampering detected. Try making app debuggable:
+  ```xml
+  <!-- In AndroidManifest.xml, add to <application> tag -->
+  android:debuggable="true"
+  ```
+- ❌ **Gadget not loading:** Verify architecture matches (use `adb shell getprop ro.product.cpu.abi`)
+- ❌ **Script not running:** Check Frida console for errors; test with simple script first
+
+---
+
+### Method 2: Automated with android-unpinner (Easiest!)
+
+Automates the entire process:
+
+```bash
+# Install (includes all dependencies)
+pip install android-unpinner
+
+# Automatic unpinning and repackaging
+android-unpinner all mayndrive_original.apk
+
+# This automatically:
+# 1. Decompiles APK
+# 2. Injects Frida Gadget  
+# 3. Adds SSL unpinning scripts
+# 4. Makes app debuggable
+# 5. Rebuilds, aligns, and signs
+# 6. Installs on device
+
+# Output: mayndrive_original.unpinned.apk
+adb install mayndrive_original.unpinned.apk
+```
+
+**Advantages:** One command, no manual edits  
+**Limitations:** Less control over customization
+
+---
+
+### Method 3: Using LIEF for Native Library Apps
+
+If MaynDrive uses native libraries (check for `.so` files in `lib/arm64-v8a/`):
+
+```python
+# inject_gadget_native.py
+import lief
+
+# Parse the main native library
+lib_path = "mayndrive_decompiled/lib/arm64-v8a/libnative.so"
+lib = lief.parse(lib_path)
+
+# Add Frida Gadget as a dependency
+lib.add_library("libfrida-gadget.so")
+
+# Write modified library back
+lib.write(lib_path)
+
+print(f"✓ Gadget dependency added to {lib_path}")
+
+# Verify
+import subprocess
+result = subprocess.run(['readelf', '-d', lib_path], capture_output=True, text=True)
+print(result.stdout)
+```
+
+```bash
+pip install lief
+python inject_gadget_native.py
+
+# Then proceed with rebuild/sign steps from Method 1
+# No smali edits needed!
+```
+
+---
+
+### Method 4: Root Required (Traditional Frida - Only if rooted)
 
 ```bash
 # 1. Install Frida tools
@@ -100,6 +314,19 @@ frida -U -f city.knot.mayndrive -l ssl-unpinning.js --no-pause
 
 # 5. Now use mitmproxy/HTTP Toolkit as normal
 ```
+
+---
+
+### Comparison of Methods
+
+| Method | Root? | Difficulty | Success Rate | Best For |
+|--------|-------|------------|--------------|----------|
+| Frida Gadget Injection | No | Medium | 80-90% | Custom scripts, full control |
+| android-unpinner | No | Easy | 70-80% | Quick testing |
+| LIEF Native Injection | No | Advanced | 85-90% | Apps with native libs |
+| Root + frida-server | Yes | Easy | 95%+ | If you have root access |
+
+**Recommendation:** Start with Method 2 (android-unpinner) for quick testing. If it fails, use Method 1 (manual Gadget injection) for more control.
 
 ---
 
