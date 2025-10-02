@@ -1,0 +1,15 @@
+# MaynDrive API Client Requirements
+
+# Core dependencies
+requests>=2.31.0
+urllib3>=2.0.0
+
+# Optional: For MitM proxy and traffic capture
+mitmproxy>=10.0.0
+
+# Optional: For Frida SSL unpinning
+frida-tools>=12.0.0
+
+# Optional: For better JSON handling and pretty printing
+rich>=13.0.0
+

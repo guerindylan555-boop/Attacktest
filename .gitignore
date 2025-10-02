@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask
+instance/
+.webassets-cache
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Environment variables
+.env
+.env.local
+
+# Test reports
+security_test_report.json
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# APK files and decompiled sources (too large for git)
+*.apk
+*.xapk
+*.jar
+base_jadx/
+MaynDrive/
+jadx-1.5.1/
+*.zip
+apktool.jar
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+

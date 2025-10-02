@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  exploit-demo:
+    build: .
+    container_name: mayndrive-security-demo
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    volumes:
+      - ./security_test_report.json:/app/security_test_report.json
+    labels:
+      - "com.dockploy.app=mayndrive-security-demo"
+      - "com.dockploy.description=MaynDrive Security Exploitation Demo"
+
