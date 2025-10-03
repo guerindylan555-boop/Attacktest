@@ -1,0 +1,93 @@
+{
+  "timestamp": "2025-10-03T17:03:14.474321",
+  "apk_path": "/home/ubuntu/Desktop/Project/Attacktest/claude_analysis/mobsf_analysis/mayndrive_extracted/base.apk",
+  "apk_size": 17567865,
+  "analysis_results": {
+    "apk_info": {
+      "aapt_output": "package: name='fr.mayndrive.app' versionCode='900034' versionName='1.1.34' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'\nsdkVersion:'24'\ntargetSdkVersion:'35'\nuses-permission: name='android.permission.INTERNET'\nuses-permission: name='android.permission.ACCESS_FINE_LOCATION'\nuses-permission: name='android.permission.ACCESS_COARSE_LOCATION'\nuses-permission: name='android.permission.CAMERA'\nuses-permission: name='android.permission.POST_NOTIFICATIONS'\nuses-permission: name='android.permission.READ_EXTERNAL_STORAGE' maxSdkVersion='32'\nuses-permission: name='android.permission.ACCESS_NETWORK_STATE'\nuses-permission: name='android.permission.WAKE_LOCK'\nuses-permission: name='com.google.android.c2dm.permission.RECEIVE'\nuses-permission: name='com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE'\nuses-permission: name='com.google.android.gms.permission.AD_ID'\nuses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'\nuses-permission: name='android.permission.FOREGROUND_SERVICE'\nuses-permission: name='android.permission.ACCESS_ADSERVICES_ATTRIBUTION'\nuses-permission: name='android.permission.ACCESS_ADSERVICES_AD_ID'\nuses-permission: name='fr.mayndrive.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'\napplication-label:'Mayn Drive'\napplication-icon-160:'res/mipmap-anydpi-v26/ic_launcher.xml'\napplication-icon-240:'res/mipmap-anydpi-v26/ic_launcher.xml'\napplication-icon-320:'res/mipmap-anydpi-v26/ic_launcher.xml'\napplication-icon-480:'res/mipmap-anydpi-v26/ic_launcher.xml'\napplication-icon-640:'res/mipmap-anydpi-v26/ic_launcher.xml'\napplication-icon-65534:'res/mipmap-anydpi-v26/ic_launcher.xml'\napplication: label='Mayn Drive' icon='res/mipmap-anydpi-v26/ic_launcher.xml'\nlaunchable-activity: name='city.knot.knotapp.ui.MainActivity'  label='' icon=''\nuses-library-not-required:'org.apache.http.legacy'\nuses-library-not-required:'android.ext.adservices'\nfeature-group: label=''\n  uses-gl-es: '0x20000'\n  uses-feature-not-required: name='android.hardware.camera'\n  uses-feature-not-required: name='android.hardware.camera.any'\n  uses-feature-not-required: name='android.hardware.camera.autofocus'\n  uses-feature-not-required: name='android.hardware.camera.flash'\n  uses-feature: name='android.hardware.faketouch'\n  uses-implied-feature: name='android.hardware.faketouch' reason='default feature for all apps'\n  uses-feature: name='android.hardware.location'\n  uses-implied-feature: name='android.hardware.location' reason='requested android.permission.ACCESS_COARSE_LOCATION permission, and requested android.permission.ACCESS_FINE_LOCATION permission'\nmain\nother-activities\nother-receivers\nother-services\nsupports-screens: 'small' 'normal' 'large' 'xlarge'\nsupports-any-density: 'true'\nlocales: '--_--'\ndensities: '160' '240' '320' '480' '640' '65534'\n",
+      "raw_info": [
+        "package: name='fr.mayndrive.app' versionCode='900034' versionName='1.1.34' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'",
+        "sdkVersion:'24'",
+        "targetSdkVersion:'35'",
+        "uses-permission: name='android.permission.INTERNET'",
+        "uses-permission: name='android.permission.ACCESS_FINE_LOCATION'",
+        "uses-permission: name='android.permission.ACCESS_COARSE_LOCATION'",
+        "uses-permission: name='android.permission.CAMERA'",
+        "uses-permission: name='android.permission.POST_NOTIFICATIONS'",
+        "uses-permission: name='android.permission.READ_EXTERNAL_STORAGE' maxSdkVersion='32'",
+        "uses-permission: name='android.permission.ACCESS_NETWORK_STATE'",
+        "uses-permission: name='android.permission.WAKE_LOCK'",
+        "uses-permission: name='com.google.android.c2dm.permission.RECEIVE'",
+        "uses-permission: name='com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE'",
+        "uses-permission: name='com.google.android.gms.permission.AD_ID'",
+        "uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'",
+        "uses-permission: name='android.permission.FOREGROUND_SERVICE'",
+        "uses-permission: name='android.permission.ACCESS_ADSERVICES_ATTRIBUTION'",
+        "uses-permission: name='android.permission.ACCESS_ADSERVICES_AD_ID'",
+        "uses-permission: name='fr.mayndrive.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'",
+        "application-label:'Mayn Drive'",
+        "application-icon-160:'res/mipmap-anydpi-v26/ic_launcher.xml'",
+        "application-icon-240:'res/mipmap-anydpi-v26/ic_launcher.xml'",
+        "application-icon-320:'res/mipmap-anydpi-v26/ic_launcher.xml'",
+        "application-icon-480:'res/mipmap-anydpi-v26/ic_launcher.xml'",
+        "application-icon-640:'res/mipmap-anydpi-v26/ic_launcher.xml'",
+        "application-icon-65534:'res/mipmap-anydpi-v26/ic_launcher.xml'",
+        "application: label='Mayn Drive' icon='res/mipmap-anydpi-v26/ic_launcher.xml'",
+        "launchable-activity: name='city.knot.knotapp.ui.MainActivity'  label='' icon=''",
+        "uses-library-not-required:'org.apache.http.legacy'",
+        "uses-library-not-required:'android.ext.adservices'",
+        "feature-group: label=''",
+        "  uses-gl-es: '0x20000'",
+        "  uses-feature-not-required: name='android.hardware.camera'",
+        "  uses-feature-not-required: name='android.hardware.camera.any'",
+        "  uses-feature-not-required: name='android.hardware.camera.autofocus'",
+        "  uses-feature-not-required: name='android.hardware.camera.flash'",
+        "  uses-feature: name='android.hardware.faketouch'",
+        "  uses-implied-feature: name='android.hardware.faketouch' reason='default feature for all apps'",
+        "  uses-feature: name='android.hardware.location'",
+        "  uses-implied-feature: name='android.hardware.location' reason='requested android.permission.ACCESS_COARSE_LOCATION permission, and requested android.permission.ACCESS_FINE_LOCATION permission'",
+        "main",
+        "other-activities",
+        "other-receivers",
+        "other-services",
+        "supports-screens: 'small' 'normal' 'large' 'xlarge'",
+        "supports-any-density: 'true'",
+        "locales: '--_--'",
+        "densities: '160' '240' '320' '480' '640' '65534'",
+        ""
+      ]
+    },
+    "manifest": {
+      "permissions": [],
+      "activities": [],
+      "services": [],
+      "receivers": [],
+      "providers": [],
+      "security_issues": []
+    },
+    "security_issues": [
+      {
+        "type": "APK_SIGNING",
+        "status": "UNSIGNED",
+        "description": "APK is not signed - security risk"
+      },
+      {
+        "type": "HARDCODED_SECRETS",
+        "status": "FOUND",
+        "description": "Found 322 potential hardcoded secrets",
+        "secrets": [
+          "Potential token: tokenCreationEpochInSecs...",
+          "Potential token: , clientTokenProvider=...",
+          "Potential token: , firebaseAuthenticationToken=...",
+          "Potential password: , newPassword=...",
+          "Potential password: , newPasswordConf=...",
+          "Potential password: , newPasswordConfError=...",
+          "Potential password: , newPasswordError=...",
+          "Potential password: , oldPassword=...",
+          "Potential password: , oldPasswordError=...",
+          "Potential token: , organizationEnrolmentToken=..."
+        ]
+      }
+    ]
+  }
+}

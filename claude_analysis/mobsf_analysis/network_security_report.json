@@ -1,0 +1,33 @@
+{
+  "vulnerability_id": "NETWORK_SECURITY",
+  "severity": "HIGH",
+  "timestamp": "2025-10-03T18:58:50.087834",
+  "certificate_pinning_implemented": false,
+  "cleartext_traffic_allowed": true,
+  "network_libraries": [],
+  "api_endpoints": [
+    "http://schemas.android.com/apk/res/android",
+    "schemas.android.com",
+    "http://www.apache.org/licenses/LICENSE-2.0",
+    "http://schemas.android.com/tools",
+    "http://schemas.android.com/apk/res-auto",
+    "androidx.compose.ui.platform.Com",
+    "..com",
+    "api.AnimatedButtonView",
+    "http://schemas.android.com/aapt"
+  ],
+  "risk_analysis": {
+    "risk_level": "HIGH",
+    "risk_factors": [
+      "No certificate pinning implemented",
+      "Cleartext HTTP traffic allowed",
+      "No modern network libraries detected",
+      "Found 9 hardcoded API endpoints"
+    ],
+    "certificate_pinning": false,
+    "cleartext_allowed": true,
+    "network_libraries_count": 0,
+    "api_endpoints_count": 9
+  },
+  "vulnerability_confirmed": true
+}

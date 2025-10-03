@@ -1,0 +1,21 @@
+{
+  "vulnerability_id": "APK_UNSIGNED",
+  "severity": "LOW",
+  "timestamp": "2025-10-03T18:56:58.870213",
+  "apk_signed": true,
+  "signature_details": "Signer #1 certificate DN: CN=Android, OU=Android, O=Google Inc., L=Mountain View, ST=California, C=US\nSigner #1 certificate SHA-256 digest: 93ff5818b47aac2d5372549815a4c13dddc846a889b4ce1da0620d2d57992545\nSigner #1 certificate SHA-1 digest: 44a1560820fa6dbd00c53ccf3836b4d2f9baf65f\nSigner #1 certificate MD5 digest: 45820330130698b84f633b1c2d30b4f9\nSource Stamp Signer certificate DN: CN=Android, OU=Android, O=Google Inc., L=Mountain View, ST=California, C=US\nSource Stamp Signer certificate SHA-256 digest: 3257d599a49d2c961a471ca9843f59d341a405884583fc087df4237b733bbd6d\nSource Stamp Signer certificate SHA-1 digest: b1af3a0bf998aeede1a8716a539e5a59da1d86d6\nSource Stamp Signer certificate MD5 digest: 577b8a9fbc7e308321aec6411169d2fb\nWARNING: SourceStamp: Unknown stamp attribute: ID 0xe43c5946\n",
+  "signature_error": null,
+  "modification_risks": [
+    "APK file size: 17,567,865 bytes",
+    "APK modification time: 2025-10-02 08:45:10",
+    "\u2705 APK can be easily extracted and modified",
+    "\u26a0\ufe0f  Found 16 potentially sensitive files that could be modified",
+    "   - /tmp/mayndrive_extract_test/play-services-measurement-sdk-api.properties",
+    "   - /tmp/mayndrive_extract_test/play-services-measurement-api.properties",
+    "   - /tmp/mayndrive_extract_test/play-services-auth-api-phone.properties",
+    "   - /tmp/mayndrive_extract_test/AndroidManifest.xml",
+    "   - /tmp/mayndrive_extract_test/res/xml/_generated_res_locale_config.xml"
+  ],
+  "repackaging_possible": false,
+  "vulnerability_confirmed": false
+}

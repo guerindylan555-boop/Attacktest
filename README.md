@@ -1,282 +1,133 @@
-# 🚨 MaynDrive Security Exploitation Demo
+# MaynDrive Traffic Capture Toolkit
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
-[![Flask](https://img.shields.io/badge/flask-3.0+-green.svg)](https://flask.palletsprojects.com/)
+This repository has been trimmed down to the scripts and evidence that reliably captured MaynDrive tokens and telemetry on-device. Everything else (experiments, planning docs, broken PoCs) has been removed so only the proven workflow remains.
 
-**Interactive web application demonstrating real attack vectors against the MaynDrive scooter-sharing API.**
+## Working Scripts
+- `capture_working_final.py` — launches the production app, injects `capture_WORKING_FINAL.js`, and records lock/unlock requests, including Bearer tokens and scooter metadata.
+- `capture_new_account.py` — same injector with added ADB handling so you can spin up a clean session, log in with a brand-new account, and grab the first-use token safely.
+- `capture_WORKING_FINAL.js` — Frida hook set targeting the discovered coroutine classes plus a Cipher hook for plaintext telemetry.
 
-⚠️ **WARNING: FOR AUTHORIZED SECURITY TESTING ONLY!**
+Both Python entry points write structured JSON and human-readable logs so you can diff captures, replay them through other tooling, or hand the evidence to the API team.
 
----
+## Requirements
+- Python 3.9+
+- Frida Python bindings (`pip install frida-tools frida`)
+- PySide6 (`pip install PySide6`) for the desktop control center
+- Appium stack (Node.js + `npm install -g appium`) and FFmpeg (`ffplay`) for automated flows/live streaming
+- USB debugging with a rooted test device (needed for restarting `frida-server` via `adb shell su -c ...`)
+- `frida-server` running on the device (matching the Frida version on the workstation)
 
-## 🎯 What This Tool Does
+## Usage
+1. Connect the device via USB, ensure `adb devices` shows it, and that `frida-ls-devices` lists it as `usb`.
+2. (Optional but recommended) Restart the on-device frida-server: `adb shell su -c 'pkill frida-server'; adb shell su -c '/data/local/tmp/frida-server &'`.
+3. For a staffed account capture: `python capture_working_final.py`
+   - Follow the console instructions: log in, unlock, then lock a scooter.
+   - Tokens land in `CAPTURED_WORKING_FINAL.txt` and `CAPTURED_WORKING_FINAL.json`; the latest token is mirrored to `LATEST_TOKEN.txt`.
+4. For a brand-new account flow: `python capture_new_account.py`
+   - Script restarts `frida-server` automatically when possible.
+   - Unlock/lock actions are recorded in `CAPTURED_NEW_ACCOUNT.*` with matching JSON rows.
+5. Stop capture with `Ctrl+C`. The script prints the output locations before exiting.
 
-This tool demonstrates **5 critical security vulnerabilities** that could allow attackers to gain unauthorized admin access to a vehicle fleet management system:
+## Verification Artifacts
+- `CAPTURED_WORKING_FINAL.txt/json` — multiple lock/unlock events with Bearer tokens, pass IDs, and coroutine class names (e.g., `B4.x`, `B4.P3`).
+- `CAPTURED_NEW_ACCOUNT.txt/json` — unlock + lock sequence from a fresh account, confirming repeatable token capture.
+- `LATEST_TOKEN.txt` — convenience copy of the most recent token (ASCII cleaned).
 
-1. **Scope Escalation** (CRITICAL) - Client-controlled role assignment
-2. **JWT Token Manipulation** (CRITICAL) - Weak token signature validation
-3. **Admin Endpoint Access** (HIGH) - Missing authorization checks
-4. **Mass Vehicle Unlock** (CRITICAL) - No rate limiting on admin operations
-5. **Device Spoofing** (MEDIUM) - Weak device validation
-
----
-
-## 🚀 Quick Start
-
-### Option 1: Docker (Recommended)
-
-```bash
-# Clone the repository
-git clone https://github.com/guerindylan555-boop/Attacktest.git
-cd Attacktest
-
-# Run with Docker Compose
-docker-compose up -d
-
-# Access the application
-open http://localhost:5000
+## Directory Layout
+```
+.
+├── capture_new_account.py
+├── capture_working_final.py
+├── capture_WORKING_FINAL.js
+├── automation
+│   ├── hooks
+│   │   └── general.js
+│   ├── scripts
+│   │   ├── run_appium_token_flow.py
+│   │   └── run_hooks.py
+│   └── ui
+├── CAPTURED_NEW_ACCOUNT.json
+├── CAPTURED_NEW_ACCOUNT.txt
+├── CAPTURED_WORKING_FINAL.json
+├── CAPTURED_WORKING_FINAL.txt
+├── LATEST_TOKEN.txt
+└── CAPTURE_LOG_SUMMARY.md (high-level notes on the retained captures)
 ```
 
-### Option 2: Local Python
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the application
-python exploit_demo_webapp.py
-
-# Access the application
-open http://localhost:5000
-```
-
-### Option 3: One-Click (Windows)
-
-```cmd
-# Double-click to run
-launch_exploit_demo.bat
-```
-
----
-
-## 📋 Prerequisites
-
-- Python 3.7+ (for local installation)
-- Docker & Docker Compose (for containerized deployment)
-- Valid test account credentials
-- **Written authorization** to test the target system
-
----
-
-## 🎭 Features
-
-### Interactive Web Interface
-- 🎨 Modern, dark-themed UI
-- 🎯 One-click exploit execution
-- 📊 Real-time results display
-- 📋 Detailed JSON responses
-- 📜 Exploitation log viewer
-
-### 5 Real Attack Scenarios
-Each exploit demonstrates a different vulnerability:
-
-#### 1. Scope Escalation Attack
-Tests if users can request admin privileges during login.
-
-```python
-# The vulnerability
-api.login(email, password, scope="admin")  # ⚠️ Client controls role!
-```
-
-#### 2. JWT Token Manipulation
-Attempts to tamper with authentication tokens to forge admin access.
-
-```python
-# Decode, modify, re-sign
-payload = jwt.decode(token, verify_signature=False)
-payload['scope'] = 'admin'
-fake_token = jwt.encode(payload, 'weak_key')
-```
-
-#### 3. Admin Endpoint Enumeration
-Tests if admin endpoints check actual user roles.
-
-```python
-# Login as user, access admin endpoints
-api.login(email, password, scope="user")
-api.unlock_vehicle_admin(...)  # Should fail!
-```
-
-#### 4. Mass Vehicle Unlock
-Demonstrates fleet-wide compromise without rate limiting.
-
-```python
-# Unlock entire fleet
-for vehicle in fleet:
-    api.unlock_vehicle_admin(vehicle, force=True)
-```
-
-#### 5. Device Spoofing
-Tests if arbitrary device information is accepted.
-
-```python
-# Use fake device ID
-device = {"uuid": "00000000-0000-0000-0000-000000000000"}
-```
-
----
-
-## 📊 Understanding Results
-
-### 🚨 VULNERABLE
-- System has this security flaw
-- Attacker could exploit this
-- **ACTION REQUIRED**: Implement fixes
-
-### ✅ SECURE
-- System is protected against this attack
-- Proper authorization is in place
-- No action needed
-
----
-
-## 🐳 Dockploy Deployment
-
-### Deploy to Dockploy
-
-1. **Create new application** in Dockploy
-2. **Connect GitHub repository**: `https://github.com/guerindylan555-boop/Attacktest`
-3. **Configure deployment**:
-   - Build Type: `Dockerfile`
-   - Port: `5000`
-   - Environment: `Production`
-4. **Deploy and access** your instance
-
-### Environment Variables (Optional)
-
-```env
-FLASK_ENV=production
-PYTHONUNBUFFERED=1
-```
-
----
-
-## 📖 Documentation
-
-- **[START_HERE.md](START_HERE.md)** - Quick start guide
-- **[SECURITY_ANALYSIS.md](SECURITY_ANALYSIS.md)** - Detailed vulnerability analysis
-- **[EXPLOIT_DEMO_README.md](EXPLOIT_DEMO_README.md)** - Complete usage guide
-- **[EXPLOIT_SUMMARY.md](EXPLOIT_SUMMARY.md)** - Overview of exploits
-
----
-
-## 🔒 Security & Legal
-
-### ⚠️ Important Warnings
-
-- ✅ **Only test systems you own** or have written permission for
-- ✅ Use **test accounts** in **test environments**
-- ✅ Follow **responsible disclosure** practices
-- ❌ **Never test production** without authorization
-- ❌ **Never share credentials** or tokens
-
-### Legal Disclaimer
-
-This tool is for **educational and authorized security testing only**. Unauthorized security testing may be illegal. By using this tool, you agree:
-
-- You have explicit written permission to test the target system
-- You will only use this on authorized test environments
-- You understand unauthorized testing may result in criminal charges
-- You accept full responsibility for your actions
-- The authors are not liable for misuse
-
----
-
-## 🛠️ Troubleshooting
-
-### "Login failed"
-- Verify credentials are correct
-- Check if account is active
-- Try logging in through the actual app first
-
-### "Connection refused"
-- Ensure the webapp is running
-- Check if port 5000 is available
-- Verify Docker container is up (if using Docker)
-
-### "ModuleNotFoundError"
-- Install dependencies: `pip install -r requirements.txt`
-- Use a virtual environment
-- Check Python version (3.7+ required)
-
----
-
-## 📈 Use Cases
-
-### For Security Teams
-- Demonstrate vulnerabilities to stakeholders
-- Validate security controls
-- Test authentication/authorization
-- Generate security reports
-
-### For Developers
-- Understand common attack vectors
-- Learn secure coding practices
-- Test API security before deployment
-- Verify fixes for vulnerabilities
-
-### For Penetration Testers
-- Automated vulnerability testing
-- Proof-of-concept exploits
-- Security assessment reporting
-- Client demonstrations
-
----
-
-## 🤝 Contributing
-
-Found a new vulnerability? Want to add more exploits?
-
-1. Fork the repository
-2. Create a feature branch
-3. Add your exploit with documentation
-4. Submit a pull request
-
----
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) file for details
-
----
-
-## 🔗 Related Resources
-
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [OWASP API Security](https://owasp.org/www-project-api-security/)
-- [JWT Security Best Practices](https://tools.ietf.org/html/rfc8725)
-- [NIST RBAC Guidelines](https://csrc.nist.gov/projects/role-based-access-control)
-
----
-
-## 📞 Support
-
-- **Documentation**: See docs folder
-- **Issues**: [GitHub Issues](https://github.com/guerindylan555-boop/Attacktest/issues)
-- **Security**: Report vulnerabilities responsibly
-
----
-
-## ⭐ Star This Repository
-
-If this tool helped you secure your application, please star the repository!
-
----
-
-**🔒 Remember: With great power comes great responsibility. Use these tools ethically!**
-
----
-
-*Last Updated: October 2, 2025*  
-*Version: 1.0.0*
+## Next Steps
+- Rotate the captured tokens if they belong to production services.
+- Point any downstream automation at the JSON logs instead of rebuilding parsers.
+- If you need additional hooks (e.g., admin endpoints), create them in a new branch so the main tree stays clean.
+
+## Control Center GUI
+- Install dependencies: `pip install PySide6` (Frida/mitmproxy CLI tools are already part of the base setup).
+- Launch the dashboard with `python -m automation.ui` from the project root.
+- The left column exposes one-click controls for the emulator, mitmdump proxy, Frida hooks, and the working token capture script.
+- The left column also drives the Appium token flow and an optional `ffplay` live stream (30 fps H.264 feed).
+- The centre panel refreshes emulator screenshots (2 Hz) so you can watch the UI while automation runs; the bottom log view tails command output for fast troubleshooting. Launch the live stream for full-motion video when you need it.
+- Buttons orchestrate the existing workflow (`restart_mayndrive_emulator.sh`, mitmdump tmux session, Frida runner, capture scripts) so everything stays in sync during a run.
+
+### Appium Automation
+- Configure an Appium server (default `http://127.0.0.1:4723/wd/hub`). Update `MAYNDRIVE_APPIUM_SERVER` if you use a remote node.
+- Provide selectors/credentials through environment variables (examples):
+  - `export MAYNDRIVE_TEST_EMAIL="user@example.com"`
+  - `export MAYNDRIVE_TEST_PASSWORD="hunter2"`
+  - `export MAYNDRIVE_SELECTOR_EMAIL="fr.mayndrive.app:id/email"` (override as necessary)
+  - `export MAYNDRIVE_SELECTOR_PASSWORD="fr.mayndrive.app:id/password"`
+  - `export MAYNDRIVE_SELECTOR_LOGIN="fr.mayndrive.app:id/login"`
+  - `export MAYNDRIVE_SELECTOR_UNLOCK="fr.mayndrive.app:id/unlock"`
+  - `export MAYNDRIVE_SELECTOR_LOCK="fr.mayndrive.app:id/lock"`
+- The new script `automation/scripts/run_appium_token_flow.py` performs: login → unlock → lock. Adjust selectors to match the current APK (use `uiautomatorviewer`/Appium Inspector to confirm resource IDs).
+- Kick off the flow via the GUI (“Run Appium Flow”) or CLI `source .venv/bin/activate && python automation/scripts/run_appium_token_flow.py`.
+
+### Live Stream
+- The GUI’s “Start Live Stream” button runs `adb exec-out screenrecord --output-format=h264 - | ffplay -framerate 30 -` for smoother monitoring. Ensure FFmpeg is installed (`sudo apt install ffmpeg`).
+
+## Automation Blueprint
+This high-level plan wires the emulator, Frida, mitmproxy, and UI automation together while keeping the option to view the screen when you need to debug.
+
+### 1. Provision the Emulator Host
+- Install Android SDK command-line tools, create an x86_64 AVD (userdebug/AOSP image) with writable system: `avdmanager create avd -n MaynDriveTest -k "system-images;android-34;googleapis;x86_64"`.
+- Enable nested virtualization/KVM on the VPS; fall back to software rendering only if hardware acceleration is unavailable.
+- Snapshot the pristine boot state after first launch (faster resets between test runs).
+
+### 2. Launch Profiles (Headless + Viewable)
+- Primary automation profile: `emulator -avd MaynDriveTest -no-window -no-audio -no-boot-anim -writable-system -accel on` and wait for `adb shell getprop sys.boot_completed`.
+- Verification profile (ad-hoc): same launch but omit `-no-window` when you connect through remote desktop, or run headless and mirror with `scrcpy --serial emulator-5554 --max-fps 30` (requires host display, which remote desktop provides).
+- For quick peeks on a headless run, stream frames: `adb exec-out screenrecord --output-format=h264 - | ffplay -framerate 30 -i -`.
+- Daily workflow: `tmux new -s mitmproxy_session` then `mitmdump --listen-port 8080 --set block_global=false --set save_stream_file=/home/ubuntu/android-tools/proxy/flows.mitm`. Detach with `Ctrl+b d`; reattach via `tmux attach -t mitmproxy_session` to view traffic in real time.
+
+### 3. Frida Server Lifecycle
+- Host side: `pipx install frida-tools`; download matching `frida-server-<ver>-android-x86_64`.
+- Deploy per boot: `adb root && adb remount && adb push frida-server... /data/local/tmp/ && adb shell chmod 755 ... && adb shell "/data/local/tmp/frida-server &"`.
+- Health check: `frida-ps -U | head` before each scenario; keep a tiny supervisor script that restarts the daemon if the process vanishes.
+
+### 4. Network Interception Stack
+- Run `mitmdump --listen-port 8080 --set save_stream_file=flows.mitm` (or Burp if you prefer GUI via remote desktop).
+- Configure proxy on the emulator: `adb shell settings put global http_proxy 10.0.2.2:8080` and disable after tests with `... :0`.
+- Install CA into system store once: `adb root && adb remount`, push hashed cert to `/system/etc/security/cacerts/`, set `chmod 644`, and reboot.
+- Track pinning bypass scripts (Frida snippets) alongside your main hook file; toggle them on when the proxy stops seeing TLS flows.
+
+### 5. Hook Design & Logging
+- Maintain `hooks/general.js` with try/catch wrappers for: OkHttp builders, request headers (Authorization), `Cipher.doFinal`, and trust manager overrides.
+- Prefix every console log with ISO timestamps plus action tags (`[LOGIN_REQUEST]` etc.) so automation can correlate events.
+- Store hooks in git with versioned subfolders keyed to app releases (e.g., `hooks/v1.12.0.js`).
+
+### 6. UI Automation Strategy
+- Baseline: ADB input helpers (`input tap`, `input text`, `keyevent 66`) orchestrated via Python subprocess; pull `uiautomator dump` XML to validate states when needed.
+- Scalable path: install Node.js + Appium (`npm install -g appium @appium/doctor`) and the Python client; script flows using resource ids extracted from APK. Run server under `xvfb-run` only if the host complains about display.
+- Shared helpers: disable animations (`adb shell settings put global animator_duration_scale 0` etc.) and clear app state before each run (`adb shell pm clear fr.mayndrive.app`).
+
+### 7. Orchestration Skeleton (No Coding Yet)
+- Sequencing order per run: reset emulator snapshot → ensure proxy + Frida up → launch app via Frida spawn (`frida -U -f fr.mayndrive.app -l hooks/current.js --no-pause`) → kick off UI automation → wait for completion → collect logs (`frida` stdout, mitm flows, `adb logcat -d` subset) → archive artifacts with timestamp.
+- Define environment variables (`FRIDA_VERSION`, `MITM_PORT`, `AVD_NAME`) in a `.env` file to keep shell scripts minimal once implemented.
+- Convenience helpers:
+  - `~/android-tools/restart_mayndrive_emulator.sh` — restarts the AVD with sane defaults and waits for `adb root` readiness.
+  - `automation/scripts/run_hooks.py` — spawns MaynDrive with `automation/hooks/general.js` attached and writes Frida logs to `~/android-tools/logs/`.
+
+### 8. Validation & Maintenance
+- Smoke test weekly: manual login run while watching `scrcpy` window to confirm UI automation still hits correct views.
+- After app updates, diff new APK against previous (use `jadx` or `apktool`) and adjust hook targets; update plan checklist with findings.
+- Monitor resource usage (`top`, `adb shell dumpsys meminfo`) so the 8 GB VPS stays within limits; scale emulator resolution down if memory pressure appears.
+
+This blueprint keeps implementation work staged, while preserving the ability to inspect the emulator visually whenever required.

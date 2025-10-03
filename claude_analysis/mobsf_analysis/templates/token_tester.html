@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaynDrive Token Tester</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .progress-container {
+            margin: 20px 0;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .result-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .result-item.success {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .result-item.danger {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .token {
+            font-family: monospace;
+            background-color: #e9ecef;
+            padding: 5px;
+            border-radius: 3px;
+            word-break: break-all;
+        }
+        .endpoint-result {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .endpoint-result.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .endpoint-result.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .summary {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-item h3 {
+            margin: 0;
+            color: #333;
+        }
+        .summary-item p {
+            margin: 5px 0 0 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .summary-item.success p {
+            color: #28a745;
+        }
+        .summary-item.danger p {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 MaynDrive Token Tester</h1>
+        
+        <form id="testForm">
+            <div class="form-group">
+                <label for="apiUrl">API Base URL:</label>
+                <input type="text" id="apiUrl" name="apiUrl" placeholder="https://api-test.knotcity.io" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="scooterSerial">Test Scooter Serial:</label>
+                <input type="text" id="scooterSerial" name="scooterSerial" value="TEST123">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="latitude">Latitude:</label>
+                    <input type="number" id="latitude" name="latitude" value="40.7128" step="any">
+                </div>
+                <div class="form-group">
+                    <label for="longitude">Longitude:</label>
+                    <input type="number" id="longitude" name="longitude" value="-74.0060" step="any">
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" id="startBtn" class="btn-primary">Start Testing</button>
+                <button type="button" id="stopBtn" class="btn-danger" disabled>Stop Testing</button>
+                <button type="button" id="saveBtn" class="btn-success" disabled>Save Results</button>
+                <button type="button" id="loadBtn" class="btn-secondary">Load Tokens</button>
+            </div>
+        </form>
+        
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="progressText">Ready to test</div>
+        </div>
+        
+        <div id="status" class="status info" style="display: none;"></div>
+        
+        <div class="summary" id="summary" style="display: none;">
+            <div class="summary-item">
+                <h3>Tokens Tested</h3>
+                <p id="tokensTested">0</p>
+            </div>
+            <div class="summary-item">
+                <h3>Valid Tokens</h3>
+                <p id="validTokens">0</p>
+            </div>
+            <div class="summary-item">
+                <h3>Vulnerability</h3>
+                <p id="vulnerability">Not Tested</p>
+            </div>
+        </div>
+        
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        let isTesting = false;
+        let progressInterval;
+
+        document.getElementById('startBtn').addEventListener('click', startTesting);
+        document.getElementById('stopBtn').addEventListener('click', stopTesting);
+        document.getElementById('saveBtn').addEventListener('click', saveResults);
+        document.getElementById('loadBtn').addEventListener('click', loadTokens);
+
+        async function startTesting() {
+            const formData = {
+                api_url: document.getElementById('apiUrl').value,
+                scooter_serial: document.getElementById('scooterSerial').value,
+                latitude: document.getElementById('latitude').value,
+                longitude: document.getElementById('longitude').value
+            };
+
+            try {
+                const response = await fetch('/api/start_test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    isTesting = true;
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
+                    document.getElementById('saveBtn').disabled = true;
+                    
+                    showStatus('Testing started...', 'info');
+                    startProgressMonitoring();
+                } else {
+                    const error = await response.json();
+                    showStatus('Error: ' + error.error, 'danger');
+                }
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'danger');
+            }
+        }
+
+        async function stopTesting() {
+            try {
+                await fetch('/api/stop_test', { method: 'POST' });
+                isTesting = false;
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                showStatus('Testing stopped', 'info');
+            } catch (error) {
+                showStatus('Error stopping test: ' + error.message, 'danger');
+            }
+        }
+
+        async function loadTokens() {
+            try {
+                const response = await fetch('/api/tokens');
+                const data = await response.json();
+                showStatus(`Loaded ${data.count} tokens from APK analysis`, 'success');
+            } catch (error) {
+                showStatus('Error loading tokens: ' + error.message, 'danger');
+            }
+        }
+
+        async function saveResults() {
+            const params = new URLSearchParams({
+                api_url: document.getElementById('apiUrl').value,
+                scooter_serial: document.getElementById('scooterSerial').value,
+                latitude: document.getElementById('latitude').value,
+                longitude: document.getElementById('longitude').value
+            });
+
+            try {
+                const response = await fetch('/api/save_results?' + params);
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'token_test_results.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    showStatus('Results saved successfully', 'success');
+                } else {
+                    showStatus('Error saving results', 'danger');
+                }
+            } catch (error) {
+                showStatus('Error saving results: ' + error.message, 'danger');
+            }
+        }
+
+        function startProgressMonitoring() {
+            progressInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('/api/progress');
+                    const progress = await response.json();
+                    
+                    if (progress.status === 'completed') {
+                        clearInterval(progressInterval);
+                        isTesting = false;
+                        document.getElementById('startBtn').disabled = false;
+                        document.getElementById('stopBtn').disabled = true;
+                        document.getElementById('saveBtn').disabled = false;
+                        
+                        showStatus('Testing completed', 'success');
+                        loadResults();
+                    } else if (progress.status === 'error') {
+                        clearInterval(progressInterval);
+                        isTesting = false;
+                        document.getElementById('startBtn').disabled = false;
+                        document.getElementById('stopBtn').disabled = true;
+                        showStatus('Error: ' + progress.message, 'danger');
+                    } else if (progress.status === 'running') {
+                        const percentage = (progress.current / progress.total) * 100;
+                        document.getElementById('progressFill').style.width = percentage + '%';
+                        document.getElementById('progressText').textContent = 
+                            `Testing ${progress.current}/${progress.total} tokens`;
+                    }
+                } catch (error) {
+                    console.error('Error monitoring progress:', error);
+                }
+            }, 1000);
+        }
+
+        async function loadResults() {
+            try {
+                const response = await fetch('/api/results');
+                const results = await response.json();
+                
+                displayResults(results);
+                updateSummary(results);
+            } catch (error) {
+                showStatus('Error loading results: ' + error.message, 'danger');
+            }
+        }
+
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<p>No results to display</p>';
+                return;
+            }
+
+            results.forEach((result, index) => {
+                const hasSuccess = Object.values(result.endpoints).some(ep => ep.result.success);
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `result-item ${hasSuccess ? 'success' : 'danger'}`;
+                
+                let html = `<h3>Token ${index + 1}: <span class="token">${result.token}</span></h3>`;
+                
+                Object.entries(result.endpoints).forEach(([endpoint, data]) => {
+                    const success = data.result.success;
+                    html += `<div class="endpoint-result ${success ? 'success' : 'danger'}">
+                        <strong>${data.name}:</strong> 
+                        ${success ? 
+                            `✅ SUCCESS (Status: ${data.result.status_code})` : 
+                            `❌ FAILED (${data.result.error || data.result.status_code})`
+                        }
+                    </div>`;
+                });
+                
+                resultDiv.innerHTML = html;
+                resultsDiv.appendChild(resultDiv);
+            });
+        }
+
+        function updateSummary(results) {
+            const validTokens = results.filter(r => 
+                Object.values(r.endpoints).some(ep => ep.result.success)
+            ).length;
+            
+            document.getElementById('tokensTested').textContent = results.length;
+            document.getElementById('validTokens').textContent = validTokens;
+            document.getElementById('vulnerability').textContent = 
+                validTokens > 0 ? 'CONFIRMED' : 'Not Found';
+            document.getElementById('vulnerability').className = 
+                validTokens > 0 ? 'danger' : 'success';
+            
+            document.getElementById('summary').style.display = 'flex';
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Load tokens on page load
+        window.addEventListener('load', loadTokens);
+    </script>
+</body>
+</html>

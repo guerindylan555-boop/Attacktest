@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest android:versionCode="900034" android:versionName="" android:compileSdkVersion="35" android:compileSdkVersionCodename="" android:requiredSplitTypes="" android:splitTypes="" package="fr.mayndrive.app" platformBuildVersionCode="35" platformBuildVersionName="15"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="35" />
+    <uses-feature android:name="" android:required="false" />
+    <uses-feature android:name="" android:required="false" />
+    <uses-feature android:name="" android:required="false" />
+    <uses-feature android:name="" android:required="false" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" android:maxSdkVersion="32" />
+    <uses-permission android:name="" />
+    <queries>
+        <package android:name="" />
+        <package android:name="" />
+        <package android:name="" />
+        <intent>
+            <action android:name="" />
+            <category android:name="" />
+            <data android:scheme="" />
+        </intent>
+        <intent>
+            <action android:name="" />
+        </intent>
+        <package android:name="" />
+    </queries>
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <uses-permission android:name="" />
+    <permission android:name="" android:protectionLevel="0x00000002" />
+    <uses-permission android:name="" />
+    <application android:theme="@2131952240" android:label="@2131886108" android:icon="@2131689472" android:name="" android:allowBackup="true" android:supportsRtl="true" android:extractNativeLibs="false" android:fullBackupContent="@2132082689" android:usesCleartextTraffic="false" android:roundIcon="@2131689474" android:appComponentFactory="" android:dataExtractionRules="@2132082690" android:localeConfig="@2132082688">
+        <activity android:theme="@2131952240" android:name="" android:exported="true" android:launchMode="3" android:screenOrientation="12" android:windowSoftInputMode="0x00000010">
+            <intent-filter>
+                <action android:name="" />
+                <category android:name="" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="" />
+                <category android:name="" />
+                <category android:name="" />
+                <data android:scheme="" android:host="" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="" />
+                <category android:name="" />
+                <category android:name="" />
+                <data android:scheme="" android:host="" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="" />
+                <category android:name="" />
+                <category android:name="" />
+                <data android:scheme="" android:host="" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="" />
+                <category android:name="" />
+                <category android:name="" />
+                <data android:scheme="" />
+                <data android:scheme="" />
+                <data android:host="" />
+            </intent-filter>
+        </activity>
+        <service android:name="" android:exported="false">
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+        </service>
+        <service android:name="" android:enabled="false" android:exported="false">
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+            <meta-data android:name="" android:value="" />
+        </service>
+        <provider android:name="" android:exported="false" android:authorities="" android:grantUriPermissions="true">
+            <meta-data android:name="" android:resource="@2132082692" />
+        </provider>
+        <meta-data android:name="" android:value="" />
+        <meta-data android:name="" android:value="@2131886691" />
+        <meta-data android:name="" android:resource="@2131165449" />
+        <meta-data android:name="" android:resource="@2131035075" />
+        <meta-data android:name="" android:value="false" />
+        <meta-data android:name="" android:value="false" />
+        <meta-data android:name="" android:value="false" />
+        <meta-data android:name="" android:value="true" />
+        <meta-data android:name="" android:value="" />
+        <activity android:theme="@2131952839" android:name="" android:exported="true" android:launchMode="2">
+            <intent-filter>
+                <action android:name="" />
+                <data android:scheme="" />
+                <category android:name="" />
+                <category android:name="" />
+            </intent-filter>
+        </activity>
+        <activity android:theme="@2131952085" android:name="" android:exported="false" />
+        <activity android:theme="@2131952085" android:name="" android:exported="false" />
+        <activity android:theme="@2131952085" android:name="" android:exported="false" />
+        <activity android:theme="@2131952085" android:name="" android:exported="false" />
+        <activity android:theme="@2131952085" android:name="" android:exported="false" />
+        <activity android:theme="@2131952085" android:name="" android:exported="false" />
+        <activity android:theme="@2131952085" android:name="" android:exported="false" />
+        <activity android:theme="@2131952082" android:name="" android:exported="false" />
+        <activity android:theme="@2131952085" android:name="" />
+        <activity android:theme="@2131952085" android:name="" />
+        <activity android:theme="@2131952085" android:name="" />
+        <activity android:theme="@2131952081" android:label="@2131886928" android:name="" android:exported="false" android:configChanges="0x00000DB0" android:windowSoftInputMode="0x00000010" android:autoRemoveFromRecents="true" />
+        <activity android:theme="@2131952088" android:name="" android:launchMode="1" android:configChanges="0x00000DB0" android:autoRemoveFromRecents="true" />
+        <activity android:theme="@2131952088" android:name="" android:exported="true" android:launchMode="3" android:autoRemoveFromRecents="true">
+            <intent-filter>
+                <action android:name="" />
+                <category android:name="" />
+                <category android:name="" />
+                <data android:scheme="" android:host="" android:path="" />
+            </intent-filter>
+        </activity>
+        <activity android:theme="@2131952085" android:name="" android:exported="false" />
+        <activity android:theme="@2131952078" android:name="" android:exported="false" />
+        <activity android:theme="@2131952088" android:name="" android:exported="false" />
+        <activity android:theme="@2131952088" android:name="" android:exported="false" android:launchMode="2" />
+        <activity android:theme="@2131952088" android:name="" android:exported="true" android:launchMode="2">
+            <intent-filter>
+                <action android:name="" />
+                <category android:name="" />
+                <category android:name="" />
+                <data android:scheme="" android:host="" android:path="" />
+            </intent-filter>
+        </activity>
+        <activity android:theme="@2131952078" android:name="" android:exported="false" />
+        <activity android:theme="@2131952079" android:name="" android:exported="false" />
+        <activity android:theme="@2131952079" android:name="" android:exported="false" />
+        <activity android:theme="@2131952082" android:name="" android:exported="false" />
+        <activity android:theme="@2131952088" android:name="" android:exported="false" />
+        <activity android:theme="@2131952064" android:name="" android:exported="false" android:configChanges="0x00000480" />
+        <service android:name="" android:enabled="false" android:exported="false">
+            <meta-data android:name="" android:value="" />
+        </service>
+        <service android:name="" android:exported="false" android:directBootAware="true">
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+        </service>
+        <activity android:theme="@2131952211" android:name="" />
+        <activity android:theme="@2131952853" android:name="" />
+        <activity android:name="" android:exported="true" android:launchMode="2">
+            <intent-filter>
+                <action android:name="" />
+                <data android:scheme="" />
+                <category android:name="" />
+                <category android:name="" />
+            </intent-filter>
+        </activity>
+        <service android:name="" android:exported="false" android:directBootAware="true">
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+        </service>
+        <provider android:name="" android:exported="false" android:authorities="" android:initOrder="99" />
+        <activity android:name="" android:exported="true" android:launchMode="2">
+            <intent-filter>
+                <action android:name="" />
+                <category android:name="" />
+                <category android:name="" />
+                <data android:scheme="" android:host="" android:pathPrefix="" />
+            </intent-filter>
+        </activity>
+        <activity android:theme="@2131952069" android:name="" />
+        <activity android:theme="@16973840" android:name="" android:exported="false" android:excludeFromRecents="true" />
+        <service android:name="" android:permission="" android:exported="true" android:visibleToInstantApps="true" />
+        <receiver android:name="" android:permission="" android:exported="true">
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+            <meta-data android:name="" android:value="true" />
+        </receiver>
+        <service android:name="" android:exported="false" android:directBootAware="true">
+            <intent-filter android:priority="-500">
+                <action android:name="" />
+            </intent-filter>
+        </service>
+        <uses-library android:name="" android:required="false" />
+        <receiver android:name="" android:enabled="true" android:exported="false" />
+        <service android:name="" android:enabled="true" android:exported="false" />
+        <service android:name="" android:permission="" android:enabled="true" android:exported="false" />
+        <activity android:theme="@16973840" android:name="" android:exported="false" />
+        <provider android:name="" android:exported="false" android:authorities="">
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+            <meta-data android:name="" android:value="" />
+        </provider>
+        <service android:name="" android:enabled="@2130968578" android:exported="false" android:directBootAware="false" />
+        <service android:name="" android:permission="" android:enabled="@2130968580" android:exported="true" android:directBootAware="false" />
+        <service android:name="" android:enabled="@2130968579" android:exported="false" android:directBootAware="false" />
+        <receiver android:name="" android:enabled="true" android:exported="false" android:directBootAware="false" />
+        <receiver android:name="" android:enabled="false" android:exported="false" android:directBootAware="false">
+            <intent-filter>
+                <action android:name="" />
+                <action android:name="" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="" android:enabled="false" android:exported="false" android:directBootAware="false">
+            <intent-filter>
+                <action android:name="" />
+                <action android:name="" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="" android:enabled="false" android:exported="false" android:directBootAware="false">
+            <intent-filter>
+                <action android:name="" />
+                <action android:name="" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="" android:enabled="false" android:exported="false" android:directBootAware="false">
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="" android:enabled="false" android:exported="false" android:directBootAware="false">
+            <intent-filter>
+                <action android:name="" />
+                <action android:name="" />
+                <action android:name="" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="" android:enabled="@2130968578" android:exported="false" android:directBootAware="false">
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="" android:permission="" android:enabled="true" android:exported="true" android:directBootAware="false">
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+        </receiver>
+        <service android:name="" android:enabled="true" android:exported="false" />
+        <provider android:name="" android:exported="false" android:authorities="" android:initOrder="100" android:directBootAware="true" />
+        <service android:name="" android:exported="false" android:directBootAware="true" />
+        <uses-library android:name="" android:required="false" />
+        <meta-data android:name="" android:value="@2131361804" />
+        <service android:name="" android:exported="false">
+            <meta-data android:name="" android:value="" />
+        </service>
+        <receiver android:name="" android:permission="" android:enabled="true" android:exported="true" android:directBootAware="false">
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="" />
+            </intent-filter>
+        </receiver>
+        <service android:name="" android:permission="" android:exported="false" />
+        <receiver android:name="" android:exported="false" />
+        <activity android:theme="@2131952318" android:name="" android:exported="false" android:stateNotNeeded="true" />
+        <meta-data android:name="" android:value="1" />
+        <provider android:name="" android:enabled="true" android:exported="false" android:authorities="" />
+        <activity android:theme="@2131951918" android:name="" android:exported="false" />
+        <activity android:theme="@2131951918" android:name="" android:exported="false" android:windowSoftInputMode="0x00000013" />
+        <meta-data android:name="" android:value="true" />
+        <meta-data android:name="" android:value="" />
+        <meta-data android:name="" android:value="" />
+        <meta-data android:name="" android:resource="@2132082693" />
+        <meta-data android:name="" android:value="3" />
+    </application>
+</manifest>
