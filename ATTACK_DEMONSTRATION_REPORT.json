@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-10-03T03:49:30.653712",
+  "target": "MaynDrive App (fr.mayndrive.app)",
+  "api_base": "https://api.knotcity.io",
+  "attacks_demonstrated": [
+    "Information Disclosure Attack",
+    "JSON Injection Attack",
+    "Session Manipulation Attack",
+    "Parameter Pollution Attack"
+  ],
+  "vulnerabilities_confirmed": [
+    {
+      "name": "User Information Disclosure",
+      "severity": "HIGH",
+      "status": "VULNERABLE",
+      "impact": "Complete user profile exposure"
+    },
+    {
+      "name": "JSON Injection",
+      "severity": "MEDIUM",
+      "status": "PARTIALLY_VULNERABLE",
+      "impact": "Extra fields accepted but not processed"
+    },
+    {
+      "name": "Session Manipulation",
+      "severity": "MEDIUM",
+      "status": "VULNERABLE",
+      "impact": "Token validation weaknesses"
+    },
+    {
+      "name": "Parameter Pollution",
+      "severity": "LOW",
+      "status": "VULNERABLE",
+      "impact": "Multiple headers accepted"
+    }
+  ],
+  "recommendations": [
+    "Fix user information disclosure vulnerability immediately",
+    "Implement strict JSON field validation",
+    "Strengthen token validation and format checking",
+    "Add comprehensive input validation and sanitization",
+    "Implement rate limiting and monitoring",
+    "Add security event logging and alerting"
+  ]
+}

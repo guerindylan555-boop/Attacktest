@@ -1,0 +1,64 @@
+====================================================================================================
+FIX SUMMARY - RUN_DECRYPT_CAPTURE.bat Now Works!
+====================================================================================================
+
+PROBLEM:
+--------
+RUN_DECRYPT_CAPTURE.bat captured 0 items because capture_DECRYPT.js was missing the coroutine hooks
+that actually capture unlock/lock requests.
+
+capture_DECRYPT.js had ONLY:
+  - Cipher.doFinal hooks (for decryption)
+  - SSLEngine hooks (for SSL/TLS)
+  ❌ MISSING: B4.Y4 and B4.M4 coroutine hooks that capture HTTP requests!
+
+SOLUTION:
+---------
+Changed capture_decrypt.py to use capture_COMPLETE_SOLUTION.js which has ALL hooks:
+  ✅ B4.Y4.invokeSuspend (unlock coroutine) - CAPTURES UNLOCK HTTP REQUESTS
+  ✅ B4.M4.invokeSuspend (lock coroutine) - CAPTURES LOCK HTTP REQUESTS
+  ✅ javax.crypto.Cipher.doFinal (cipher decryption)
+  ✅ Socket.io emit/packet (real-time notifications)
+  ✅ OkHttp RealCall.execute (HTTP backup)
+  ✅ Native sendto/recvfrom (raw UDP packets)
+
+WHAT CHANGED:
+-------------
+1. capture_decrypt.py:
+   - SCRIPT_FILE = "capture_COMPLETE_SOLUTION.js" (was "capture_DECRYPT.js")
+   - Updated output messages
+
+2. RUN_DECRYPT_CAPTURE.bat:
+   - Fixed frida-server startup (uses nohup, no longer hangs)
+   - Updated messages to reflect complete capture
+
+UNIFIED SCRIPTS:
+----------------
+Both RUN_CAPTURE.bat and RUN_DECRYPT_CAPTURE.bat now:
+  - Use the same working frida-server startup method
+  - Use capture_COMPLETE_SOLUTION.js with all hooks
+  - Capture unlock/lock + cipher + UDP in one script
+
+HOW TO USE:
+-----------
+.\RUN_DECRYPT_CAPTURE.bat
+
+Then:
+1. Wait for "[+] Hooked B4.Y4.invokeSuspend" messages
+2. App will auto-launch
+3. Unlock/lock a scooter
+4. Watch for:
+   - [COROUTINE] = HTTP unlock/lock with Bearer token + scooter serial
+   - [UDP CIPHER PLAINTEXT] = Decrypted telemetry
+   - [UDP SEND/RECV] = Raw encrypted packets
+
+EXPECTED OUTPUT:
+----------------
+[COROUTINE] Unlock/Lock coroutine triggered (B4.Y4)
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  Scooter Serial: TUF061
+  Latitude: 48.856614
+  Longitude: 2.352222
+
+====================================================================================================
+

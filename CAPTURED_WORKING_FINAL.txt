@@ -1,0 +1,120 @@
+
+====================================================================================================
+[2025-10-03T03:27:32.871649] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Pass ID: qb.q@a2bccf5
+Class: B4.x
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:32.903924] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Pass ID: u.S@d591c73
+Class: B4.P3
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:32.906251] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Scooter ID: kh.d@ecda5ad
+Location: None
+Class: B4.d3
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:32.957135] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Pass ID: qb.q@a2bccf5
+Class: B4.x
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:32.967548] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Pass ID: u.S@d591c73
+Class: B4.P3
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:32.983606] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Scooter ID: kh.d@ecda5ad
+Location: None
+Class: B4.d3
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:33.222761] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Scooter ID: kh.d@f20918e
+Location: KnotMapRegion(centerLatitude=47.39027698832425, centerLongitude=0.6889144890010357, latitudeDegrees=0.562007461977359, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:33.358887] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Scooter ID: kh.d@f20918e
+Location: KnotMapRegion(centerLatitude=47.39027698832425, centerLongitude=0.6889144890010357, latitudeDegrees=0.562007461977359, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:36.064652] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Scooter ID: kh.d@f20918e
+Location: KnotMapRegion(centerLatitude=47.43510309622584, centerLongitude=0.6889144890010357, latitudeDegrees=0.4723552461741889, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:36.416569] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Scooter ID: kh.d@f20918e
+Location: KnotMapRegion(centerLatitude=47.43510309622584, centerLongitude=0.6889144890010357, latitudeDegrees=0.4723552461741889, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:36.723612] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Scooter ID: kh.d@f20918e
+Location: KnotMapRegion(centerLatitude=47.39049603096516, centerLongitude=0.6889144890010357, latitudeDegrees=0.4727555197723774, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:37.161688] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Scooter ID: kh.d@f20918e
+Location: KnotMapRegion(centerLatitude=47.39049603096516, centerLongitude=0.6889144890010357, latitudeDegrees=0.4727555197723774, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:48.731669] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Pass ID: u.S@d591c73
+Class: B4.P3
+====================================================================================================
+
+====================================================================================================
+[2025-10-03T03:27:48.788393] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTQ3NjQsImV4cCI6MTc1OTQ1ODM2NH0.ivnhjjDy1zEtAD1BTJAAK5V1vDtAaSHNuHZWpMspSFE
+Pass ID: u.S@d591c73
+Class: B4.P3
+====================================================================================================

@@ -1,0 +1,194 @@
+[2025-10-03T02:39:26.396617] {'type': 'unlock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'scooter_id': 'kh.d@a420863', 'location': None, 'timestamp': '2025-10-03T00:39:31.143Z', 'className': 'B4.d3'}
+
+====================================================================================================
+[2025-10-03T02:39:26.396617] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Scooter ID: kh.d@a420863
+Location: None
+Class: B4.d3
+====================================================================================================
+[2025-10-03T02:39:26.408659] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': 'qb.q@ad9dc48', 'timestamp': '2025-10-03T00:39:31.144Z', 'className': 'B4.x'}
+
+====================================================================================================
+[2025-10-03T02:39:26.408659] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: qb.q@ad9dc48
+Class: B4.x
+====================================================================================================
+[2025-10-03T02:39:26.444061] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': 'u.S@4f90324', 'timestamp': '2025-10-03T00:39:31.188Z', 'className': 'B4.P3'}
+
+====================================================================================================
+[2025-10-03T02:39:26.444061] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: u.S@4f90324
+Class: B4.P3
+====================================================================================================
+[2025-10-03T02:39:26.581396] {'type': 'unlock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'scooter_id': 'kh.d@a420863', 'location': None, 'timestamp': '2025-10-03T00:39:31.319Z', 'className': 'B4.d3'}
+
+====================================================================================================
+[2025-10-03T02:39:26.581396] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Scooter ID: kh.d@a420863
+Location: None
+Class: B4.d3
+====================================================================================================
+[2025-10-03T02:39:26.588180] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': 'qb.q@ad9dc48', 'timestamp': '2025-10-03T00:39:31.336Z', 'className': 'B4.x'}
+
+====================================================================================================
+[2025-10-03T02:39:26.588180] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: qb.q@ad9dc48
+Class: B4.x
+====================================================================================================
+[2025-10-03T02:39:26.666323] {'type': 'unlock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'scooter_id': 'kh.d@568fa78', 'location': 'KnotMapRegion(centerLatitude=47.39027698832425, centerLongitude=0.6889144890010357, latitudeDegrees=0.562007461977359, longitudeDegrees=0.494384430348873)', 'timestamp': '2025-10-03T00:39:31.411Z', 'className': 'B4.i1'}
+
+====================================================================================================
+[2025-10-03T02:39:26.666323] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Scooter ID: kh.d@568fa78
+Location: KnotMapRegion(centerLatitude=47.39027698832425, centerLongitude=0.6889144890010357, latitudeDegrees=0.562007461977359, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+[2025-10-03T02:39:26.784542] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': 'u.S@4f90324', 'timestamp': '2025-10-03T00:39:31.530Z', 'className': 'B4.P3'}
+
+====================================================================================================
+[2025-10-03T02:39:26.784542] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: u.S@4f90324
+Class: B4.P3
+====================================================================================================
+[2025-10-03T02:39:27.371320] {'type': 'unlock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'scooter_id': 'kh.d@568fa78', 'location': 'KnotMapRegion(centerLatitude=47.39027698832425, centerLongitude=0.6889144890010357, latitudeDegrees=0.562007461977359, longitudeDegrees=0.494384430348873)', 'timestamp': '2025-10-03T00:39:32.115Z', 'className': 'B4.i1'}
+
+====================================================================================================
+[2025-10-03T02:39:27.371320] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Scooter ID: kh.d@568fa78
+Location: KnotMapRegion(centerLatitude=47.39027698832425, centerLongitude=0.6889144890010357, latitudeDegrees=0.562007461977359, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+[2025-10-03T02:39:29.565707] {'type': 'unlock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'scooter_id': 'kh.d@568fa78', 'location': 'KnotMapRegion(centerLatitude=47.43510309622584, centerLongitude=0.6889144890010357, latitudeDegrees=0.4723552461741889, longitudeDegrees=0.494384430348873)', 'timestamp': '2025-10-03T00:39:34.312Z', 'className': 'B4.i1'}
+
+====================================================================================================
+[2025-10-03T02:39:29.565707] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Scooter ID: kh.d@568fa78
+Location: KnotMapRegion(centerLatitude=47.43510309622584, centerLongitude=0.6889144890010357, latitudeDegrees=0.4723552461741889, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+[2025-10-03T02:39:29.905577] {'type': 'unlock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'scooter_id': 'kh.d@568fa78', 'location': 'KnotMapRegion(centerLatitude=47.43510309622584, centerLongitude=0.6889144890010357, latitudeDegrees=0.4723552461741889, longitudeDegrees=0.494384430348873)', 'timestamp': '2025-10-03T00:39:34.648Z', 'className': 'B4.i1'}
+
+====================================================================================================
+[2025-10-03T02:39:29.905577] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Scooter ID: kh.d@568fa78
+Location: KnotMapRegion(centerLatitude=47.43510309622584, centerLongitude=0.6889144890010357, latitudeDegrees=0.4723552461741889, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+[2025-10-03T02:39:29.945884] {'type': 'lock_request', 'authorization': None, 'pass_id': 'cad428a3-bc97-4f01-840c-57c99b41c597', 'timestamp': '2025-10-03T00:39:34.691Z', 'className': 'B4.q2'}
+[2025-10-03T02:39:30.006597] {'type': 'lock_request', 'authorization': None, 'pass_id': 'cad428a3-bc97-4f01-840c-57c99b41c597', 'timestamp': '2025-10-03T00:39:34.753Z', 'className': 'B4.q2'}
+[2025-10-03T02:39:30.364911] {'type': 'unlock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'scooter_id': 'kh.d@568fa78', 'location': 'KnotMapRegion(centerLatitude=47.39049603096516, centerLongitude=0.6889144890010357, latitudeDegrees=0.4727555197723774, longitudeDegrees=0.494384430348873)', 'timestamp': '2025-10-03T00:39:35.111Z', 'className': 'B4.i1'}
+
+====================================================================================================
+[2025-10-03T02:39:30.364911] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Scooter ID: kh.d@568fa78
+Location: KnotMapRegion(centerLatitude=47.39049603096516, centerLongitude=0.6889144890010357, latitudeDegrees=0.4727555197723774, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+[2025-10-03T02:39:30.675137] {'type': 'unlock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'scooter_id': 'kh.d@568fa78', 'location': 'KnotMapRegion(centerLatitude=47.39049603096516, centerLongitude=0.6889144890010357, latitudeDegrees=0.4727555197723774, longitudeDegrees=0.494384430348873)', 'timestamp': '2025-10-03T00:39:35.423Z', 'className': 'B4.i1'}
+
+====================================================================================================
+[2025-10-03T02:39:30.675137] UNLOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Scooter ID: kh.d@568fa78
+Location: KnotMapRegion(centerLatitude=47.39049603096516, centerLongitude=0.6889144890010357, latitudeDegrees=0.4727555197723774, longitudeDegrees=0.494384430348873)
+Class: B4.i1
+====================================================================================================
+[2025-10-03T02:39:42.505845] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': 'u.S@4f90324', 'timestamp': '2025-10-03T00:39:47.251Z', 'className': 'B4.P3'}
+
+====================================================================================================
+[2025-10-03T02:39:42.505845] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: u.S@4f90324
+Class: B4.P3
+====================================================================================================
+[2025-10-03T02:39:42.587075] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': 'u.S@4f90324', 'timestamp': '2025-10-03T00:39:47.332Z', 'className': 'B4.P3'}
+
+====================================================================================================
+[2025-10-03T02:39:42.587075] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: u.S@4f90324
+Class: B4.P3
+====================================================================================================
+[2025-10-03T02:39:45.364926] {'type': 'lock_request', 'authorization': None, 'pass_id': 'cad428a3-bc97-4f01-840c-57c99b41c597', 'timestamp': '2025-10-03T00:39:50.108Z', 'className': 'B4.q2'}
+[2025-10-03T02:39:45.479344] {'type': 'lock_request', 'authorization': None, 'pass_id': 'cad428a3-bc97-4f01-840c-57c99b41c597', 'timestamp': '2025-10-03T00:39:50.224Z', 'className': 'B4.q2'}
+[2025-10-03T02:39:47.877715] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': '37', 'timestamp': '2025-10-03T00:39:52.622Z', 'className': 'B4.r1'}
+
+====================================================================================================
+[2025-10-03T02:39:47.877715] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: 37
+Class: B4.r1
+====================================================================================================
+[2025-10-03T02:39:47.921772] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': '37', 'timestamp': '2025-10-03T00:39:52.667Z', 'className': 'B4.r1'}
+
+====================================================================================================
+[2025-10-03T02:39:47.921772] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: 37
+Class: B4.r1
+====================================================================================================
+[2025-10-03T02:39:48.665983] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': '922', 'timestamp': '2025-10-03T00:39:53.410Z', 'className': 'B4.U4'}
+
+====================================================================================================
+[2025-10-03T02:39:48.665983] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: 922
+Class: B4.U4
+====================================================================================================
+[2025-10-03T02:39:51.282199] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': '922', 'timestamp': '2025-10-03T00:39:56.027Z', 'className': 'B4.U4'}
+
+====================================================================================================
+[2025-10-03T02:39:51.282199] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: 922
+Class: B4.U4
+====================================================================================================
+[2025-10-03T02:39:51.288310] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': 'u.S@4f90324', 'timestamp': '2025-10-03T00:39:56.035Z', 'className': 'B4.P3'}
+
+====================================================================================================
+[2025-10-03T02:39:51.288310] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: u.S@4f90324
+Class: B4.P3
+====================================================================================================
+[2025-10-03T02:39:51.358901] {'type': 'lock_request', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU', 'pass_id': 'u.S@4f90324', 'timestamp': '2025-10-03T00:39:56.104Z', 'className': 'B4.P3'}
+
+====================================================================================================
+[2025-10-03T02:39:51.358901] LOCK REQUEST
+====================================================================================================
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDM0OTMsInNlc3Npb25faWQiOiI3NmM0NzE3ZS03ZWM5LTRkN2MtOWRlOS00NjRiNjJlY2VhYzgiLCJpYXQiOjE3NTk0NTA4MDksImV4cCI6MTc1OTQ1NDQwOX0.Az9ES9eXPr2p7oo3h9h05wQN7Xv-Ler_r1ghz9dCfcU
+Pass ID: u.S@4f90324
+Class: B4.P3
+====================================================================================================
+[2025-10-03T02:39:57.766137] {'type': 'lock_request', 'authorization': None, 'pass_id': 'cad428a3-bc97-4f01-840c-57c99b41c597', 'timestamp': '2025-10-03T00:40:02.512Z', 'className': 'B4.q2'}
+[2025-10-03T02:39:57.842290] {'type': 'lock_request', 'authorization': None, 'pass_id': 'cad428a3-bc97-4f01-840c-57c99b41c597', 'timestamp': '2025-10-03T00:40:02.578Z', 'className': 'B4.q2'}

@@ -1,0 +1,61 @@
+{
+  "timestamp": "2025-10-03T03:46:42.880903",
+  "target": "MaynDrive App (fr.mayndrive.app)",
+  "api_base": "https://api.knotcity.io",
+  "vulnerabilities": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "findings": {
+    "user_info_disclosure": {
+      "status": "VULNERABLE",
+      "endpoints": [
+        "/api/application/users"
+      ],
+      "data_exposed": [
+        "user_id",
+        "email",
+        "firstname",
+        "lastname",
+        "account_types",
+        "trip_count",
+        "notifications",
+        "bank_card",
+        "two_factor",
+        "organization_info"
+      ],
+      "severity": "HIGH"
+    },
+    "json_injection": {
+      "status": "PARTIALLY_VULNERABLE",
+      "description": "Extra JSON fields accepted but not processed for privilege escalation",
+      "severity": "MEDIUM"
+    },
+    "session_manipulation": {
+      "status": "VULNERABLE",
+      "description": "Token variations accepted (extra spaces, case changes)",
+      "severity": "MEDIUM"
+    },
+    "parameter_pollution": {
+      "status": "VULNERABLE",
+      "description": "Multiple headers and case variations accepted",
+      "severity": "LOW"
+    }
+  },
+  "security_controls": {
+    "authorization": {
+      "status": "WORKING",
+      "description": "Scooter-specific authorization properly enforced"
+    },
+    "input_validation": {
+      "status": "PARTIAL",
+      "description": "Serial number regex validation works, but extra fields accepted"
+    },
+    "endpoint_protection": {
+      "status": "WORKING",
+      "description": "Most admin/system endpoints properly protected"
+    }
+  }
+}
