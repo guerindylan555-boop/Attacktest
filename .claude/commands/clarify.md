@@ -1,158 +1,114 @@
 ---
-description: Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec.
+description: Resolve open questions in the automation app spec related to restart stability, replay fidelity, and durable UI labeling.
 ---
 
-The user input to you can be provided directly by the agent or as a command argument - you **MUST** consider it before proceeding with the prompt (if not empty).
+The user input after `/clarify` **must** influence every decision below.
 
 User input:
 
 $ARGUMENTS
 
-Goal: Detect and reduce ambiguity or missing decision points in the active feature specification and record the clarifications directly in the spec file.
+Goal: Surface and eliminate the most critical ambiguities in the active feature specification for repairing the automation app (kill/restart flow, replay routines, and UI discovery metadata). Record the answers directly in the spec so downstream planning and implementation stay aligned.
 
-Note: This clarification workflow is expected to run (and be completed) BEFORE invoking `/plan`. If the user explicitly states they are skipping clarification (e.g., exploratory spike), you may proceed, but must warn that downstream rework risk increases.
+This clarification pass should finish **before** `/plan` unless the user explicitly waives it, in which case warn about elevated rework risk.
 
 Execution steps:
 
-1. Run `.specify/scripts/bash/check-prerequisites.sh --json --paths-only` from repo root **once** (combined `--json --paths-only` mode / `-Json -PathsOnly`). Parse minimal JSON payload fields:
+1. From the repo root run `.specify/scripts/bash/check-prerequisites.sh --json --paths-only` exactly once. Capture from its JSON payload:
    - `FEATURE_DIR`
    - `FEATURE_SPEC`
-   - (Optionally capture `IMPL_PLAN`, `TASKS` for future chained flows.)
-   - If JSON parsing fails, abort and instruct user to re-run `/specify` or verify feature branch environment.
+   - (Optionally note `IMPL_PLAN`, `TASKS` for subsequent phases.)
+   Abort if JSON parsing fails and instruct the user to re-run `/specify` or repair the feature branch context.
 
-2. Load the current spec file. Perform a structured ambiguity & coverage scan using this taxonomy. For each category, mark status: Clear / Partial / Missing. Produce an internal coverage map used for prioritization (do not output raw map unless no questions will be asked).
+2. Load the current spec and perform an ambiguity scan emphasizing the automation workflows:
 
    Functional Scope & Behavior:
-   - Core user goals & success criteria
-   - Explicit out-of-scope declarations
-   - User roles / personas differentiation
+   - Restart/killswitch success criteria and clean-state definition
+   - Replay fidelity expectations (timing, ordering, device/OS variance)
+   - UI discovery outputs and labeling granularity
+   - Out-of-scope declarations for manual overrides or unsupported widgets
 
    Domain & Data Model:
-   - Entities, attributes, relationships
-   - Identity & uniqueness rules
-   - Lifecycle/state transitions
-   - Data volume / scale assumptions
+   - Session/state objects involved in restart and replay
+   - Identifier schema for discovered UI elements (naming collision rules)
+   - Persistence requirements for replay scripts and UI maps
 
    Interaction & UX Flow:
-   - Critical user journeys / sequences
-   - Error/empty/loading states
-   - Accessibility or localization notes
+   - Kill → restart → ready sequence including confirmation dialogs
+   - Replay setup, progress indication, and recovery steps when drift detected
+   - UI labeling workflows in the recorder/discovery UI
 
    Non-Functional Quality Attributes:
-   - Performance (latency, throughput targets)
-   - Scalability (horizontal/vertical, limits)
-   - Reliability & availability (uptime, recovery expectations)
-   - Observability (logging, metrics, tracing signals)
-   - Security & privacy (authN/Z, data protection, threat assumptions)
-   - Compliance / regulatory constraints (if any)
+   - Performance budgets for restart (time-to-ready) and replay (latency jitter)
+   - Reliability goals (crash-free restarts, deterministic replays)
+   - Observability signals (logs, metrics, traces for restart/replay/discovery)
+   - Security/privacy when storing labeled UI metadata
 
    Integration & External Dependencies:
-   - External services/APIs and failure modes
-   - Data import/export formats
-   - Protocol/versioning assumptions
+   - Target app/environment prerequisites for clean restart
+   - Replay transport (e.g., WebSocket, adb) and version constraints
+   - Storage backends for UI catalogs or replay archives
 
    Edge Cases & Failure Handling:
-   - Negative scenarios
-   - Rate limiting / throttling
-   - Conflict resolution (e.g., concurrent edits)
+   - Restart mid-operation, missing permissions, hung processes
+   - Replay desync, unavailable UI nodes, dynamic IDs
+   - Conflicting labels or obsolete discovery snapshots
 
    Constraints & Tradeoffs:
-   - Technical constraints (language, storage, hosting)
-   - Explicit tradeoffs or rejected alternatives
+   - Supported platforms and automation frameworks
+   - Resource limits (memory, disk for snapshots)
+   - Any deliberate exclusions (e.g., no multi-session parallelism)
 
    Terminology & Consistency:
-   - Canonical glossary terms
-   - Avoided synonyms / deprecated terms
+   - Canonical names for restart modes, replay runs, and UI labels
+   - Deprecated aliases to avoid in future specs
 
    Completion Signals:
-   - Acceptance criteria testability
-   - Measurable Definition of Done style indicators
+   - Acceptance criteria: crash-free restart, replay accuracy tolerance (e.g., 100% click match), labeled UI coverage targets
+   - Definition-of-done checkpoints (tests, monitoring hooks, documentation updates)
 
    Misc / Placeholders:
-   - TODO markers / unresolved decisions
-   - Ambiguous adjectives ("robust", "intuitive") lacking quantification
+   - TODO markers, vague adjectives ("robust", "intuitive"), or unresolved dependency notes
 
-   For each category with Partial or Missing status, add a candidate question opportunity unless:
-   - Clarification would not materially change implementation or validation strategy
-   - Information is better deferred to planning phase (note internally)
+   Categorize each item as Clear / Partial / Missing. Create an internal coverage map to drive question selection.
 
-3. Generate (internally) a prioritized queue of candidate clarification questions (maximum 5). Do NOT output them all at once. Apply these constraints:
-    - Maximum of 5 total questions across the whole session.
-    - Each question must be answerable with EITHER:
-       * A short multiple‑choice selection (2–5 distinct, mutually exclusive options), OR
-       * A one-word / short‑phrase answer (explicitly constrain: "Answer in <=5 words").
-   - Only include questions whose answers materially impact architecture, data modeling, task decomposition, test design, UX behavior, operational readiness, or compliance validation.
-   - Ensure category coverage balance: attempt to cover the highest impact unresolved categories first; avoid asking two low-impact questions when a single high-impact area (e.g., security posture) is unresolved.
-   - Exclude questions already answered, trivial stylistic preferences, or plan-level execution details (unless blocking correctness).
-   - Favor clarifications that reduce downstream rework risk or prevent misaligned acceptance tests.
-   - If more than 5 categories remain unresolved, select the top 5 by (Impact * Uncertainty) heuristic.
+3. Generate an internal queue of up to 5 clarification questions targeting the highest impact gaps. Each must be answerable via:
+   - A 2–5 option multiple-choice table (include a `Short` option only if a free-form alternative makes sense), or
+   - A constrained short answer: `Format: Short answer (<=5 words)`.
 
-4. Sequential questioning loop (interactive):
-    - Present EXACTLY ONE question at a time.
-    - For multiple‑choice questions render options as a Markdown table:
+   Focus on clarifications that affect architecture/state management, replay sequencing, UI metadata schema, validation strategy, or operations. Avoid stylistic or low-stakes inquiries.
 
-       | Option | Description |
-       |--------|-------------|
-       | A | <Option A description> |
-       | B | <Option B description> |
-       | C | <Option C description> | (add D/E as needed up to 5)
-       | Short | Provide a different short answer (<=5 words) | (Include only if free-form alternative is appropriate)
+4. Question loop:
+   - Ask **one** question at a time, format per guidance above.
+   - Validate responses map to an option or meet the <=5 word requirement.
+   - If unclear, request quick disambiguation without counting as a new question.
+   - Record accepted answers in working memory and continue until queue empty, user stops, or 5 questions asked.
+   - Never hint at future queued questions.
 
-    - For short‑answer style (no meaningful discrete options), output a single line after the question: `Format: Short answer (<=5 words)`.
-    - After the user answers:
-       * Validate the answer maps to one option or fits the <=5 word constraint.
-       * If ambiguous, ask for a quick disambiguation (count still belongs to same question; do not advance).
-       * Once satisfactory, record it in working memory (do not yet write to disk) and move to the next queued question.
-    - Stop asking further questions when:
-       * All critical ambiguities resolved early (remaining queued items become unnecessary), OR
-       * User signals completion ("done", "good", "no more"), OR
-       * You reach 5 asked questions.
-    - Never reveal future queued questions in advance.
-    - If no valid questions exist at start, immediately report no critical ambiguities.
+5. After each accepted answer, immediately integrate it into the spec:
+   - Ensure a `## Clarifications` section exists (create if missing) with `### Session YYYY-MM-DD` for today.
+   - Append a bullet `- Q: <question> → A: <answer>`.
+   - Update the relevant spec sections (Functional Requirements, Data Model, Interaction Flow, Non-Functional, Edge Cases, etc.) to reflect the clarification. Remove or revise conflicting text instead of duplicating it.
+   - Save the spec back to `FEATURE_SPEC` after each integration, preserving formatting and heading order.
 
-5. Integration after EACH accepted answer (incremental update approach):
-    - Maintain in-memory representation of the spec (loaded once at start) plus the raw file contents.
-    - For the first integrated answer in this session:
-       * Ensure a `## Clarifications` section exists (create it just after the highest-level contextual/overview section per the spec template if missing).
-       * Under it, create (if not present) a `### Session YYYY-MM-DD` subheading for today.
-    - Append a bullet line immediately after acceptance: `- Q: <question> → A: <final answer>`.
-    - Then immediately apply the clarification to the most appropriate section(s):
-       * Functional ambiguity → Update or add a bullet in Functional Requirements.
-       * User interaction / actor distinction → Update User Stories or Actors subsection (if present) with clarified role, constraint, or scenario.
-       * Data shape / entities → Update Data Model (add fields, types, relationships) preserving ordering; note added constraints succinctly.
-       * Non-functional constraint → Add/modify measurable criteria in Non-Functional / Quality Attributes section (convert vague adjective to metric or explicit target).
-       * Edge case / negative flow → Add a new bullet under Edge Cases / Error Handling (or create such subsection if template provides placeholder for it).
-       * Terminology conflict → Normalize term across spec; retain original only if necessary by adding `(formerly referred to as "X")` once.
-    - If the clarification invalidates an earlier ambiguous statement, replace that statement instead of duplicating; leave no obsolete contradictory text.
-    - Save the spec file AFTER each integration to minimize risk of context loss (atomic overwrite).
-    - Preserve formatting: do not reorder unrelated sections; keep heading hierarchy intact.
-    - Keep each inserted clarification minimal and testable (avoid narrative drift).
+6. Validation checklist after each write and at the end:
+   - ≤5 questions logged for the session.
+   - No unresolved placeholders where an answer was meant to apply.
+   - Clarification entries align with updated content; no contradictions remain.
+   - Markdown structure intact; only new headings allowed are `## Clarifications` and `### Session YYYY-MM-DD`.
+   - Terminology consistent (e.g., single name for the restart control).
 
-6. Validation (performed after EACH write plus final pass):
-   - Clarifications session contains exactly one bullet per accepted answer (no duplicates).
-   - Total asked (accepted) questions ≤ 5.
-   - Updated sections contain no lingering vague placeholders the new answer was meant to resolve.
-   - No contradictory earlier statement remains (scan for now-invalid alternative choices removed).
-   - Markdown structure valid; only allowed new headings: `## Clarifications`, `### Session YYYY-MM-DD`.
-   - Terminology consistency: same canonical term used across all updated sections.
+7. Final report to user:
+   - Number of questions asked/answered.
+   - Path to the updated spec.
+   - Sections modified.
+   - Coverage summary table listing each taxonomy category with Status: Resolved, Clear, Deferred, or Outstanding.
+   - Note any Deferred/Outstanding items and recommend whether to proceed to `/plan` or revisit `/clarify` later.
+   - Suggest the next command.
 
-7. Write the updated spec back to `FEATURE_SPEC`.
-
-8. Report completion (after questioning loop ends or early termination):
-   - Number of questions asked & answered.
-   - Path to updated spec.
-   - Sections touched (list names).
-   - Coverage summary table listing each taxonomy category with Status: Resolved (was Partial/Missing and addressed), Deferred (exceeds question quota or better suited for planning), Clear (already sufficient), Outstanding (still Partial/Missing but low impact).
-   - If any Outstanding or Deferred remain, recommend whether to proceed to `/plan` or run `/clarify` again later post-plan.
-   - Suggested next command.
-
-Behavior rules:
-- If no meaningful ambiguities found (or all potential questions would be low-impact), respond: "No critical ambiguities detected worth formal clarification." and suggest proceeding.
-- If spec file missing, instruct user to run `/specify` first (do not create a new spec here).
-- Never exceed 5 total asked questions (clarification retries for a single question do not count as new questions).
-- Avoid speculative tech stack questions unless the absence blocks functional clarity.
-- Respect user early termination signals ("stop", "done", "proceed").
- - If no questions asked due to full coverage, output a compact coverage summary (all categories Clear) then suggest advancing.
- - If quota reached with unresolved high-impact categories remaining, explicitly flag them under Deferred with rationale.
-
-Context for prioritization: $ARGUMENTS
+Behavior notes:
+- If no impactful ambiguities remain, reply: "No critical ambiguities detected worth formal clarification." Provide a concise coverage summary and suggest the next action.
+- If `FEATURE_SPEC` is missing, instruct the user to run `/specify` first.
+- Respect early termination commands ("stop", "done") and warn that unasked questions may carry risk.
+- Do not exceed the 5-question total cap.
+- Only request clarifications that materially influence stabilizing the automation app.
