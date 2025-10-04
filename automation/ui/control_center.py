@@ -348,7 +348,7 @@ class ControlCenter(QMainWindow):
         )
         
         if result.get("status") == "success":
-            self.append_log(f"[INFO] Interaction captured: click ({x}, {y})")
+            self.append_log(f"[INFO] Interaction captured: click ({dev_x}, {dev_y})")
             # TODO: Relay to actual Android device via ADB
             # subprocess.run(["adb", "shell", "input", "tap", str(x), str(y)])
         else:
