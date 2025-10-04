@@ -1,0 +1,331 @@
+{
+  "id": "f45dd009-0279-4a5f-be6e-23c9ed7e592c",
+  "timestamp": "2025-10-04T16:34:17.446047+00:00",
+  "duration": 79.203001,
+  "duration_limit_seconds": 1800,
+  "auto_stopped": false,
+  "interactions": [
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:19.660044",
+      "x": 526,
+      "y": 2126,
+      "view_x": 708,
+      "view_y": 457
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:31.326237",
+      "x": 763,
+      "y": 1325,
+      "view_x": 759,
+      "view_y": 285
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:34.934197",
+      "x": 488,
+      "y": 2167,
+      "view_x": 700,
+      "view_y": 466
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:37.326570",
+      "x": 530,
+      "y": 1809,
+      "view_x": 709,
+      "view_y": 389
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:40.496914",
+      "x": 479,
+      "y": 441,
+      "view_x": 698,
+      "view_y": 95
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:47.394426",
+      "x": 642,
+      "y": 1972,
+      "view_x": 733,
+      "view_y": 424
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:48.159411",
+      "x": 958,
+      "y": 1828,
+      "view_x": 801,
+      "view_y": 393
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:51.055164",
+      "x": 637,
+      "y": 1837,
+      "view_x": 732,
+      "view_y": 395
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:52.357638",
+      "x": 116,
+      "y": 1846,
+      "view_x": 620,
+      "view_y": 397
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:53.607056",
+      "x": 423,
+      "y": 1991,
+      "view_x": 686,
+      "view_y": 428
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:54.617205",
+      "x": 861,
+      "y": 1818,
+      "view_x": 780,
+      "view_y": 391
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:55.628610",
+      "x": 93,
+      "y": 1828,
+      "view_x": 615,
+      "view_y": 393
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:57.033096",
+      "x": 1019,
+      "y": 1679,
+      "view_x": 814,
+      "view_y": 361
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:57.161110",
+      "x": 1019,
+      "y": 1679,
+      "view_x": 814,
+      "view_y": 361
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:58.018259",
+      "x": 963,
+      "y": 1818,
+      "view_x": 802,
+      "view_y": 391
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:34:59.003029",
+      "x": 256,
+      "y": 1693,
+      "view_x": 650,
+      "view_y": 364
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:00.249351",
+      "x": 209,
+      "y": 2121,
+      "view_x": 640,
+      "view_y": 456
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:01.329618",
+      "x": 558,
+      "y": 1828,
+      "view_x": 715,
+      "view_y": 393
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:02.419764",
+      "x": 875,
+      "y": 1977,
+      "view_x": 783,
+      "view_y": 425
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:03.547432",
+      "x": 111,
+      "y": 1823,
+      "view_x": 619,
+      "view_y": 392
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:04.776667",
+      "x": 800,
+      "y": 1688,
+      "view_x": 767,
+      "view_y": 363
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:05.651335",
+      "x": 963,
+      "y": 1823,
+      "view_x": 802,
+      "view_y": 392
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:06.585351",
+      "x": 847,
+      "y": 2139,
+      "view_x": 777,
+      "view_y": 460
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:07.496420",
+      "x": 428,
+      "y": 1953,
+      "view_x": 687,
+      "view_y": 420
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:08.563088",
+      "x": 907,
+      "y": 1693,
+      "view_x": 790,
+      "view_y": 364
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:09.447080",
+      "x": 851,
+      "y": 1972,
+      "view_x": 778,
+      "view_y": 424
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:10.928038",
+      "x": 428,
+      "y": 683,
+      "view_x": 687,
+      "view_y": 147
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:12.135246",
+      "x": 79,
+      "y": 1949,
+      "view_x": 612,
+      "view_y": 419
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:14.033699",
+      "x": 595,
+      "y": 1698,
+      "view_x": 723,
+      "view_y": 365
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:14.534879",
+      "x": 917,
+      "y": 1693,
+      "view_x": 792,
+      "view_y": 364
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:15.363322",
+      "x": 949,
+      "y": 1837,
+      "view_x": 799,
+      "view_y": 395
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:16.251967",
+      "x": 907,
+      "y": 1702,
+      "view_x": 790,
+      "view_y": 366
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:17.173191",
+      "x": 1024,
+      "y": 1530,
+      "view_x": 815,
+      "view_y": 329
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:18.059220",
+      "x": 32,
+      "y": 1549,
+      "view_x": 602,
+      "view_y": 333
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:19.515275",
+      "x": 577,
+      "y": 1558,
+      "view_x": 719,
+      "view_y": 335
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:20.512843",
+      "x": 46,
+      "y": 1553,
+      "view_x": 605,
+      "view_y": 334
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:21.662517",
+      "x": 1019,
+      "y": 1549,
+      "view_x": 814,
+      "view_y": 333
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:22.945141",
+      "x": 996,
+      "y": 2107,
+      "view_x": 809,
+      "view_y": 453
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:35:27.651095",
+      "x": 777,
+      "y": 1321,
+      "view_x": 762,
+      "view_y": 284
+    }
+  ],
+  "metadata": {
+    "app_version": "1.0.0",
+    "device_info": "automation_app",
+    "recording_start_time": "2025-10-04T16:34:17.446047+00:00",
+    "last_updated": "2025-10-04T16:35:36.649048+00:00",
+    "recording_end_time": "2025-10-04T16:35:36.649048+00:00",
+    "name": "Test"
+  },
+  "state": "completed",
+  "incremental_file": "automation/recordings/20251004_163417_automation_recording_f45dd009-0279-4a5f-be6e-23c9ed7e592c.jsonl"
+}

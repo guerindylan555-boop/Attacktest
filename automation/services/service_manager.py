@@ -218,12 +218,23 @@ class ServiceManager:
                 if ensure.get("status") == "error":
                     return {"status": "error", "error": ensure.get("error"), "details": ensure.get("details")}
 
-            # Re-start frida (this launches/app or attaches)
-            fr = self._start_frida()
-            if isinstance(fr, dict) and not fr.get("success"):
-                return {"status": "error", "error": fr.get("error"), "details": fr.get("error_message")}
+            # Ensure frida-server running, then spawn the app via Frida (fresh process)
+            ensure_frida = self._start_frida_server()
+            if ensure_frida.get("status") == "error":
+                return {"status": "error", "error": ensure_frida.get("error"), "details": ensure_frida.get("details")}
 
-            return {"status": "success"}
+            try:
+                # Spawn mode: frida -U -f PACKAGE -l hook.js
+                proc, log_file = run_hooks.run_frida(attach_mode=False, auto_launch=False)
+                self._processes["frida_hook"] = proc
+                time.sleep(3)
+                if proc.poll() is None:
+                    return {"status": "success", "pid": proc.pid, "log_file": str(log_file)}
+                # If process exited immediately, return snippet for diagnostics
+                snippet = self._read_tail(log_file)
+                return {"status": "error", "error": "Frida spawn exited", "details": snippet or str(log_file)}
+            except Exception as exc:  # noqa: BLE001
+                return {"status": "error", "error": str(exc)}
 
     # ------------------------------------------------------------------
     # Internal helpers
