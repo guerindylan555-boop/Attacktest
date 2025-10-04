@@ -73,6 +73,8 @@ Both Python entry points write structured JSON and human-readable logs so you ca
   - `python automation/scripts/run_replay_validation.py exports/replay/admin.json`
   - `python automation/scripts/export_ui_catalog.py --device-profile pixel-emulator`
   Each command emits structured JSON that CI jobs can parse.
+- Quality gate: `automation/scripts/run_lint.sh` runs `compileall` (and `mypy`
+  when available) to ensure the new modules stay type-safe.
 
 ### Appium Automation
 - Configure an Appium server (default `http://127.0.0.1:4723/wd/hub`). Update `MAYNDRIVE_APPIUM_SERVER` if you use a remote node.

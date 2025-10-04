@@ -67,3 +67,7 @@ apktool.jar
 
 
 
+# Automation artifacts
+automation/logs/*.jsonl
+automation/replay/reports/
+automation/ui_catalog/exports/

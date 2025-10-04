@@ -92,6 +92,8 @@ That's it! The system will automatically:
   - `python automation/scripts/run_replay_validation.py exports/replay/admin.json`
   - `python automation/scripts/export_ui_catalog.py --device-profile pixel`
   Use these in CI to confirm automation health before running GUI flows.
+- **Lint/type gate** – run `automation/scripts/run_lint.sh` locally or in CI to
+  execute `compileall` (and `mypy` when installed) across the new modules.
 
 ## 🎯 Service Details
 

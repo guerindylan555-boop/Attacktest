@@ -168,6 +168,8 @@ ServiceManager.start_all_services()
   rotate keys.
 - Control Center GUI displays restart/replay/catalog/log health badges and
   reuses the shared automation services introduced above.
+- Introduced `automation/scripts/run_lint.sh` to execute `compileall` (and
+  `mypy` when installed) across automation modules for quick lint/type checks.
 
 ---
 

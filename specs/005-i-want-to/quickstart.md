@@ -41,13 +41,20 @@ pytest tests/session tests/replay tests/ui_catalog -q
 - All unit and integration tests must pass.
 - Contract fixtures simulate restart failures, replay drift, and label collisions.
 
-## 5. Manual GUI Smoke Check
+## 5. Lint & Type Checks
+```bash
+automation/scripts/run_lint.sh
+```
+- Runs `compileall` across automation modules and invokes `mypy` when available.
+- Fails fast if type errors or syntax issues are detected.
+
+## 6. Manual GUI Smoke Check
 1. Launch the control center GUI: `python -m automation.ui`.
 2. Click **Kill & Restart** and observe status indicator turn green once `ready`.
 3. Trigger saved replay from GUI; verify on-screen overlay matches expected steps.
 4. Open the UI Catalog panel; confirm latest version/date and ability to open JSON/YAML artifacts.
 
-## 6. Post-Run Hygiene
+## 7. Post-Run Hygiene
 - Commit generated catalogs and traces after review; archive superseded outputs into `automation/archive/`.
 - Update root `README.md` with any new selectors or environment variables introduced.
 - Review weekly automation health metrics exported by `automation/session/metrics.py`.

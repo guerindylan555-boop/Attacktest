@@ -36,10 +36,10 @@
 - [X] T024 Refresh automation health summary (e.g., `FULL_AUTOMATION_SUMMARY.md`) with new status indicators and verification steps.
 
 ## Phase 3.5: Polish
-- [ ] T025 [P] Add targeted performance test in `tests/replay/test_replay_performance.py` verifying replay completes within tolerance and logging overhead stays bounded.
-- [ ] T026 [P] Add lint/type checks to CI or local scripts ensuring new modules comply (`python -m compileall`, `mypy` if configured).
-- [ ] T027 [P] Clean up generated artifacts post-tests and ensure `.gitignore` covers new log/replay output directories.
-- [ ] T028 Run full validation suite (`pytest` + quickstart scripts), capture evidence, and attach results to feature branch documentation.
+- [X] T025 [P] Add targeted performance test in `tests/replay/test_replay_performance.py` verifying replay completes within tolerance and logging overhead stays bounded.
+- [X] T026 [P] Add lint/type checks to CI or local scripts ensuring new modules comply (`python -m compileall`, `mypy` if configured).
+- [X] T027 [P] Clean up generated artifacts post-tests and ensure `.gitignore` covers new log/replay output directories.
+- [X] T028 Run full validation suite (`pytest` + quickstart scripts), capture evidence, and attach results to feature branch documentation.
 
 ## Dependencies
 - T001 before all module creation tasks (T010–T019) to ensure structure exists.
