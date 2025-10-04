@@ -99,13 +99,13 @@ class ControlCenter(QMainWindow):
         control_column.addWidget(self.btn_capture_token)
 
         self.btn_delete_recording = self._build_primary_button(
-            "Delete Recording", "#f39c12"
+            "Delete Recording", "#f39c12", enabled=True
         )
         self.btn_delete_recording.clicked.connect(self._on_delete_recording_clicked)
         control_column.addWidget(self.btn_delete_recording)
 
         self.btn_reset_app_frida = self._build_primary_button(
-            "Reset App + Frida", "#8e44ad"
+            "Reset App + Frida", "#8e44ad", enabled=True
         )
         self.btn_reset_app_frida.clicked.connect(self._on_reset_app_frida_clicked)
         control_column.addWidget(self.btn_reset_app_frida)
@@ -179,7 +179,7 @@ class ControlCenter(QMainWindow):
         log_layout.addWidget(self.log_view)
         screen_layout.addLayout(log_layout)
 
-    def _build_primary_button(self, text: str, color: str) -> QPushButton:
+    def _build_primary_button(self, text: str, color: str, *, enabled: bool = False) -> QPushButton:
         button = QPushButton(text)
         button.setStyleSheet(
             f"""
@@ -204,7 +204,7 @@ class ControlCenter(QMainWindow):
             }}
             """
         )
-        button.setEnabled(False)
+        button.setEnabled(enabled)
         return button
 
     @staticmethod
