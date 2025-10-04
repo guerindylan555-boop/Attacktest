@@ -65,7 +65,7 @@ adb shell am force-stop fr.mayndrive.app
 ### App Won't Launch?
 ```bash
 # Manual launch
-adb shell am start -n fr.mayndrive.app/city.knot.mayndrive.ui.MainActivity
+adb shell am start -n fr.mayndrive.app/city.knot.knotapp.ui.MainActivity
 ```
 
 ### Check Logs

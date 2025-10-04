@@ -14,7 +14,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 DEFAULT_SERVER = os.getenv("MAYNDRIVE_APPIUM_SERVER", "http://127.0.0.1:4723/wd/hub")
 APP_PACKAGE = os.getenv("MAYNDRIVE_APP_PACKAGE", "fr.mayndrive.app")
 APP_ACTIVITY = os.getenv(
-    "MAYNDRIVE_APP_ACTIVITY", "city.knot.mayndrive.ui.MainActivity"
+    "MAYNDRIVE_APP_ACTIVITY", "city.knot.knotapp.ui.MainActivity"
 )
 
 SELECTORS = {

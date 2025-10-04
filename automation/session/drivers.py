@@ -8,7 +8,7 @@ from typing import Optional
 
 DEFAULT_ACTIVITY = os.getenv(
     "MAYNDRIVE_APP_ACTIVITY_DEFAULT",
-    "city.knot.mayndrive.ui.MainActivity",
+    "city.knot.knotapp.ui.MainActivity",
 )
 
 

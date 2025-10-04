@@ -132,7 +132,7 @@ The system uses **3 fallback methods** to ensure the app launches:
 
 ### Method 1: Direct Activity Launch (Primary)
 ```bash
-adb shell am start -n fr.mayndrive.app/city.knot.mayndrive.ui.MainActivity
+adb shell am start -n fr.mayndrive.app/city.knot.knotapp.ui.MainActivity
 ```
 - Most reliable and fastest
 - Directly launches the main activity
@@ -227,7 +227,7 @@ tmux new-session -d -s mitmproxy_session mitmdump --listen-port 8080
 
 ### Launch App
 ```bash
-adb shell am start -n fr.mayndrive.app/city.knot.mayndrive.ui.MainActivity
+adb shell am start -n fr.mayndrive.app/city.knot.knotapp.ui.MainActivity
 ```
 
 ### Start Frida

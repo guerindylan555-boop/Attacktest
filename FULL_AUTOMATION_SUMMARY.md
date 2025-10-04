@@ -65,7 +65,7 @@ def _wait_for_boot_complete(self, timeout: int = 60) -> bool:
 
 **Method 1: Direct Activity Launch** (Primary)
 ```python
-adb shell am start -n fr.mayndrive.app/city.knot.mayndrive.ui.MainActivity
+adb shell am start -n fr.mayndrive.app/city.knot.knotapp.ui.MainActivity
 ```
 
 **Method 2: Monkey Launcher** (Fallback)
@@ -331,7 +331,7 @@ tmux kill-session -t mitmproxy_session
 | **View Frida Logs** | `tail -f ~/android-tools/logs/frida-general-*.log` |
 | **Check Services** | `adb devices && tmux ls && adb shell pidof fr.mayndrive.app` |
 | **Reset Everything** | `adb kill-server && tmux kill-session -t mitmproxy_session` |
-| **Manual App Launch** | `adb shell am start -n fr.mayndrive.app/city.knot.mayndrive.ui.MainActivity` |
+| **Manual App Launch** | `adb shell am start -n fr.mayndrive.app/city.knot.knotapp.ui.MainActivity` |
 
 ---
 

@@ -78,7 +78,7 @@ Control Center starts
 The `launch_app()` function now uses **3 fallback strategies** to ensure the app launches:
 
 1. **Method 1**: Direct activity launch via `am start -n` (most reliable)
-   - Uses explicit activity: `fr.mayndrive.app/city.knot.mayndrive.ui.MainActivity`
+   - Uses explicit activity: `fr.mayndrive.app/city.knot.knotapp.ui.MainActivity`
    
 2. **Method 2**: Monkey launcher (fallback)
    - Uses Android monkey tool with launcher category
@@ -109,7 +109,7 @@ This will test:
 1. **Test attach to running app**:
    ```bash
    # Manually launch MaynDrive first
-   adb shell am start -n fr.mayndrive.app/city.knot.mayndrive.ui.MainActivity
+   adb shell am start -n fr.mayndrive.app/city.knot.knotapp.ui.MainActivity
    # Then start Control Center - should attach without re-spawning
    ./run_control_center.sh
    ```
@@ -146,7 +146,7 @@ If the app doesn't launch:
 
 3. **Try manual launch**:
    ```bash
-   adb shell am start -n fr.mayndrive.app/city.knot.mayndrive.ui.MainActivity
+   adb shell am start -n fr.mayndrive.app/city.knot.knotapp.ui.MainActivity
    ```
 
 4. **Check Frida logs**:
