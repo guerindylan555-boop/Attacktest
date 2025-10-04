@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+import subprocess
 from typing import Any, Dict, List, Optional
 
 from PySide6.QtCore import Qt, QThreadPool, QTimer
@@ -47,6 +48,8 @@ class ControlCenter(QMainWindow):
         self.thread_pool = QThreadPool.globalInstance()
         self._screen_worker_active = False
         self._status_worker_active = False
+        self._last_frame_size = None  # (width, height) of last device frame
+        self._last_pixmap_size = None  # QSize of last scaled pixmap
 
         self._record_in_progress = False
         self._replay_in_progress = False
@@ -254,9 +257,11 @@ class ControlCenter(QMainWindow):
             self._handle_screen_error("Invalid screen data")
             return
         pixmap = QPixmap.fromImage(image)
-        self.screen_label.setPixmap(
-            pixmap.scaled(self.screen_label.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        )
+        # Keep original device frame size for coordinate mapping
+        self._last_frame_size = (image.width(), image.height())
+        scaled = pixmap.scaled(self.screen_label.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self._last_pixmap_size = scaled.size()
+        self.screen_label.setPixmap(scaled)
 
     def _handle_screen_error(self, message: str) -> None:
         self._screen_worker_active = False
@@ -299,12 +304,48 @@ class ControlCenter(QMainWindow):
             self.append_log("[ERROR] Interaction blocked: recording not active")
             return
         
-        # Get click coordinates relative to label
-        x = event.pos().x()
-        y = event.pos().y()
-        
-        # Add interaction to recording
-        result = self.automation_controller.add_interaction("click", x=x, y=y)
+        # Map click within label to device coordinates
+        label_w = self.screen_label.width()
+        label_h = self.screen_label.height()
+        if self._last_frame_size is None or self._last_pixmap_size is None:
+            self._handle_screen_error("No frame available for coordinate mapping")
+            return
+        pix_w = self._last_pixmap_size.width()
+        pix_h = self._last_pixmap_size.height()
+        # Offsets due to aspect-fit centering
+        off_x = max(0, (label_w - pix_w) // 2)
+        off_y = max(0, (label_h - pix_h) // 2)
+        click_x = event.pos().x() - off_x
+        click_y = event.pos().y() - off_y
+        if click_x < 0 or click_y < 0 or click_x >= pix_w or click_y >= pix_h:
+            # Click landed in letterboxed area; ignore
+            self.append_log("[SCREEN] Click outside preview area; ignored")
+            return
+        dev_w, dev_h = self._last_frame_size
+        # Scale from preview pixels to device pixels
+        scale_x = dev_w / float(pix_w)
+        scale_y = dev_h / float(pix_h)
+        dev_x = int(click_x * scale_x)
+        dev_y = int(click_y * scale_y)
+
+        # Perform the tap on the device via adb
+        try:
+            subprocess.run([
+                "adb", "-s", DEFAULT_DEVICE_ID, "shell", "input", "tap", str(dev_x), str(dev_y)
+            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+        except FileNotFoundError:
+            self.append_log("[ERROR] adb executable not found; cannot send tap")
+        except subprocess.TimeoutExpired:
+            self.append_log("[ERROR] adb tap command timed out")
+
+        # Add interaction to recording (store both device and view coordinates)
+        result = self.automation_controller.add_interaction(
+            "click",
+            x=dev_x,
+            y=dev_y,
+            view_x=int(event.pos().x()),
+            view_y=int(event.pos().y()),
+        )
         
         if result.get("status") == "success":
             self.append_log(f"[INFO] Interaction captured: click ({x}, {y})")
@@ -461,7 +502,11 @@ class ControlCenter(QMainWindow):
         button = self._action_buttons.get(state["action"])
         if not button:
             return
-        button.setEnabled(state.get("enabled", False))
+        # Enable the Record button while in progress to allow stopping
+        if state["action"] == "record" and state.get("in_progress", False):
+            button.setEnabled(True)
+        else:
+            button.setEnabled(state.get("enabled", False))
         reason = state.get("disabled_reason")
         if reason:
             button.setToolTip(reason)
