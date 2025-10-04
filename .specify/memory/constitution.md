@@ -1,94 +1,72 @@
 <!--
-Sync Impact Report:
-Version change: 1.0.0 → 1.1.0
-Modified principles: N/A
-Added sections: Principle VI (Code & Artifact Hygiene), Cleanup Standards subsection
-Removed sections: N/A
-Templates requiring updates:
-  ✅ plan-template.md (Constitution Check section already generic)
-  ✅ spec-template.md (No changes needed - requirements-focused)
-  ✅ tasks-template.md (Cleanup tasks now aligned with Principle VI)
-  ✅ agent-file-template.md (No changes needed - context tracking only)
-Follow-up TODOs: None
+Sync Impact Report
+- Version change: 0.0.0 → 1.0.0
+- Modified principles: Initial publication (all five principles new)
+- Added sections: Operational Standards; Collaboration & Review Workflow
+- Removed sections: None
+- Templates requiring updates:
+  ⚠ .specify/templates/plan-template.md – refresh Constitution Check gates and version reference
+  ⚠ .specify/templates/spec-template.md – highlight clean automation, restart/replay goals, UI labeling expectations
+  ⚠ .specify/templates/tasks-template.md – bake in restart validation, replay fidelity, and folder hygiene tasks
+- Follow-up TODOs:
+  • Document a recurring folder cleanup checklist alongside automation scripts
 -->
 
-# Attacktest Security Framework Constitution
+# Attacktest Automation Toolkit Constitution
 
 ## Core Principles
 
-### I. Security-First Testing (NON-NEGOTIABLE)
-Every security test MUST be designed to identify real vulnerabilities, not just validate expected behavior. Tests must simulate actual attack scenarios and produce actionable security findings. All test results must be documented with clear evidence and remediation guidance.
+### I. Clean, Modular Automation Code
+Mandates:
+- Enforce small, composable modules with clear interfaces for exploit automation, UI control, and evidence capture.
+- Keep every change covered by automated tests or explicit validation scripts before merging.
+- Reject code that obscures intent, duplicates logic, or hides state transitions in global variables.
+Rationale: Maintainable automation lets the team iterate quickly on new vulnerability probes without destabilizing proven workflows.
 
-### II. Automation-Driven Discovery
-Security testing MUST be automated wherever possible to ensure consistent, repeatable vulnerability discovery. Manual testing is reserved for complex scenarios that cannot be automated. All automated tests must be version-controlled and executable in isolated environments.
+### II. Deterministic Session Control
+Mandates:
+- Provide idempotent routines to kill, restart, and reseed test environments without manual cleanup.
+- Track and persist run states so replay scripts follow the exact recorded click or intent sequence.
+- Block merges when restart or replay workflows crash, hang, or produce non-repeatable outcomes.
+Rationale: Repeatable session control is foundational for verifying fixes, reproducing exploits, and expanding coverage safely.
 
-### III. Evidence-Based Reporting (NON-NEGOTIABLE)
-Every security finding MUST be backed by concrete evidence: captured tokens, network traffic, code analysis results, or exploit demonstrations. Reports must include proof-of-concept code, reproduction steps, and clear impact assessment. No security claim without verifiable evidence.
+### III. Security-First Exploit Research
+Mandates:
+- Treat captured credentials, tokens, and device artifacts as secrets; encrypt at rest and scrub from logs.
+- Run tooling with least privilege, isolating destructive payloads from discovery-only scans.
+- Document mitigation steps for every risky assumption in specs, plans, and code reviews.
+Rationale: Automation that finds vulnerabilities must not create new ones or leak sensitive data in the process.
 
-### IV. Multi-Vector Analysis
-Security testing MUST cover multiple attack vectors: network traffic interception, application code analysis, runtime behavior monitoring, and API endpoint testing. Single-vector testing is insufficient for comprehensive security assessment.
+### IV. Evidence-Driven Discovery
+Mandates:
+- Capture structured output (JSON + human-readable logs) for every automation run and store alongside replay assets.
+- Instrument UI discovery to label widgets with stable identifiers, screenshots, and locator metadata.
+- Require observability hooks (metrics, traces, logs) before adding new exploitation branches.
+Rationale: Rich evidence accelerates triage, reporting, and future exploit automation.
 
-### V. Reproducible Test Environment
-All security tests MUST be executable in controlled, reproducible environments. Test environments must be isolated, version-controlled, and documented. Tests must produce consistent results across different execution contexts.
+### V. Sustainable Repository Hygiene
+Mandates:
+- Propose folder cleanup with each significant change: deprecate dead scripts, relocate assets, and document new structure.
+- Keep automation scripts, replay assets, and tooling configs grouped by function with READMEs at each level.
+- Schedule quarterly hygiene passes to align directory layout with actively supported workflows.
+Rationale: A predictable tree prevents drift, speeds onboarding, and keeps automation extensible.
 
-### VI. Code & Artifact Hygiene (NON-NEGOTIABLE)
-The codebase and project structure MUST remain clean, organized, and maintainable. Obsolete scripts, duplicate experiments, and temporary artifacts MUST be removed proactively. When technical debt or folder clutter accumulates, the system MUST prompt for cleanup approval before proceeding with new features. Working scripts and verified evidence take precedence over experimental code.
+## Operational Standards
+- Apply type hints, linting, and formatting across Python, JS, and shell entry points to enforce consistency.
+- Maintain golden-path automation scenarios (restart, replay, UI discovery) as executable examples with expected outputs.
+- Bundle verification scripts (unit, integration, smoke) so any engineer can validate a change before and after folder moves.
+- Store UI maps, selector catalogs, and replay definitions in version-controlled JSON/YAML with reviewable diffs.
 
-**Rationale**: Security testing generates extensive artifacts (captures, logs, PoCs, reports). Without disciplined hygiene, the signal-to-noise ratio degrades, making it difficult to identify working exploits, reproduce findings, or maintain automation. Clean code enables rapid iteration and reduces operational risk.
-
-## Security Testing Framework
-
-### Test Categories
-- **Network Security**: Traffic interception, SSL/TLS analysis, API security testing
-- **Application Security**: Code analysis, vulnerability scanning, runtime monitoring
-- **Authentication Security**: Token capture, session management, privilege escalation
-- **Data Security**: Encryption analysis, data leakage detection, storage security
-
-### Automation Standards
-- **Frida Integration**: All dynamic analysis MUST use Frida for runtime hooking and monitoring
-- **Traffic Capture**: Network analysis MUST use mitmproxy or equivalent for traffic interception
-- **Code Analysis**: Static analysis MUST use multiple tools (MobSF, QARK, AndroBugs) for comprehensive coverage
-- **Evidence Collection**: All findings MUST be captured in structured JSON format with timestamps
-
-## Evidence Management
-
-### Documentation Requirements
-- **Capture Logs**: All security tests MUST generate detailed logs with ISO timestamps
-- **Structured Output**: Test results MUST be stored in both human-readable and machine-parseable formats
-- **Version Control**: All test scripts, hooks, and evidence MUST be version-controlled
-- **Artifact Preservation**: Test artifacts MUST be preserved for audit and reproduction
-
-### Reporting Standards
-- **Executive Summary**: High-level findings with business impact
-- **Technical Details**: Step-by-step reproduction instructions
-- **Proof of Concept**: Working exploit code or demonstration
-- **Remediation Guidance**: Specific recommendations for vulnerability mitigation
-
-### Cleanup Standards
-- **Obsolete Script Removal**: Deprecated or superseded test scripts MUST be deleted, not commented out
-- **Experiment Isolation**: Exploratory code MUST reside in clearly marked directories (e.g., `experiments/`, `drafts/`) separate from production automation
-- **Duplicate Detection**: Redundant captures, logs, or reports MUST be consolidated or archived
-- **Proactive Prompts**: When 3+ obsolete files or 2+ duplicate workflows are detected, request cleanup approval before new feature work
-
-## Development Workflow
-
-### Test Development Process
-1. **Threat Modeling**: Identify potential attack vectors before test development
-2. **Test Design**: Create automated tests that simulate real attack scenarios
-3. **Evidence Collection**: Implement comprehensive logging and artifact capture
-4. **Validation**: Verify tests produce consistent, actionable results
-5. **Documentation**: Document findings with clear remediation guidance
-6. **Cleanup Review**: Remove temporary files and obsolete experiments after validation
-
-### Quality Gates
-- **Test Coverage**: All identified attack vectors must have corresponding automated tests
-- **Evidence Quality**: All security findings must include verifiable proof
-- **Reproducibility**: All tests must produce consistent results across multiple runs
-- **Documentation**: All findings must be documented with clear remediation steps
-- **Code Hygiene**: Working directory must contain only active scripts and verified evidence
+## Collaboration & Review Workflow
+- Specifications must state restart success criteria, replay accuracy tolerances, and UI labeling requirements before planning begins.
+- Code reviews block on missing tests, absent observability hooks, or unexplained folder reorganizations.
+- Document folder cleanup proposals in PR descriptions and update affected READMEs or onboarding guides.
+- Share weekly automation health summaries covering crash rates, replay fidelity, and labeling drift to catch regressions early.
 
 ## Governance
+- This constitution governs all automation, discovery scripts, and supporting infrastructure under the Attacktest repository.
+- Amendments require consensus from engineering and security leads, an impact assessment, and updates to dependent templates.
+- Versioning follows semantic rules: Major for principle changes, Minor for new guidance, Patch for clarifications.
+- Compliance reviews occur monthly; violations trigger hotfix branches that restore alignment before new features land.
 
-This constitution supersedes all other testing practices. Amendments require documentation of security impact, approval from security team, and migration plan for existing tests. All security test development must verify compliance with these principles. Complexity in test design must be justified by security value. Use existing security analysis tools and frameworks as guidance for implementation.
-
-**Version**: 1.1.0 | **Ratified**: 2025-10-04 | **Last Amended**: 2025-10-04
+**Version**: 1.0.0 | **Ratified**: 2025-10-04 | **Last Amended**: 2025-10-04

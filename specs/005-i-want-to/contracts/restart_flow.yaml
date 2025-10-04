@@ -1,0 +1,60 @@
+name: session.restart
+version: 1.0.0
+summary: Idempotent restart command that resets the emulator app and validates readiness probes.
+inputs:
+  app_id:
+    type: string
+    required: true
+    example: fr.mayndrive.app
+  timeout_seconds:
+    type: integer
+    required: false
+    default: 30
+  force_clear_data:
+    type: boolean
+    required: false
+    default: false
+  snapshot_tag:
+    type: string
+    required: false
+    description: Optional emulator snapshot to restore before app launch.
+outputs:
+  session_id:
+    type: string
+    description: UUID referencing the SessionState record.
+  status:
+    type: string
+    enum: [ready, error]
+  readiness_checks:
+    type: array
+    items:
+      type: object
+      properties:
+        name: { type: string }
+        status: { type: string, enum: [pass, fail, warn] }
+        details: { type: string }
+  duration_seconds:
+    type: number
+errors:
+  - code: SESSION_TIMEOUT
+    http_status: 504
+    message: Restart exceeded timeout_seconds.
+    remediation: Increase timeout or inspect emulator performance.
+  - code: HOOK_HEARTBEAT_MISSING
+    http_status: 502
+    message: Frida heartbeat not detected after restart.
+    remediation: Restart frida-server and retry.
+  - code: UI_NOT_READY
+    http_status: 409
+    message: Login screen selectors unavailable.
+    remediation: Verify app build or update selectors.
+metrics:
+  - name: automation_restart_duration_seconds
+    type: histogram
+    labels: [app_id]
+  - name: automation_restart_failures_total
+    type: counter
+    labels: [app_id, error_code]
+notes:
+  - Command must encrypt any credentials cleared during restart.
+  - All logs emitted in structured JSON (`automation/logs/<session_id>.jsonl`).

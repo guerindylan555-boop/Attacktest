@@ -7,6 +7,13 @@ from typing import Optional
 from PySide6.QtCore import QObject, QRunnable, Signal
 
 from automation.services.service_manager import ServiceManager
+from automation.session.controller import SessionController, SessionRestartError
+from automation.session.metrics import (
+    increment_restart_failure,
+    observe_restart_duration,
+)
+
+import time
 
 
 class ScreenCaptureSignals(QObject):
@@ -92,3 +99,59 @@ class ResetAppFridaWorker(QRunnable):
                 self.signals.error.emit(result.get("error", "reset failed"))
         except Exception as exc:  # noqa: BLE001
             self.signals.error.emit(str(exc))
+
+
+class SessionRestartSignals(QObject):
+    completed = Signal(dict)
+    failed = Signal(dict)
+
+
+class SessionRestartWorker(QRunnable):
+    """Execute SessionController.restart in a background thread."""
+
+    def __init__(
+        self,
+        session_controller: SessionController,
+        *,
+        app_id: str,
+        timeout_seconds: int,
+        force_clear_data: bool,
+        snapshot_tag: str | None,
+    ) -> None:
+        super().__init__()
+        self.session_controller = session_controller
+        self.app_id = app_id
+        self.timeout_seconds = timeout_seconds
+        self.force_clear_data = force_clear_data
+        self.snapshot_tag = snapshot_tag
+        self.signals = SessionRestartSignals()
+
+    def run(self) -> None:  # noqa: D401
+        start = time.perf_counter()
+        try:
+            state = self.session_controller.restart(
+                app_id=self.app_id,
+                timeout_seconds=self.timeout_seconds,
+                force_clear_data=self.force_clear_data,
+                snapshot_tag=self.snapshot_tag,
+            )
+            duration = time.perf_counter() - start
+            observe_restart_duration(app_id=self.app_id, duration_seconds=duration)
+            self.signals.completed.emit({"state": state, "duration": duration})
+        except SessionRestartError as exc:
+            increment_restart_failure(app_id=self.app_id, error_code=exc.code)
+            self.signals.failed.emit(
+                {
+                    "code": exc.code,
+                    "message": exc.message,
+                    "session": exc.session,
+                }
+            )
+        except Exception as exc:  # noqa: BLE001
+            self.signals.failed.emit(
+                {
+                    "code": "UNEXPECTED",
+                    "message": str(exc),
+                    "session": None,
+                }
+            )

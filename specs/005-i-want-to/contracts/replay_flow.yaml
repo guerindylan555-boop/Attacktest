@@ -1,0 +1,59 @@
+name: replay.run
+version: 1.0.0
+summary: Executes a recorded replay script with deterministic timing and validates drift thresholds.
+inputs:
+  session_id:
+    type: string
+    required: true
+  replay_script_id:
+    type: string
+    required: true
+  max_timing_drift_ms:
+    type: integer
+    required: false
+    default: 250
+  max_coordinate_tolerance_px:
+    type: integer
+    required: false
+    default: 10
+  stop_on_missing_element:
+    type: boolean
+    required: false
+    default: true
+outputs:
+  status:
+    type: string
+    enum: [success, drift_detected, missing_element, error]
+  drift_report:
+    type: object
+    properties:
+      total_steps: { type: integer }
+      steps_with_drift: { type: integer }
+      max_timing_drift_ms: { type: number }
+      max_coordinate_drift_px: { type: number }
+  artifacts:
+    type: object
+    properties:
+      screenshots_path: { type: string }
+      logs_path: { type: string }
+      metrics_snapshot_path: { type: string }
+errors:
+  - code: SESSION_NOT_READY
+    message: Session not in ready state when replay requested.
+    remediation: Re-run session.restart.
+  - code: REPLAY_SCRIPT_MISSING
+    message: Replay script not found or disabled.
+    remediation: Regenerate or check version control.
+  - code: DRIFT_THRESHOLD_EXCEEDED
+    message: Observed drift exceeded configured thresholds.
+    remediation: Inspect drift_report and update selectors or timings.
+metrics:
+  - name: automation_replay_drift_ms
+    type: summary
+    labels: [replay_script_id]
+  - name: automation_replay_failures_total
+    type: counter
+    labels: [replay_script_id, error_code]
+notes:
+  - Golden trace hash recorded to detect playback regression.
+  - When stop_on_missing_element=false, command continues but flags at end.

@@ -1,0 +1,54 @@
+name: catalog.export
+version: 1.0.0
+summary: Discovers UI widgets and produces synchronized JSON/YAML catalogs with screenshots and metadata.
+inputs:
+  session_id:
+    type: string
+    required: true
+  device_profile:
+    type: string
+    required: true
+    example: pixel-emulator
+  include_screenshots:
+    type: boolean
+    required: false
+    default: true
+  redact_sensitive:
+    type: boolean
+    required: false
+    default: true
+outputs:
+  catalog_version:
+    type: string
+    description: Semantic version for the export (e.g., 2025.10.0).
+  json_path:
+    type: string
+  yaml_path:
+    type: string
+  screenshot_directory:
+    type: string
+  label_collisions:
+    type: array
+    items:
+      type: object
+      properties:
+        label: { type: string }
+        selectors: { type: array, items: { type: string } }
+errors:
+  - code: DISCOVERY_FAILED
+    message: Appium/Frida discovery routine failed.
+    remediation: Check device connectivity and hooks.
+  - code: LABEL_COLLISION
+    message: Duplicate labels detected when collisions > 0 and stop_on_collision enabled.
+    remediation: Adjust naming strategy and rerun export.
+metrics:
+  - name: automation_catalog_entries_total
+    type: gauge
+    labels: [device_profile]
+  - name: automation_catalog_export_duration_seconds
+    type: histogram
+    labels: [device_profile]
+notes:
+  - JSON and YAML artifacts must remain byte-for-byte in sync; pipeline regenerates both from the same model to avoid drift.
+  - Sensitive selectors (marked `sensitive=true`) are encrypted when redact_sensitive=true.
+  - Exports update README and automation health summaries with new catalog_version.
