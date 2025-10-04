@@ -79,6 +79,20 @@ That's it! The system will automatically:
 ============================================================
 ```
 
+- **Status badges**: Restart, Replay, Catalog, and Logs panels reflect the
+  new automation modules. Green = healthy, red = failure with error code.
+- **Structured logs**: Default sink lives at `automation/logs/control_center.jsonl`.
+  Override via `AUTOMATION_LOG_FILE=/path/to/run.jsonl` before launching.
+- **Metrics endpoint**: Set `AUTOMATION_METRICS_PORT=8008` (or another port)
+  to start an embedded Prometheus HTTP server exposing restart durations,
+  failure counters, and replay drift.
+- **CLI validation** – each command emits JSON and honours the same
+  environment variables as the GUI:
+  - `python automation/scripts/run_restart_healthcheck.py --timeout 30`
+  - `python automation/scripts/run_replay_validation.py exports/replay/admin.json`
+  - `python automation/scripts/export_ui_catalog.py --device-profile pixel`
+  Use these in CI to confirm automation health before running GUI flows.
+
 ## 🎯 Service Details
 
 ### 1. Emulator Service
@@ -320,4 +334,3 @@ The system will:
 6. Open the UI
 
 **You're ready to record, replay, and capture tokens!**
-

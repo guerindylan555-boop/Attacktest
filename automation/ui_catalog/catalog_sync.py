@@ -2,17 +2,19 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Optional
 
 import yaml
 
 from automation.logs import get_logger
 from automation.ui_catalog.discovery import UIDiscoveryService
 from automation.ui_catalog.schema import LabelCollision, UICatalogEntry, UICatalogVersion
+from automation.ui_catalog.encryption import CatalogEncryptor
 
 
 class ExportResult(Enum):
@@ -33,9 +35,16 @@ class CatalogExportOutcome:
 class CatalogExporter:
     """Coordinates discovery and dual-format catalog exports."""
 
-    def __init__(self, *, discovery: UIDiscoveryService, encryptor, output_dir: Path) -> None:
+    def __init__(
+        self,
+        *,
+        discovery: UIDiscoveryService,
+        encryptor: Optional[CatalogEncryptor] = None,
+        output_dir: Path,
+        secret: Optional[str] = None,
+    ) -> None:
         self._discovery = discovery
-        self._encryptor = encryptor
+        self._encryptor = encryptor or CatalogEncryptor(secret or os.getenv("AUTOMATION_CATALOG_SECRET", "attacktest"))
         self._output_dir = output_dir
         self._logger = get_logger("ui_catalog.exporter")
 
@@ -113,7 +122,7 @@ class CatalogExporter:
 def _sanitize_entries(
     entries: Iterable[UICatalogEntry],
     *,
-    encryptor,
+    encryptor: CatalogEncryptor,
     redact_sensitive: bool,
 ) -> List[UICatalogEntry]:
     sanitized: List[UICatalogEntry] = []

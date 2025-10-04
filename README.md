@@ -66,6 +66,13 @@ Both Python entry points write structured JSON and human-readable logs so you ca
 - The left column also drives the Appium token flow and an optional `ffplay` live stream (30 fps H.264 feed).
 - The centre panel refreshes emulator screenshots (2 Hz) so you can watch the UI while automation runs; the bottom log view tails command output for fast troubleshooting. Launch the live stream for full-motion video when you need it.
 - Buttons orchestrate the existing workflow (`restart_mayndrive_emulator.sh`, mitmdump tmux session, Frida runner, capture scripts) so everything stays in sync during a run.
+- Restart/replay/catalog health indicators now mirror the new automation modules. The “Structured Logs” label links to the JSONL sink configured via `AUTOMATION_LOG_FILE` (defaults to `automation/logs/control_center.jsonl`).
+- Set `AUTOMATION_METRICS_PORT=8008` (or another port) before launching the GUI to expose Prometheus metrics for restart duration, failures, replay drift, and catalog exports.
+- Headless automation can be validated with the helper scripts:
+  - `python automation/scripts/run_restart_healthcheck.py --timeout 30`
+  - `python automation/scripts/run_replay_validation.py exports/replay/admin.json`
+  - `python automation/scripts/export_ui_catalog.py --device-profile pixel-emulator`
+  Each command emits structured JSON that CI jobs can parse.
 
 ### Appium Automation
 - Configure an Appium server (default `http://127.0.0.1:4723/wd/hub`). Update `MAYNDRIVE_APPIUM_SERVER` if you use a remote node.

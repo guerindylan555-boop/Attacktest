@@ -151,6 +151,26 @@ ServiceManager.start_all_services()
 
 ---
 
+## 2025 Automation Stabilization Additions
+
+- Introduced `automation/session/`, `automation/replay/`, and
+  `automation/ui_catalog/` modules for deterministic restart, replay, and UI
+  discovery.
+- New CLI scripts provide headless validation:
+  - `automation/scripts/run_restart_healthcheck.py`
+  - `automation/scripts/run_replay_validation.py`
+  - `automation/scripts/export_ui_catalog.py`
+- Structured logging now defaults to JSONL files (configurable via
+  `AUTOMATION_LOG_FILE`) and Prometheus metrics publish on
+  `AUTOMATION_METRICS_PORT`.
+- UI catalog exports encrypt sensitive selectors using
+  `automation/ui_catalog/encryption.py`; set `AUTOMATION_CATALOG_SECRET` to
+  rotate keys.
+- Control Center GUI displays restart/replay/catalog/log health badges and
+  reuses the shared automation services introduced above.
+
+---
+
 ## ✅ Testing & Verification
 
 ### Automated Test
@@ -345,4 +365,3 @@ tmux kill-session -t mitmproxy_session
 **Implementation Date:** October 4, 2025  
 **Version:** 2.0 (Full Automation)  
 **Status:** Production Ready ✅
-

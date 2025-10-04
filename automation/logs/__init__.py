@@ -24,15 +24,22 @@ except ModuleNotFoundError:  # pragma: no cover - fallback
     _fallback_logger = logging.getLogger("automation")
 
 try:  # pragma: no cover - optional dependency
-    from prometheus_client import CollectorRegistry
+    from prometheus_client import CollectorRegistry, start_http_server
+    _PROM_AVAILABLE = True
 except ModuleNotFoundError:  # pragma: no cover - fallback
+    _PROM_AVAILABLE = False
+
     class CollectorRegistry:  # type: ignore[override]
         def __init__(self, *_, **__) -> None:
             pass
 
+    def start_http_server(*_, **__):  # type: ignore[override]
+        raise RuntimeError("prometheus_client not installed")
+
 _DEFAULT_LOG_LEVEL = os.environ.get("AUTOMATION_LOG_LEVEL", "INFO")
 _LOG_CONFIGURED = False
 _METRICS_REGISTRY = CollectorRegistry(auto_describe=True)
+_METRICS_SERVER_STARTED = False
 
 
 def configure_logging(*, level: Optional[str] = None, log_file: Optional[Path] = None) -> None:
@@ -97,6 +104,13 @@ def configure_logging(*, level: Optional[str] = None, log_file: Optional[Path] =
 
     _LOG_CONFIGURED = True
 
+    port_env = os.getenv("AUTOMATION_METRICS_PORT")
+    if port_env and _PROM_AVAILABLE:
+        try:
+            start_metrics_server(int(port_env))
+        except Exception:  # pragma: no cover - defensive guard
+            _fallback_logger.warning("Failed to start metrics server", port=port_env) if not _LOGURU_AVAILABLE else _loguru_logger.warning("Failed to start metrics server", port=port_env)  # type: ignore[name-defined]
+
 
 def get_logger(component: str = "automation"):  # -> loguru.Logger
     """Return a component-scoped logger instance."""
@@ -141,4 +155,20 @@ def get_metrics_registry() -> CollectorRegistry:
     return _METRICS_REGISTRY
 
 
-__all__ = ["configure_logging", "get_logger", "get_metrics_registry"]
+def start_metrics_server(port: Optional[int] = None) -> bool:
+    """Expose Prometheus metrics on the given port."""
+
+    if not _PROM_AVAILABLE:
+        return False
+
+    global _METRICS_SERVER_STARTED
+    if _METRICS_SERVER_STARTED:
+        return True
+
+    listen_port = port or int(os.getenv("AUTOMATION_METRICS_PORT", "8008"))
+    start_http_server(listen_port, registry=_METRICS_REGISTRY)
+    _METRICS_SERVER_STARTED = True
+    return True
+
+
+__all__ = ["configure_logging", "get_logger", "get_metrics_registry", "start_metrics_server"]

@@ -19,16 +19,9 @@ from automation.session.probes import (
 )
 from automation.services.service_manager import ServiceManager
 from automation.ui_catalog.catalog_sync import CatalogExporter
+from automation.ui_catalog.encryption import CatalogEncryptor
 from automation.ui_catalog.discovery import AppiumUIDiscoveryService, DiscoveryResult, UIDiscoveryService
 from automation.ui_catalog.schema import UICatalogEntry
-
-
-class SimpleEncryptor:
-    def __init__(self, secret: Optional[str] = None) -> None:
-        self.secret = secret or os.getenv("AUTOMATION_ENCRYPTION_KEY", "attacktest")
-
-    def encrypt(self, value: str) -> str:
-        return f"enc::{self.secret}:{value}"  # pragma: no cover - trivial helper
 
 
 class DryRunDiscovery(UIDiscoveryService):
@@ -44,7 +37,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--appium-url", default=os.getenv("MAYNDRIVE_APPIUM_SERVER", "http://127.0.0.1:4723/wd/hub"), help="Appium server URL")
     parser.add_argument("--dry-run", action="store_true", help="Skip Appium discovery and produce empty catalog")
     parser.add_argument("--include-screenshots", action="store_true", help="Capture screenshots alongside catalog entries")
-    parser.add_argument("--redact-sensitive", action="store_true", default=True, help="Encrypt sensitive selectors")
+    parser.add_argument("--disable-redaction", action="store_true", help="Emit sensitive selectors in plaintext (discouraged)")
     parser.add_argument("--log-file", default=os.getenv("AUTOMATION_LOG_FILE"), help="Structured log output path")
     return parser.parse_args()
 
@@ -67,8 +60,9 @@ def build_catalog_exporter(args: argparse.Namespace) -> CatalogExporter:
         }
         driver = webdriver.Remote(command_executor=args.appium_url, desired_capabilities=desired_caps)
         discovery = AppiumUIDiscoveryService(driver, Path(args.out) / "screens")
-    encryptor = SimpleEncryptor()
-    return CatalogExporter(discovery=discovery, encryptor=encryptor, output_dir=Path(args.out))
+    secret = os.getenv("AUTOMATION_CATALOG_SECRET", "attacktest")
+    encryptor = CatalogEncryptor(secret)
+    return CatalogExporter(discovery=discovery, encryptor=encryptor, output_dir=Path(args.out), secret=secret)
 
 
 def ensure_session_ready(args: argparse.Namespace, logger) -> None:
@@ -113,7 +107,7 @@ def main() -> int:
         session_id=args.session_id,
         device_profile=args.device_profile,
         include_screenshots=args.include_screenshots,
-        redact_sensitive=args.redact_sensitive,
+        redact_sensitive=not args.disable_redaction,
     )
 
     payload = {

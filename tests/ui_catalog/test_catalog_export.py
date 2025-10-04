@@ -9,6 +9,7 @@ import pytest
 from automation.ui_catalog.catalog_sync import CatalogExporter, ExportResult
 from automation.ui_catalog.discovery import DiscoveryResult, UIDiscoveryService
 from automation.ui_catalog.schema import UICatalogEntry, UICatalogVersion
+from automation.ui_catalog.encryption import CatalogEncryptor
 
 
 class FakeDiscovery(UIDiscoveryService):
@@ -17,11 +18,6 @@ class FakeDiscovery(UIDiscoveryService):
 
     def discover(self, *, session_id: str, device_profile: str) -> DiscoveryResult:
         return DiscoveryResult(entries=self.entries, screenshots={})
-
-
-class FakeEncryptor:
-    def encrypt(self, value: str) -> str:
-        return f"enc::{value}"
 
 
 ENTRY = UICatalogEntry(
@@ -41,7 +37,7 @@ def exporter(tmp_path: Path) -> CatalogExporter:
     discovery = FakeDiscovery(entries=[ENTRY])
     return CatalogExporter(
         discovery=discovery,
-        encryptor=FakeEncryptor(),
+        encryptor=CatalogEncryptor("test-secret"),
         output_dir=tmp_path / "exports",
     )
 
@@ -93,4 +89,6 @@ def test_export_encrypts_sensitive_selectors(exporter: CatalogExporter) -> None:
 
     json_data = json.loads(result.json_path.read_text())
     selectors = json_data["entries"][1]["selectors"]
-    assert selectors["accessibility_id"].startswith("enc::")
+    assert selectors["accessibility_id"] != ENTRY.selectors["accessibility_id"]
+    assert isinstance(selectors["accessibility_id"], str)
+    assert len(selectors["accessibility_id"]) > 0

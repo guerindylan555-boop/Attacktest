@@ -1,6 +1,6 @@
 # Automation Module Layout
 
-This directory hosts the tooling that orchestrates the MaynDrive automation flows. The structure is in the middle of a migration toward the consolidated modules defined in the Automation App Stabilization plan.
+This directory hosts the tooling that orchestrates the MaynDrive automation flows. The structure now centres on the consolidated modules defined in the Automation App Stabilization plan.
 
 ## Active Modules
 - `session/` – new home for restart orchestration, session state models, and metrics emitters.
@@ -10,10 +10,10 @@ This directory hosts the tooling that orchestrates the MaynDrive automation flow
 - `scripts/` – operator entry points that will be updated to call into the modules above.
 - `hooks/` – Frida/Appium hook assets (unchanged).
 
-## Legacy Modules Pending Migration
-- `sessions/` – previous restart/replay controllers; code will migrate into `session/` and `replay/` during implementation.
-- `services/` – assorted helpers that will either move into dedicated modules or be archived if superseded.
-- `models/` – legacy data structures; new pydantic models will live under `session/`, `replay/`, or `ui_catalog/`.
-- `recordings/` & `ui/` – existing assets that will be reviewed and relocated or archived in later hygiene tasks.
+## Archived / Legacy Content
+- `archive/` – historical modules kept for reference (e.g. the former `automation/sessions`). Remove entries once downstream branches stop importing them.
+- `services/` – legacy orchestration helpers still required by the PySide6 control centre; refactors will fold logic into `session/` and `replay/` over time.
+- `models/` – data structures that continue to back the GUI and token workflows. Use alongside the new modules until a dedicated data layer replaces them.
+- `recordings/` & `ui/` – existing assets retained for backward-compatible inspection and GUI support.
 
-Migration tasks are tracked in `specs/005-i-want-to/tasks.md` (see T020). Until those tasks are completed, both the new and legacy modules coexist. New code MUST target the module layout above.
+New code MUST target the active modules listed above. When retiring older helpers, move them into `automation/archive/` so historical branches retain a breadcrumb without polluting the primary automation surface.

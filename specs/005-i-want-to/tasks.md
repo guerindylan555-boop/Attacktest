@@ -29,11 +29,11 @@
 - [X] T019 Provide CLI/script entry points `automation/scripts/run_restart_healthcheck.py`, `run_replay_validation.py`, and `export_ui_catalog.py` wired to new services and producing structured logs per quickstart.
 
 ## Phase 3.4: Integration & Hygiene
-- [ ] T020 Migrate or archive superseded modules (`automation/sessions`, `automation/services`, legacy scripts) into `automation/archive/` with README explaining replacements.
-- [ ] T021 Update `README.md` and `AUTOMATIC_SETUP_GUIDE.md` with new restart/replay/catalog procedures, environment variables, and folder layout.
-- [ ] T022 Wire metrics endpoint exposure (e.g., using `prometheus_client.start_http_server`) and document port/configuration.
-- [ ] T023 Add encryption helpers for catalog exports, ensuring keys sourced from existing secure storage and documenting emergency rotation process.
-- [ ] T024 Refresh automation health summary (e.g., `FULL_AUTOMATION_SUMMARY.md`) with new status indicators and verification steps.
+- [X] T020 Migrate or archive superseded modules (`automation/sessions`, `automation/services`, legacy scripts) into `automation/archive/` with README explaining replacements.
+- [X] T021 Update `README.md` and `AUTOMATIC_SETUP_GUIDE.md` with new restart/replay/catalog procedures, environment variables, and folder layout.
+- [X] T022 Wire metrics endpoint exposure (e.g., using `prometheus_client.start_http_server`) and document port/configuration.
+- [X] T023 Add encryption helpers for catalog exports, ensuring keys sourced from existing secure storage and documenting emergency rotation process.
+- [X] T024 Refresh automation health summary (e.g., `FULL_AUTOMATION_SUMMARY.md`) with new status indicators and verification steps.
 
 ## Phase 3.5: Polish
 - [ ] T025 [P] Add targeted performance test in `tests/replay/test_replay_performance.py` verifying replay completes within tolerance and logging overhead stays bounded.
