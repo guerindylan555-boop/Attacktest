@@ -7,6 +7,7 @@ import tempfile
 import time
 import threading
 import zipfile
+import os
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
@@ -37,8 +38,13 @@ class ServiceManager:
     MAYNDRIVE_PACKAGE_CANDIDATES = (
         PROJECT_ROOT / "Mayn Drive_1.1.34.xapk",
         PROJECT_ROOT / "mayndrive.apk",
+        PROJECT_ROOT / "apk" / "mayndrive.apk",
         Path.home() / "android-tools" / "mayndrive.apk",
+        Path.home() / "Downloads" / "mayndrive.apk",
     )
+    MAYNDRIVE_APK_ENV = os.getenv("MAYNDRIVE_APK")
+    MAYNDRIVE_XAPK_ENV = os.getenv("MAYNDRIVE_XAPK")
+    MAYNDRIVE_APK_URL = os.getenv("MAYNDRIVE_APK_URL")
 
     def __init__(self) -> None:
         self.services: Dict[str, ServiceStatus] = {
@@ -512,10 +518,20 @@ class ServiceManager:
             snippet = self._read_tail(log_file)
             print("[FRIDA] Frida exited unexpectedly!")
             print(f"[FRIDA] Log snippet: {snippet}")
+            # Fall back to spawn mode if attach exited early
+            print("[FRIDA] Falling back to spawn mode...")
+            proc2, log_file2 = run_hooks.run_frida(attach_mode=False, auto_launch=False)
+            self._processes["frida_hook"] = proc2
+            time.sleep(5)
+            if proc2.poll() is None:
+                print(f"[FRIDA] Spawn mode success (PID: {proc2.pid})")
+                print(f"[FRIDA] Logs: {log_file2}")
+                return {"success": True, "pid": proc2.pid, "log_file": str(log_file2)}
+            snippet2 = self._read_tail(log_file2)
             return {
                 "success": False,
-                "error": "Frida hook exited",
-                "error_message": snippet or f"See log: {log_file}",
+                "error": "Frida hook exited (attach and spawn failed)",
+                "error_message": snippet2 or f"See log: {log_file2}",
             }
         except FileNotFoundError:
             print("[FRIDA] frida command not found in PATH")
@@ -523,11 +539,28 @@ class ServiceManager:
         except RuntimeError as exc:
             # Handle app not running or failed to launch
             print(f"[FRIDA] Runtime error: {exc}")
-            return {
-                "success": False, 
-                "error": "App launch failed",
-                "error_message": str(exc)
-            }
+            # Attempt spawn as a fallback when auto-attach launch failed
+            try:
+                print("[FRIDA] Falling back to spawn mode after launch error...")
+                proc2, log_file2 = run_hooks.run_frida(attach_mode=False, auto_launch=False)
+                self._processes["frida_hook"] = proc2
+                time.sleep(5)
+                if proc2.poll() is None:
+                    print(f"[FRIDA] Spawn mode success (PID: {proc2.pid})")
+                    print(f"[FRIDA] Logs: {log_file2}")
+                    return {"success": True, "pid": proc2.pid, "log_file": str(log_file2)}
+                snippet2 = self._read_tail(log_file2)
+                return {
+                    "success": False,
+                    "error": "App launch failed (spawn fallback exited)",
+                    "error_message": snippet2 or str(exc),
+                }
+            except Exception as exc2:  # noqa: BLE001
+                return {
+                    "success": False,
+                    "error": "App launch failed (spawn fallback error)",
+                    "error_message": f"{exc}; fallback: {exc2}",
+                }
         except Exception as exc:  # noqa: BLE001
             print(f"[FRIDA] Unexpected error: {exc}")
             return {"success": False, "error": str(exc)}
@@ -540,6 +573,8 @@ class ServiceManager:
             check = subprocess.run(
                 [
                     "adb",
+                    "-s",
+                    "emulator-5554",
                     "shell",
                     f"ls {self.FRIDA_SERVER_REMOTE_PATH}"
                 ],
@@ -555,6 +590,8 @@ class ServiceManager:
             subprocess.run(
                 [
                     "adb",
+                    "-s",
+                    "emulator-5554",
                     "shell",
                     f"chmod 755 {self.FRIDA_SERVER_REMOTE_PATH}"
                 ],
@@ -566,6 +603,8 @@ class ServiceManager:
             subprocess.run(
                 [
                     "adb",
+                    "-s",
+                    "emulator-5554",
                     "shell",
                     f"{self.FRIDA_SERVER_REMOTE_PATH} &"
                 ],
@@ -577,6 +616,8 @@ class ServiceManager:
             subprocess.run(
                 [
                     "adb",
+                    "-s",
+                    "emulator-5554",
                     "shell",
                     f"su -c '{self.FRIDA_SERVER_REMOTE_PATH} &'"
                 ],
@@ -587,7 +628,7 @@ class ServiceManager:
 
             time.sleep(2)
             verify = subprocess.run(
-                ["adb", "shell", "ps -A | grep frida-server"],
+                ["adb", "-s", "emulator-5554", "shell", "ps -A | grep frida-server"],
                 capture_output=True,
                 text=True,
                 timeout=5,
@@ -612,7 +653,7 @@ class ServiceManager:
                 continue
             try:
                 result = subprocess.run(
-                    ["adb", "push", str(candidate), self.FRIDA_SERVER_REMOTE_PATH],
+                    ["adb", "-s", "emulator-5554", "push", str(candidate), self.FRIDA_SERVER_REMOTE_PATH],
                     capture_output=True,
                     text=True,
                     timeout=30,
@@ -622,6 +663,8 @@ class ServiceManager:
                 subprocess.run(
                     [
                         "adb",
+                        "-s",
+                        "emulator-5554",
                         "shell",
                         f"chmod 755 {self.FRIDA_SERVER_REMOTE_PATH}"
                     ],
@@ -648,6 +691,8 @@ class ServiceManager:
             result = subprocess.run(
                 [
                     "adb",
+                    "-s",
+                    "emulator-5554",
                     "shell",
                     "pm",
                     "list",
@@ -671,21 +716,65 @@ class ServiceManager:
         return {"status": "ok"}
 
     def _install_mayndrive_from_local_sources(self) -> Dict[str, Any]:
-        for candidate in self.MAYNDRIVE_PACKAGE_CANDIDATES:
+        # Build candidate list (env vars take precedence)
+        env_candidates: List[Path] = []
+        if self.MAYNDRIVE_APK_ENV:
+            env_candidates.append(Path(self.MAYNDRIVE_APK_ENV))
+        if self.MAYNDRIVE_XAPK_ENV:
+            env_candidates.append(Path(self.MAYNDRIVE_XAPK_ENV))
+
+        candidates = [*env_candidates, *self.MAYNDRIVE_PACKAGE_CANDIDATES]
+
+        for candidate in candidates:
             if not candidate.exists():
+                continue
+            if candidate.is_dir():
+                result = self._install_from_directory(candidate)
+                if result.get("status") == "ok":
+                    return result
+                # fallthrough on error to try other candidates
                 continue
             suffix = candidate.suffix.lower()
             if suffix == ".apk":
                 return self._adb_install_apk(candidate)
-            if suffix == ".xapk":
+            if suffix == ".xapk" or zipfile.is_zipfile(candidate):
                 result = self._install_from_xapk(candidate)
                 if result.get("status") == "ok":
                     return result
+
+        # If a URL is provided, attempt to download and install
+        if self.MAYNDRIVE_APK_URL:
+            dl_result = self._download_and_install_apk(self.MAYNDRIVE_APK_URL)
+            if dl_result.get("status") == "ok":
+                return dl_result
+            return dl_result
         return {
             "status": "error",
             "error": "MaynDrive package not found",
-            "details": "Place MaynDrive APK or XAPK in the project root",
+            "details": (
+                "Place MaynDrive APK/XAPK in one of: "
+                f"{self.PROJECT_ROOT}, {self.PROJECT_ROOT/'apk'}, "
+                f"{Path.home()/'android-tools'}, {Path.home()/'Downloads'} "
+                "or set MAYNDRIVE_APK/MAYNDRIVE_XAPK env vars. "
+                "You can also set MAYNDRIVE_APK_URL to download automatically."
+            ),
         }
+
+    def _download_and_install_apk(self, url: str) -> Dict[str, Any]:
+        try:
+            import requests  # lazy import; present in requirements
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                tmp_path = Path(tmp_dir) / "mayndrive.apk"
+                resp = requests.get(url, timeout=60)
+                if resp.status_code != 200:
+                    return {
+                        "status": "error",
+                        "error": f"Failed to download APK (HTTP {resp.status_code})",
+                    }
+                tmp_path.write_bytes(resp.content)
+                return self._adb_install_apk(tmp_path)
+        except Exception as exc:  # noqa: BLE001
+            return {"status": "error", "error": str(exc)}
 
     def _install_from_xapk(self, xapk_path: Path) -> Dict[str, Any]:
         try:
@@ -700,11 +789,16 @@ class ServiceManager:
                             "error": "No APK found inside XAPK",
                             "details": str(xapk_path),
                         }
-                    apk_infos.sort(key=lambda info: info.file_size, reverse=True)
-                    target_info = apk_infos[0]
-                    archive.extract(target_info, tmp_dir)
-                    apk_path = Path(tmp_dir) / target_info.filename
-                    return self._adb_install_apk(apk_path)
+                    # Extract all APK splits and install-multiple with base first
+                    # Prefer base.apk first if present
+                    apk_infos.sort(key=lambda info: (0 if info.filename.endswith("base.apk") else 1, -info.file_size))
+                    extracted: List[Path] = []
+                    for info in apk_infos:
+                        archive.extract(info, tmp_dir)
+                        extracted.append(Path(tmp_dir) / info.filename)
+                    if len(extracted) == 1:
+                        return self._adb_install_apk(extracted[0])
+                    return self._adb_install_multi_apk(extracted)
         except zipfile.BadZipFile:
             return {
                 "status": "error",
@@ -714,10 +808,44 @@ class ServiceManager:
         except Exception as exc:  # noqa: BLE001
             return {"status": "error", "error": str(exc)}
 
+    def _install_from_directory(self, dir_path: Path) -> Dict[str, Any]:
+        try:
+            apks = sorted(dir_path.glob("**/*.apk"))
+            if not apks:
+                return {"status": "error", "error": "No APKs in directory", "details": str(dir_path)}
+            # If there is only one, install single; else multi with base first
+            if len(apks) == 1:
+                return self._adb_install_apk(apks[0])
+            apks.sort(key=lambda p: (0 if p.name.endswith("base.apk") else 1, -p.stat().st_size))
+            return self._adb_install_multi_apk(apks)
+        except Exception as exc:  # noqa: BLE001
+            return {"status": "error", "error": str(exc)}
+
+    def _adb_install_multi_apk(self, apk_paths: List[Path]) -> Dict[str, Any]:
+        try:
+            cmd = ["adb", "-s", "emulator-5554", "install-multiple", "-r", *[str(p) for p in apk_paths]]
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=180,
+            )
+            if result.returncode == 0:
+                return {"status": "ok"}
+            return {
+                "status": "error",
+                "error": "adb install-multiple failed",
+                "details": result.stderr.strip() or result.stdout.strip(),
+            }
+        except subprocess.TimeoutExpired:
+            return {"status": "error", "error": "Timeout installing split APKs"}
+        except FileNotFoundError:
+            return {"status": "error", "error": "adb command not found"}
+
     def _adb_install_apk(self, apk_path: Path) -> Dict[str, Any]:
         try:
             result = subprocess.run(
-                ["adb", "install", "-r", str(apk_path)],
+                ["adb", "-s", "emulator-5554", "install", "-r", str(apk_path)],
                 capture_output=True,
                 text=True,
                 timeout=120,

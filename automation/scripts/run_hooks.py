@@ -12,7 +12,21 @@ LOG_DIR = Path.home() / "android-tools" / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 PACKAGE_NAME = "fr.mayndrive.app"
 
-def is_app_running(package_name: str = PACKAGE_NAME, device_id: str = "emulator-5554") -> bool:
+def _detect_device_id() -> str:
+    """Detect the first emulator device ID, fallback to default."""
+    default = os.getenv("ANDROID_DEVICE_ID", "emulator-5554")
+    try:
+        out = subprocess.run(["adb", "devices"], capture_output=True, text=True, timeout=5)
+        lines = out.stdout.strip().splitlines()[1:]  # skip header
+        for ln in lines:
+            parts = ln.split() if ln else []
+            if len(parts) >= 2 and parts[0].startswith("emulator-") and parts[1] == "device":
+                return parts[0]
+    except Exception:
+        pass
+    return default
+
+def is_app_running(package_name: str = PACKAGE_NAME, device_id: str = None) -> bool:
     """
     Check if the MaynDrive app is currently running.
     
@@ -23,18 +37,109 @@ def is_app_running(package_name: str = PACKAGE_NAME, device_id: str = "emulator-
     Returns:
         True if app is running, False otherwise
     """
+    if device_id is None:
+        device_id = _detect_device_id()
+
     try:
         result = subprocess.run(
             ["adb", "-s", device_id, "shell", f"pidof {package_name}"],
             capture_output=True,
             text=True,
-            timeout=5
+            timeout=5,
         )
-        return result.returncode == 0 and result.stdout.strip() != ""
+        if result.returncode == 0 and result.stdout.strip() != "":
+            return True
     except (subprocess.TimeoutExpired, FileNotFoundError, Exception):
-        return False
+        pass
 
-def launch_app(package_name: str = PACKAGE_NAME, device_id: str = "emulator-5554") -> bool:
+    # Fallback: use ps and grep for older/newer Androids without pidof behavior
+    try:
+        result = subprocess.run(
+            [
+                "adb",
+                "-s",
+                device_id,
+                "shell",
+                "sh",
+                "-c",
+                f"(ps -A 2>/dev/null || ps) | grep {package_name} | grep -v grep",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if result.returncode == 0 and package_name in (result.stdout or ""):
+            return True
+    except (subprocess.TimeoutExpired, FileNotFoundError, Exception):
+        pass
+
+    # Fallback: check top activity from dumpsys
+    try:
+        result = subprocess.run(
+            [
+                "adb",
+                "-s",
+                device_id,
+                "shell",
+                "dumpsys",
+                "activity",
+                "activities",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=8,
+        )
+        out = result.stdout or ""
+        if package_name in out and ("mResumedActivity" in out or "topResumedActivity" in out):
+            return True
+    except Exception:
+        pass
+    return False
+
+def _resolve_main_activity(package_name: str, device_id: str) -> str | None:
+    """Resolve the default launchable activity component for a package.
+
+    Returns a component string like "com.pkg/.MainActivity" or None.
+    """
+    # Try cmd package resolve-activity --brief
+    for args in (
+        ["cmd", "package", "resolve-activity", "--brief", package_name],
+        [
+            "cmd",
+            "package",
+            "resolve-activity",
+            "--brief",
+            "-a",
+            "android.intent.action.MAIN",
+            "-c",
+            "android.intent.category.LAUNCHER",
+            package_name,
+        ],
+    ):
+        try:
+            res = subprocess.run(
+                ["adb", "-s", device_id, "shell", *args],
+                capture_output=True,
+                text=True,
+                timeout=8,
+            )
+            comp = (res.stdout or "").strip().splitlines()[-1] if res.returncode == 0 else ""
+            if comp and "/" in comp and not comp.startswith("No activity"):
+                return comp
+        except Exception:
+            continue
+    return None
+
+def _wait_for_app_running(package_name: str, device_id: str, timeout_sec: int = 25) -> bool:
+    import time
+    start = time.time()
+    while time.time() - start < timeout_sec:
+        if is_app_running(package_name, device_id):
+            return True
+        time.sleep(1)
+    return False
+
+def launch_app(package_name: str = PACKAGE_NAME, device_id: str = None) -> bool:
     """
     Launch the MaynDrive app via adb using multiple strategies.
     
@@ -46,25 +151,25 @@ def launch_app(package_name: str = PACKAGE_NAME, device_id: str = "emulator-5554
         True if app was launched successfully, False otherwise
     """
     import time
-    
-    # Strategy 1: Use am start with explicit activity
+    if device_id is None:
+        device_id = _detect_device_id()
+
+    # Strategy 1: Resolve and start the default activity, wait for it
     try:
+        comp = _resolve_main_activity(package_name, device_id)
         print(f"[INFO] Launching {package_name} via am start (method 1)...")
-        result = subprocess.run(
-            ["adb", "-s", device_id, "shell", "am", "start", "-n", 
-             f"{package_name}/city.knot.mayndrive.ui.MainActivity"],
-            capture_output=True,
-            text=True,
-            timeout=10
-        )
-        if result.returncode == 0:
-            print(f"[INFO] App launched successfully via am start")
-            time.sleep(3)  # Give app time to start
-            if is_app_running(package_name, device_id):
-                return True
-            print(f"[WARN] App launched but not detected as running yet, waiting...")
-            time.sleep(2)
-            return is_app_running(package_name, device_id)
+        if comp:
+            result = subprocess.run(
+                ["adb", "-s", device_id, "shell", "am", "start", "-W", "-n", comp],
+                capture_output=True,
+                text=True,
+                timeout=15,
+            )
+            if result.returncode == 0:
+                print("[INFO] App launch command succeeded; waiting for process...")
+                if _wait_for_app_running(package_name, device_id, timeout_sec=20):
+                    return True
+                print("[WARN] App not yet detected; continuing...")
     except (subprocess.TimeoutExpired, FileNotFoundError, Exception) as e:
         print(f"[WARN] Method 1 failed: {e}")
     
@@ -79,9 +184,9 @@ def launch_app(package_name: str = PACKAGE_NAME, device_id: str = "emulator-5554
             timeout=10
         )
         if result.returncode == 0:
-            print(f"[INFO] App launched via monkey")
-            time.sleep(3)
-            return is_app_running(package_name, device_id)
+            print(f"[INFO] App launched via monkey; waiting for process...")
+            if _wait_for_app_running(package_name, device_id, timeout_sec=20):
+                return True
     except (subprocess.TimeoutExpired, FileNotFoundError, Exception) as e:
         print(f"[WARN] Method 2 failed: {e}")
     
@@ -89,21 +194,31 @@ def launch_app(package_name: str = PACKAGE_NAME, device_id: str = "emulator-5554
     try:
         print(f"[INFO] Launching {package_name} via generic intent (method 3)...")
         result = subprocess.run(
-            ["adb", "-s", device_id, "shell", "am", "start", 
-             "-a", "android.intent.action.MAIN",
-             "-c", "android.intent.category.LAUNCHER",
-             package_name],
+            [
+                "adb",
+                "-s",
+                device_id,
+                "shell",
+                "am",
+                "start",
+                "-a",
+                "android.intent.action.MAIN",
+                "-c",
+                "android.intent.category.LAUNCHER",
+                "-p",
+                package_name,
+            ],
             capture_output=True,
             text=True,
             timeout=10
         )
         if result.returncode == 0:
-            print(f"[INFO] App launched via generic intent")
-            time.sleep(3)
-            return is_app_running(package_name, device_id)
+            print(f"[INFO] App launched via generic intent; waiting for process...")
+            if _wait_for_app_running(package_name, device_id, timeout_sec=20):
+                return True
     except (subprocess.TimeoutExpired, FileNotFoundError, Exception) as e:
         print(f"[ERROR] All launch methods failed. Last error: {e}")
-    
+
     return False
 
 def run_frida(attach_mode: bool = True, auto_launch: bool = True):
@@ -125,13 +240,14 @@ def run_frida(attach_mode: bool = True, auto_launch: bool = True):
     
     if attach_mode:
         # Check if app is running
-        app_running = is_app_running(PACKAGE_NAME)
+        device_id = _detect_device_id()
+        app_running = is_app_running(PACKAGE_NAME, device_id)
         print(f"[INFO] Checking if {PACKAGE_NAME} is running: {app_running}")
         
         if not app_running:
             if auto_launch:
                 print(f"[INFO] App not running, attempting to launch {PACKAGE_NAME}...")
-                launch_success = launch_app(PACKAGE_NAME)
+                launch_success = launch_app(PACKAGE_NAME, device_id)
                 if not launch_success:
                     error_msg = (
                         f"Failed to launch {PACKAGE_NAME} for Frida attachment. "
@@ -145,11 +261,25 @@ def run_frida(attach_mode: bool = True, auto_launch: bool = True):
         else:
             print(f"[INFO] {PACKAGE_NAME} is already running")
         
-        # Attach to running app - won't spawn a new instance
-        cmd = [
-            "frida", "-U", "-n", PACKAGE_NAME,
-            "-l", str(HOOK_PATH)
-        ]
+        # Attach to running app - prefer PID for reliability
+        def _get_pid() -> str | None:
+            try:
+                r = subprocess.run(
+                    ["adb", "-s", device_id, "shell", f"pidof -s {PACKAGE_NAME}"],
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                )
+                pid = (r.stdout or "").strip()
+                return pid if pid else None
+            except Exception:
+                return None
+
+        pid = _get_pid()
+        if pid:
+            cmd = ["frida", "-U", "-p", pid, "-l", str(HOOK_PATH)]
+        else:
+            cmd = ["frida", "-U", "-n", PACKAGE_NAME, "-l", str(HOOK_PATH)]
         print(f"[INFO] Frida attaching to MaynDrive app (attach mode)")
     else:
         # Spawn new app instance
