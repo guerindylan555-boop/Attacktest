@@ -18,4 +18,14 @@ else
   echo "[warn] requirements.txt not found at ${SCRIPT_DIR}; skipping install" >&2
 fi
 
+# Provide sensible defaults for automation environment variables if user hasn't set them.
+export MAYNDRIVE_APP_PACKAGE="${MAYNDRIVE_APP_PACKAGE:-fr.mayndrive.app}"
+export MAYNDRIVE_APP_ACTIVITY="${MAYNDRIVE_APP_ACTIVITY:-city.knot.mayndrive.ui.MainActivity}"
+
+# Default structured log sink so GUI/CLI writes JSONL when none provided.
+export AUTOMATION_LOG_FILE="${AUTOMATION_LOG_FILE:-${SCRIPT_DIR}/automation/logs/control_center.jsonl}"
+
+# Optionally expose metrics server unless user explicitly disables it.
+export AUTOMATION_METRICS_PORT="${AUTOMATION_METRICS_PORT:-8008}"
+
 exec "${VENV_DIR}/bin/python" -m automation.ui.control_center "$@"
