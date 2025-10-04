@@ -1,8 +1,15 @@
 """Device control drivers used by session orchestration."""
 from __future__ import annotations
 
+import os
 import subprocess
 from typing import Optional
+
+
+DEFAULT_ACTIVITY = os.getenv(
+    "MAYNDRIVE_APP_ACTIVITY_DEFAULT",
+    "city.knot.mayndrive.ui.MainActivity",
+)
 
 
 class ADBRestartDriver:
@@ -11,7 +18,7 @@ class ADBRestartDriver:
     def __init__(self, *, device_id: str, package: str, activity: Optional[str]) -> None:
         self.device_id = device_id
         self.package = package
-        self.activity = activity
+        self.activity = activity or os.getenv("MAYNDRIVE_APP_ACTIVITY", DEFAULT_ACTIVITY)
 
     def terminate_app(self, app_id: str) -> None:
         subprocess.run(
