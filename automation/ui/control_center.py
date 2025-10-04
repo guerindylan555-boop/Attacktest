@@ -113,21 +113,12 @@ class ControlCenter(QMainWindow):
             self.logger.warning("failed to initialise session controller", error=str(exc))
             return None
 
-    def _resolve_log_file_path(self, logger) -> Path:
+    def _resolve_log_file_path(self, _logger) -> Path:
         env_path = os.getenv("AUTOMATION_LOG_FILE")
-        if env_path:
-            return Path(env_path)
-        sink_path: Optional[str] = None
-        if hasattr(logger, "_core"):
-            handlers = getattr(logger._core, "handlers", [])
-            if handlers:
-                sink = handlers[0]._sink  # type: ignore[attr-defined]
-                sink_path = getattr(sink, "name", None)
-
-        if sink_path:
-            return Path(str(sink_path))
-
-        return LOG_OUTPUT_PATH
+        path = Path(env_path) if env_path else LOG_OUTPUT_PATH
+        path.parent.mkdir(parents=True, exist_ok=True)
+        configure_logging(log_file=path)
+        return path
 
     # ------------------------------------------------------------------
     # UI construction
