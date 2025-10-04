@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 class AutomationRecording:
     """Model for capturing and storing user interactions for replay functionality."""
     
-    def __init__(self, recording_id: Optional[str] = None, duration_limit_seconds: int = 1800):
+    def __init__(self, recording_id: Optional[str] = None, duration_limit_seconds: int = 1800, display_name: Optional[str] = None):
         """Initialize a new automation recording.
         
         Args:
@@ -30,6 +30,8 @@ class AutomationRecording:
             "device_info": "automation_app",
             "recording_start_time": self.timestamp
         }
+        if display_name:
+            self.metadata["name"] = display_name
         self.state = "pending"
         self.file_path: Optional[Path] = None
         self.incremental_file: Optional[Path] = None
@@ -185,7 +187,7 @@ class AutomationRecording:
             payload["last_error"] = self.last_error
         return payload
     
-    def save_to_file(self, recordings_dir: Path = None) -> Path:
+    def save_to_file(self, recordings_dir: Path = None, display_name: Optional[str] = None) -> Path:
         """Save recording to JSON file.
         
         Args:
@@ -202,7 +204,18 @@ class AutomationRecording:
         
         # Create filename: {timestamp}_automation_recording_{id}.json
         timestamp_str = self.timestamp.replace(":", "").replace("-", "").replace("T", "_").split(".")[0]
-        filename = f"{timestamp_str}_automation_recording_{self.id}.json"
+        # Apply optional display name (persist into metadata)
+        if display_name:
+            self.metadata["name"] = display_name
+        name_slug = None
+        if self.metadata.get("name"):
+            raw = str(self.metadata.get("name"))[:64]
+            name_slug = "".join(c if c.isalnum() or c in ("-", "_") else "-" for c in raw).strip("-")
+            name_slug = name_slug or None
+        if name_slug:
+            filename = f"{timestamp_str}_automation_recording_{self.id}__{name_slug}.json"
+        else:
+            filename = f"{timestamp_str}_automation_recording_{self.id}.json"
         file_path = recordings_dir / filename
 
         with open(file_path, 'w') as f:
@@ -229,7 +242,11 @@ class AutomationRecording:
         
         # Load with duration_limit from file or default
         duration_limit = data.get("duration_limit_seconds", 1800)
-        recording = cls(recording_id=data["id"], duration_limit_seconds=duration_limit)
+        display_name = None
+        md = data.get("metadata", {})
+        if isinstance(md, dict):
+            display_name = md.get("name")
+        recording = cls(recording_id=data["id"], duration_limit_seconds=duration_limit, display_name=display_name)
         
         recording.timestamp = data.get("timestamp", recording.timestamp)
         recording.duration = data.get("duration", 0.0)

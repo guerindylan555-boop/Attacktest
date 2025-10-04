@@ -9,6 +9,7 @@ import threading
 import zipfile
 import os
 from pathlib import Path
+import socket
 from typing import Any, Dict, Iterable, List, Optional
 
 from automation.models.service_status import (
@@ -27,6 +28,7 @@ class ServiceManager:
         "emulator": Path.home() / "android-tools" / "restart_mayndrive_emulator.sh",
         "proxy": Path("mitmdump"),
         "frida": PROJECT_ROOT / "automation" / "scripts" / "run_hooks.py",
+        "appium": Path("appium"),
     }
     FRIDA_SERVER_REMOTE_PATH = "/data/local/tmp/frida-server"
     FRIDA_SERVER_LOCAL_CANDIDATES = (
@@ -236,6 +238,13 @@ class ServiceManager:
         except (subprocess.TimeoutExpired, FileNotFoundError, Exception):
             running["frida"] = False
         
+        # Check Appium by probing port 4723
+        try:
+            with socket.create_connection(("127.0.0.1", 4723), timeout=1):
+                running["appium"] = True
+        except Exception:
+            running["appium"] = False
+        
         return running
 
     def _snapshot(self) -> ServiceManagerSnapshot:
@@ -295,6 +304,8 @@ class ServiceManager:
                     result = self._start_proxy()
                 elif service_name == "frida":
                     result = self._start_frida()
+                elif service_name == "appium":
+                    result = self._start_appium()
                 else:
                     raise ValueError(f"Unknown service: {service_name}")
 
@@ -341,6 +352,8 @@ class ServiceManager:
             return ServiceStatus.check_proxy_status()
         if service_name == "frida":
             return ServiceStatus.check_frida_status()
+        if service_name == "appium":
+            return ServiceStatus.check_appium_status()
         return None
 
     def _kill_emulator_device(self) -> None:
@@ -564,6 +577,69 @@ class ServiceManager:
         except Exception as exc:  # noqa: BLE001
             print(f"[FRIDA] Unexpected error: {exc}")
             return {"success": False, "error": str(exc)}
+
+    def _start_appium(self) -> Dict[str, Any]:
+        print("[APPIUM] Checking if Appium server is already running...")
+        try:
+            with socket.create_connection(("127.0.0.1", 4723), timeout=1):
+                print("[APPIUM] Appium already running on 127.0.0.1:4723")
+                return {"success": True, "pid": None}
+        except Exception:
+            pass
+
+        # Try tmux session reuse
+        try:
+            result = subprocess.run(
+                ["tmux", "has-session", "-t", "appium_session"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=2,
+            )
+            if result.returncode == 0:
+                print("[APPIUM] tmux appium_session exists; waiting for server...")
+                time.sleep(2)
+                try:
+                    with socket.create_connection(("127.0.0.1", 4723), timeout=2):
+                        return {"success": True, "pid": None}
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        # Start appium in tmux, try v2 `appium server` first, then legacy `appium`
+        cmd_variants = [
+            ["appium", "server", "--address", "127.0.0.1", "--port", "4723", "--base-path", "/wd/hub"],
+            ["appium", "--address", "127.0.0.1", "--port", "4723", "--base-path", "/wd/hub"],
+        ]
+        last_error: Optional[str] = None
+        for args in cmd_variants:
+            try:
+                print(f"[APPIUM] Starting Appium via: {' '.join(args)}")
+                process = subprocess.Popen([
+                    "tmux",
+                    "new-session",
+                    "-d",
+                    "-s",
+                    "appium_session",
+                    *args,
+                ])
+                self._processes["appium"] = process
+                # Wait for server to become responsive
+                for _ in range(10):
+                    try:
+                        with socket.create_connection(("127.0.0.1", 4723), timeout=1):
+                            print("[APPIUM] Appium started successfully on 4723")
+                            return {"success": True, "pid": process.pid}
+                    except Exception:
+                        time.sleep(1)
+                last_error = "timeout waiting for port 4723"
+            except FileNotFoundError as e:
+                last_error = str(e)
+                continue
+            except Exception as exc:
+                last_error = str(exc)
+                continue
+        return {"success": False, "error": f"Failed to start Appium: {last_error or 'unknown error'}"}
 
     def _start_frida_server(self) -> Dict[str, Any]:
         if not self._ensure_device_ready(timeout=30):

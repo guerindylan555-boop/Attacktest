@@ -101,7 +101,7 @@ class AutomationController:
             }
             return payload
 
-    def stop_recording(self, recording_id: str) -> Dict[str, Any]:
+    def stop_recording(self, recording_id: str, *, display_name: Optional[str] = None) -> Dict[str, Any]:
         with self._lock:
             if (
                 self.current_recording is None
@@ -116,7 +116,7 @@ class AutomationController:
                 }
 
             result = self.current_recording.stop_recording()
-            file_path = self.current_recording.save_to_file(self.recordings_dir)
+            file_path = self.current_recording.save_to_file(self.recordings_dir, display_name=display_name)
             
             # Stop duration enforcement timer
             self._stop_duration_timer()
@@ -239,6 +239,8 @@ class AutomationController:
                     "timestamp": recording.timestamp,
                     "duration": recording.duration,
                     "file_path": str(path),
+                    "name": (recording.metadata or {}).get("name"),
+                    "metadata": recording.metadata,
                 }
             )
         return items

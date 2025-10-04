@@ -113,6 +113,7 @@ class ControlCenter(QMainWindow):
             ("emulator", "Emulator"),
             ("proxy", "Proxy"),
             ("frida", "Frida"),
+            ("appium", "Appium"),
         ]:
             layout = QVBoxLayout()
             label_title = QLabel(title)
@@ -342,7 +343,14 @@ class ControlCenter(QMainWindow):
         if not recording_id:
             self.append_log("[WARN] Controller missing active recording id")
             return
-        result = self.automation_controller.stop_recording(recording_id)
+        # Prompt for optional recording name
+        name, ok = QInputDialog.getText(
+            self,
+            "Name Recording",
+            "Enter a name for this recording (optional):",
+        )
+        display_name = name.strip() if ok and name.strip() else None
+        result = self.automation_controller.stop_recording(recording_id, display_name=display_name)
         self._apply_button_state(result.get("ui_state"))
 
         if result.get("status") == "success":
@@ -405,7 +413,7 @@ class ControlCenter(QMainWindow):
         self.append_log("=" * 60)
         self.append_log("[STARTUP] Automatic Service Initialization")
         self.append_log("=" * 60)
-        self.append_log("[STARTUP] Starting emulator, proxy, and Frida...")
+        self.append_log("[STARTUP] Starting emulator, proxy, Frida, and Appium...")
         self.append_log("[STARTUP] This may take 60-90 seconds if emulator needs to boot...")
         self.append_log("[STARTUP] MaynDrive app will launch automatically...")
         self.append_log("")
@@ -501,9 +509,11 @@ class ControlCenter(QMainWindow):
     def _choose_recording(self, recordings: List[Dict[str, Any]]) -> Optional[str]:
         if len(recordings) == 1:
             return recordings[0]["id"]
-        items = [
-            f"{record['timestamp']} — {record['id']}" for record in recordings
-        ]
+        def _label(rec: Dict[str, Any]) -> str:
+            name = rec.get("name") or (rec.get("metadata") or {}).get("name") if isinstance(rec.get("metadata"), dict) else None
+            prefix = f"{name} — " if name else ""
+            return f"{prefix}{rec['timestamp']} — {rec['id']}"
+        items = [_label(record) for record in recordings]
         item, ok = QInputDialog.getItem(
             self,
             "Select Recording",

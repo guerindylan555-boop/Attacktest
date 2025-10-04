@@ -43,7 +43,7 @@ class ServiceStatus:
     last_transition: datetime = field(default_factory=_utcnow)
 
     def __post_init__(self) -> None:
-        valid_services = {"emulator", "proxy", "frida"}
+        valid_services = {"emulator", "proxy", "frida", "appium"}
         if self.service_name not in valid_services:
             raise ValueError(f"service_name must be one of {sorted(valid_services)}")
         valid_states = {state.value for state in ServiceState}
@@ -260,6 +260,21 @@ class ServiceStatus:
             status.mark_error("ADB not found")
         except Exception as exc:  # noqa: BLE001
             status.mark_error(f"Unexpected error: {exc}")
+        return status
+
+    @classmethod
+    def check_appium_status(cls, host: str = "127.0.0.1", port: int = 4723) -> "ServiceStatus":
+        status = cls("appium")
+        status.begin_start_attempt()
+        try:
+            import socket
+            with socket.create_connection((host, port), timeout=2):
+                pass
+            status.record_health_check()
+            status.mark_running()
+        except Exception:
+            status.record_health_check()
+            status.mark_error("Appium server not running")
         return status
 
 
