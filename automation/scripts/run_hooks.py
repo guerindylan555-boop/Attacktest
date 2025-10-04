@@ -15,7 +15,7 @@ def run_frida():
     log_file = LOG_DIR / f"frida-general-{timestamp}.log"
     cmd = [
         "frida", "-U", "-f", "fr.mayndrive.app",
-        "-l", str(HOOK_PATH), "--no-pause"
+        "-l", str(HOOK_PATH)
     ]
     with log_file.open("w", encoding="utf-8") as fh:
         process = subprocess.Popen(cmd, stdout=fh, stderr=subprocess.STDOUT)

@@ -1,0 +1,918 @@
+{
+  "started_at": "2025-10-03T23:57:37.462866Z",
+  "updated_at": "2025-10-04T00:00:42.053759Z",
+  "actions": [
+    {
+      "action": "tap",
+      "index": 1,
+      "timestamp": "2025-10-03T23:58:25.167881Z",
+      "x": 552,
+      "y": 2118,
+      "bounds": [
+        66,
+        2109,
+        1014,
+        2241
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#1 TAP android.view.View",
+      "delay_ms": 800,
+      "keyboard_visible": false,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 2,
+      "timestamp": "2025-10-03T23:58:33.469525Z",
+      "x": 483,
+      "y": 2158,
+      "bounds": [
+        479,
+        2115,
+        601,
+        2170
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "Cancel",
+        "class": "android.widget.TextView"
+      },
+      "label": "#2 TAP Cancel",
+      "delay_ms": 8301,
+      "keyboard_visible": false,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 3,
+      "timestamp": "2025-10-03T23:58:39.052193Z",
+      "x": 540,
+      "y": 1835,
+      "bounds": [
+        0,
+        312,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.ScrollView"
+      },
+      "label": "#3 TAP android.widget.ScrollView",
+      "delay_ms": 5582,
+      "keyboard_visible": false,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 4,
+      "timestamp": "2025-10-03T23:58:45.432066Z",
+      "x": 503,
+      "y": 463,
+      "bounds": [
+        110,
+        444,
+        871,
+        510
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#4 TAP android.view.View",
+      "delay_ms": 6379,
+      "keyboard_visible": true,
+      "keyboard_transition": true,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 5,
+      "timestamp": "2025-10-03T23:58:53.349159Z",
+      "x": 633,
+      "y": 1972,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#5 TAP android.widget.FrameLayout",
+      "delay_ms": 7917,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 6,
+      "timestamp": "2025-10-03T23:58:58.391636Z",
+      "x": 960,
+      "y": 1827,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#6 TAP android.widget.FrameLayout",
+      "delay_ms": 5042,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 7,
+      "timestamp": "2025-10-03T23:59:01.798665Z",
+      "x": 633,
+      "y": 1835,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#7 TAP android.widget.FrameLayout",
+      "delay_ms": 3407,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 8,
+      "timestamp": "2025-10-03T23:59:05.030198Z",
+      "x": 107,
+      "y": 1843,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#8 TAP android.widget.FrameLayout",
+      "delay_ms": 3231,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 9,
+      "timestamp": "2025-10-03T23:59:08.332037Z",
+      "x": 442,
+      "y": 1980,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#9 TAP android.widget.FrameLayout",
+      "delay_ms": 3301,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 10,
+      "timestamp": "2025-10-03T23:59:11.777832Z",
+      "x": 855,
+      "y": 1819,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#10 TAP android.widget.FrameLayout",
+      "delay_ms": 3445,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 11,
+      "timestamp": "2025-10-03T23:59:16.467168Z",
+      "x": 103,
+      "y": 1839,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#11 TAP android.widget.FrameLayout",
+      "delay_ms": 4689,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 12,
+      "timestamp": "2025-10-03T23:59:19.696767Z",
+      "x": 1009,
+      "y": 1698,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#12 TAP android.widget.FrameLayout",
+      "delay_ms": 3229,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 13,
+      "timestamp": "2025-10-03T23:59:22.809813Z",
+      "x": 1009,
+      "y": 1698,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#13 TAP android.widget.FrameLayout",
+      "delay_ms": 3113,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 14,
+      "timestamp": "2025-10-03T23:59:25.876932Z",
+      "x": 964,
+      "y": 1815,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#14 TAP android.widget.FrameLayout",
+      "delay_ms": 3067,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 15,
+      "timestamp": "2025-10-03T23:59:28.915041Z",
+      "x": 260,
+      "y": 1674,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#15 TAP android.widget.FrameLayout",
+      "delay_ms": 3038,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 16,
+      "timestamp": "2025-10-03T23:59:31.948391Z",
+      "x": 196,
+      "y": 2093,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#16 TAP android.widget.FrameLayout",
+      "delay_ms": 3033,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 17,
+      "timestamp": "2025-10-03T23:59:35.034621Z",
+      "x": 535,
+      "y": 1843,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#17 TAP android.widget.FrameLayout",
+      "delay_ms": 3086,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 18,
+      "timestamp": "2025-10-03T23:59:38.069413Z",
+      "x": 863,
+      "y": 1952,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#18 TAP android.widget.FrameLayout",
+      "delay_ms": 3034,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 19,
+      "timestamp": "2025-10-03T23:59:40.977560Z",
+      "x": 107,
+      "y": 1839,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#19 TAP android.widget.FrameLayout",
+      "delay_ms": 2908,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 20,
+      "timestamp": "2025-10-03T23:59:43.977444Z",
+      "x": 802,
+      "y": 1682,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#20 TAP android.widget.FrameLayout",
+      "delay_ms": 2999,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 21,
+      "timestamp": "2025-10-03T23:59:47.016203Z",
+      "x": 952,
+      "y": 1827,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#21 TAP android.widget.FrameLayout",
+      "delay_ms": 3038,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 22,
+      "timestamp": "2025-10-03T23:59:50.004505Z",
+      "x": 851,
+      "y": 2114,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#22 TAP android.widget.FrameLayout",
+      "delay_ms": 2988,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 23,
+      "timestamp": "2025-10-03T23:59:53.212231Z",
+      "x": 422,
+      "y": 1952,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#23 TAP android.widget.FrameLayout",
+      "delay_ms": 3207,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 24,
+      "timestamp": "2025-10-03T23:59:56.147672Z",
+      "x": 908,
+      "y": 1686,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#24 TAP android.widget.FrameLayout",
+      "delay_ms": 2935,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 25,
+      "timestamp": "2025-10-03T23:59:59.338357Z",
+      "x": 855,
+      "y": 1956,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#25 TAP android.widget.FrameLayout",
+      "delay_ms": 3190,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 26,
+      "timestamp": "2025-10-04T00:00:04.332439Z",
+      "x": 374,
+      "y": 685,
+      "bounds": [
+        110,
+        675,
+        871,
+        741
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#26 TAP android.view.View",
+      "delay_ms": 4994,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 27,
+      "timestamp": "2025-10-04T00:00:07.312629Z",
+      "x": 78,
+      "y": 1948,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#27 TAP android.widget.FrameLayout",
+      "delay_ms": 2980,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 28,
+      "timestamp": "2025-10-04T00:00:10.436575Z",
+      "x": 592,
+      "y": 1686,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#28 TAP android.widget.FrameLayout",
+      "delay_ms": 3123,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 29,
+      "timestamp": "2025-10-04T00:00:13.466121Z",
+      "x": 908,
+      "y": 1682,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#29 TAP android.widget.FrameLayout",
+      "delay_ms": 3029,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 30,
+      "timestamp": "2025-10-04T00:00:16.509575Z",
+      "x": 972,
+      "y": 1823,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#30 TAP android.widget.FrameLayout",
+      "delay_ms": 3043,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 31,
+      "timestamp": "2025-10-04T00:00:19.471366Z",
+      "x": 895,
+      "y": 1674,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#31 TAP android.widget.FrameLayout",
+      "delay_ms": 2961,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 32,
+      "timestamp": "2025-10-04T00:00:22.584857Z",
+      "x": 91,
+      "y": 2110,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#32 TAP android.widget.FrameLayout",
+      "delay_ms": 3113,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 33,
+      "timestamp": "2025-10-04T00:00:25.595544Z",
+      "x": 1009,
+      "y": 1678,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#33 TAP android.widget.FrameLayout",
+      "delay_ms": 3010,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 34,
+      "timestamp": "2025-10-04T00:00:28.479461Z",
+      "x": 66,
+      "y": 1698,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#34 TAP android.widget.FrameLayout",
+      "delay_ms": 2883,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 35,
+      "timestamp": "2025-10-04T00:00:31.486332Z",
+      "x": 588,
+      "y": 1694,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#35 TAP android.widget.FrameLayout",
+      "delay_ms": 3006,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 36,
+      "timestamp": "2025-10-04T00:00:34.513430Z",
+      "x": 74,
+      "y": 1690,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#36 TAP android.widget.FrameLayout",
+      "delay_ms": 3027,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 37,
+      "timestamp": "2025-10-04T00:00:37.607366Z",
+      "x": 1009,
+      "y": 1670,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#37 TAP android.widget.FrameLayout",
+      "delay_ms": 3093,
+      "keyboard_visible": true,
+      "keyboard_transition": false,
+      "keyboard_hidden": false
+    },
+    {
+      "action": "tap",
+      "index": 38,
+      "timestamp": "2025-10-04T00:00:41.660369Z",
+      "x": 993,
+      "y": 2114,
+      "bounds": [
+        66,
+        2109,
+        1014,
+        2241
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#38 TAP android.view.View",
+      "delay_ms": 4053,
+      "keyboard_visible": false,
+      "keyboard_transition": false,
+      "keyboard_hidden": true
+    }
+  ]
+}

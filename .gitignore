@@ -57,6 +57,10 @@ jadx-1.5.1/
 *.zip
 apktool.jar
 
+# Large binary files
+frida_servers/
+*.bin
+
 # Temporary files
 *.tmp
 *.bak

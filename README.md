@@ -12,8 +12,8 @@ Both Python entry points write structured JSON and human-readable logs so you ca
 ## Requirements
 - Python 3.9+
 - Frida Python bindings (`pip install frida-tools frida`)
-- PySide6 (`pip install PySide6`) for the desktop control center
-- Appium stack (Node.js + `npm install -g appium`) and FFmpeg (`ffplay`) for automated flows/live streaming
+- PySide6 (`pip install PySide6`) and lxml (`pip install lxml`) inside `.venv`
+- Appium stack (Node.js + `npm install -g appium`) for automated flows
 - USB debugging with a rooted test device (needed for restarting `frida-server` via `adb shell su -c ...`)
 - `frida-server` running on the device (matching the Frida version on the workstation)
 
@@ -62,9 +62,10 @@ Both Python entry points write structured JSON and human-readable logs so you ca
 ## Control Center GUI
 - Install dependencies: `pip install PySide6` (Frida/mitmproxy CLI tools are already part of the base setup).
 - Launch the dashboard with `python -m automation.ui` from the project root.
-- The left column exposes one-click controls for the emulator, mitmdump proxy, Frida hooks, and the working token capture script.
-- The left column also drives the Appium token flow and an optional `ffplay` live stream (30 fps H.264 feed).
-- The centre panel refreshes emulator screenshots (2 Hz) so you can watch the UI while automation runs; the bottom log view tails command output for fast troubleshooting. Launch the live stream for full-motion video when you need it.
+- When the dashboard launches it spins up the emulator (if needed), mitmdump, Frida hooks, and an Appium server (`npx appium@2.11.0`) automatically. Buttons remain available for manual restarts or shutdowns.
+- The left column exposes one-click controls for the emulator, mitmdump proxy, Frida hooks, the working token capture script, and a "Run Login Capture" button. Select a saved recording to have the button replay it automatically while Frida runs; otherwise it falls back to the Appium login flow (requires `MAYNDRIVE_TEST_EMAIL` / `MAYNDRIVE_TEST_PASSWORD`).
+- The left column also drives the Appium token flow. The screen panel itself is interactive—clicks become taps and drags become swipes via `adb input`—so you can explore the UI directly from the dashboard while it records which element was touched (resource-id/text/bounds) and highlights it in the preview.
+- The centre panel refreshes emulator screenshots (≈1 Hz) while remaining interactive; the bottom log view tails command output for fast troubleshooting. If you still want a full-motion mirror, open `scrcpy` separately.
 - Buttons orchestrate the existing workflow (`restart_mayndrive_emulator.sh`, mitmdump tmux session, Frida runner, capture scripts) so everything stays in sync during a run.
 
 ### Appium Automation
@@ -79,9 +80,10 @@ Both Python entry points write structured JSON and human-readable logs so you ca
   - `export MAYNDRIVE_SELECTOR_LOCK="fr.mayndrive.app:id/lock"`
 - The new script `automation/scripts/run_appium_token_flow.py` performs: login → unlock → lock. Adjust selectors to match the current APK (use `uiautomatorviewer`/Appium Inspector to confirm resource IDs).
 - Kick off the flow via the GUI (“Run Appium Flow”) or CLI `source .venv/bin/activate && python automation/scripts/run_appium_token_flow.py`.
+- To capture tokens end-to-end automatically run `python automation/scripts/capture_login_token.py`; it spawns the Frida hooks, executes the login Appium flow, and saves any Bearer tokens to `LATEST_TOKEN.txt` plus a timestamped log in `~/android-tools/logs/`.
 
 ### Live Stream
-- The GUI’s “Start Live Stream” button runs `adb exec-out screenrecord --output-format=h264 - | ffplay -framerate 30 -` for smoother monitoring. Ensure FFmpeg is installed (`sudo apt install ffmpeg`).
+- For high-frame-rate monitoring launch `adb exec-out screenrecord --output-format=h264 - | ffplay -framerate 30 -` manually (requires FFmpeg) or use `scrcpy`.
 
 ## Automation Blueprint
 This high-level plan wires the emulator, Frida, mitmproxy, and UI automation together while keeping the option to view the screen when you need to debug.
@@ -94,7 +96,7 @@ This high-level plan wires the emulator, Frida, mitmproxy, and UI automation tog
 ### 2. Launch Profiles (Headless + Viewable)
 - Primary automation profile: `emulator -avd MaynDriveTest -no-window -no-audio -no-boot-anim -writable-system -accel on` and wait for `adb shell getprop sys.boot_completed`.
 - Verification profile (ad-hoc): same launch but omit `-no-window` when you connect through remote desktop, or run headless and mirror with `scrcpy --serial emulator-5554 --max-fps 30` (requires host display, which remote desktop provides).
-- For quick peeks on a headless run, stream frames: `adb exec-out screenrecord --output-format=h264 - | ffplay -framerate 30 -i -`.
+- For quick peeks on a headless run you can still stream frames manually: `adb exec-out screenrecord --output-format=h264 - | ffplay -framerate 30 -i -`.
 - Daily workflow: `tmux new -s mitmproxy_session` then `mitmdump --listen-port 8080 --set block_global=false --set save_stream_file=/home/ubuntu/android-tools/proxy/flows.mitm`. Detach with `Ctrl+b d`; reattach via `tmux attach -t mitmproxy_session` to view traffic in real time.
 
 ### 3. Frida Server Lifecycle

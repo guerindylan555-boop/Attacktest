@@ -1,0 +1,1032 @@
+{
+  "started_at": "2025-10-03T23:09:29.499415Z",
+  "updated_at": "2025-10-03T23:15:57.968110Z",
+  "actions": [
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        2087,
+        1014,
+        2197
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.Button"
+      },
+      "label": "#1 TAP android.widget.Button",
+      "index": 1,
+      "timestamp": "2025-10-03T23:10:00.000765Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        1701,
+        1014,
+        1811
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.Button"
+      },
+      "label": "#2 TAP android.widget.Button",
+      "index": 2,
+      "timestamp": "2025-10-03T23:10:14.582145Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        110,
+        444,
+        871,
+        510
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#3 TAP android.view.View",
+      "index": 3,
+      "timestamp": "2025-10-03T23:10:24.014900Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#4 TAP android.widget.FrameLayout",
+      "index": 4,
+      "timestamp": "2025-10-03T23:10:34.329090Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#5 TAP android.widget.FrameLayout",
+      "index": 5,
+      "timestamp": "2025-10-03T23:10:37.846454Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#6 TAP android.widget.FrameLayout",
+      "index": 6,
+      "timestamp": "2025-10-03T23:10:40.616185Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#7 TAP android.widget.FrameLayout",
+      "index": 7,
+      "timestamp": "2025-10-03T23:10:43.329963Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#8 TAP android.widget.FrameLayout",
+      "index": 8,
+      "timestamp": "2025-10-03T23:10:47.316702Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#9 TAP android.widget.FrameLayout",
+      "index": 9,
+      "timestamp": "2025-10-03T23:10:50.025180Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#10 TAP android.widget.FrameLayout",
+      "index": 10,
+      "timestamp": "2025-10-03T23:10:52.711787Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#11 TAP android.widget.FrameLayout",
+      "index": 11,
+      "timestamp": "2025-10-03T23:10:55.398603Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#12 TAP android.widget.FrameLayout",
+      "index": 12,
+      "timestamp": "2025-10-03T23:10:58.016786Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#13 TAP android.widget.FrameLayout",
+      "index": 13,
+      "timestamp": "2025-10-03T23:11:00.711085Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#14 TAP android.widget.FrameLayout",
+      "index": 14,
+      "timestamp": "2025-10-03T23:11:19.225816Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#15 TAP android.widget.FrameLayout",
+      "index": 15,
+      "timestamp": "2025-10-03T23:11:24.446890Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#16 TAP android.widget.FrameLayout",
+      "index": 16,
+      "timestamp": "2025-10-03T23:11:31.220202Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#17 TAP android.widget.FrameLayout",
+      "index": 17,
+      "timestamp": "2025-10-03T23:11:35.337109Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#18 TAP android.widget.FrameLayout",
+      "index": 18,
+      "timestamp": "2025-10-03T23:11:38.767284Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#19 TAP android.widget.FrameLayout",
+      "index": 19,
+      "timestamp": "2025-10-03T23:11:41.349786Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#20 TAP android.widget.FrameLayout",
+      "index": 20,
+      "timestamp": "2025-10-03T23:11:45.047394Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#21 TAP android.widget.FrameLayout",
+      "index": 21,
+      "timestamp": "2025-10-03T23:11:47.602188Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#22 TAP android.widget.FrameLayout",
+      "index": 22,
+      "timestamp": "2025-10-03T23:11:50.244016Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#23 TAP android.widget.FrameLayout",
+      "index": 23,
+      "timestamp": "2025-10-03T23:11:52.787006Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#24 TAP android.widget.FrameLayout",
+      "index": 24,
+      "timestamp": "2025-10-03T23:11:56.581842Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#25 TAP android.widget.FrameLayout",
+      "index": 25,
+      "timestamp": "2025-10-03T23:11:59.269781Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        609,
+        1014,
+        807
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.EditText"
+      },
+      "label": "#26 TAP android.widget.EditText",
+      "index": 26,
+      "timestamp": "2025-10-03T23:12:01.961380Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#27 TAP android.widget.FrameLayout",
+      "index": 27,
+      "timestamp": "2025-10-03T23:12:15.729529Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#28 TAP android.widget.FrameLayout",
+      "index": 28,
+      "timestamp": "2025-10-03T23:12:20.474890Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#29 TAP android.widget.FrameLayout",
+      "index": 29,
+      "timestamp": "2025-10-03T23:12:24.002640Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#30 TAP android.widget.FrameLayout",
+      "index": 30,
+      "timestamp": "2025-10-03T23:12:26.717761Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#31 TAP android.widget.FrameLayout",
+      "index": 31,
+      "timestamp": "2025-10-03T23:12:29.490572Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#32 TAP android.widget.FrameLayout",
+      "index": 32,
+      "timestamp": "2025-10-03T23:12:33.203876Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#33 TAP android.widget.FrameLayout",
+      "index": 33,
+      "timestamp": "2025-10-03T23:12:48.776009Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#34 TAP android.widget.FrameLayout",
+      "index": 34,
+      "timestamp": "2025-10-03T23:12:52.321420Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#35 TAP android.widget.FrameLayout",
+      "index": 35,
+      "timestamp": "2025-10-03T23:12:54.906442Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#36 TAP android.widget.FrameLayout",
+      "index": 36,
+      "timestamp": "2025-10-03T23:12:57.542838Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#37 TAP android.widget.FrameLayout",
+      "index": 37,
+      "timestamp": "2025-10-03T23:13:01.388658Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        492,
+        1121,
+        588,
+        1176
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "Login",
+        "class": "android.widget.TextView"
+      },
+      "label": "#38 TAP Login",
+      "index": 38,
+      "timestamp": "2025-10-03T23:13:04.934250Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        110,
+        444,
+        871,
+        510
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#39 TAP android.view.View",
+      "index": 39,
+      "timestamp": "2025-10-03T23:13:16.036732Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#40 TAP android.widget.FrameLayout",
+      "index": 40,
+      "timestamp": "2025-10-03T23:13:23.539258Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        1093,
+        1014,
+        1203
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.Button"
+      },
+      "label": "#41 TAP android.widget.Button",
+      "index": 41,
+      "timestamp": "2025-10-03T23:13:30.356865Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        110,
+        675,
+        871,
+        741
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#42 TAP android.view.View",
+      "index": 42,
+      "timestamp": "2025-10-03T23:13:50.680565Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        609,
+        1014,
+        807
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.EditText"
+      },
+      "label": "#43 TAP android.widget.EditText",
+      "index": 43,
+      "timestamp": "2025-10-03T23:13:58.869481Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#44 TAP android.widget.FrameLayout",
+      "index": 44,
+      "timestamp": "2025-10-03T23:14:57.409378Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#45 TAP android.widget.FrameLayout",
+      "index": 45,
+      "timestamp": "2025-10-03T23:15:00.128701Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#46 TAP android.widget.FrameLayout",
+      "index": 46,
+      "timestamp": "2025-10-03T23:15:03.782997Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#47 TAP android.widget.FrameLayout",
+      "index": 47,
+      "timestamp": "2025-10-03T23:15:06.308277Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#48 TAP android.widget.FrameLayout",
+      "index": 48,
+      "timestamp": "2025-10-03T23:15:13.388731Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#49 TAP android.widget.FrameLayout",
+      "index": 49,
+      "timestamp": "2025-10-03T23:15:17.047769Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#50 TAP android.widget.FrameLayout",
+      "index": 50,
+      "timestamp": "2025-10-03T23:15:19.706072Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        1470,
+        1014,
+        1573
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#51 TAP android.view.View",
+      "index": 51,
+      "timestamp": "2025-10-03T23:15:23.442419Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        1470,
+        1014,
+        1573
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#52 TAP android.view.View",
+      "index": 52,
+      "timestamp": "2025-10-03T23:15:26.122214Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        1470,
+        1014,
+        1573
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#53 TAP android.view.View",
+      "index": 53,
+      "timestamp": "2025-10-03T23:15:29.916632Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2340
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.FrameLayout"
+      },
+      "label": "#54 TAP android.widget.FrameLayout",
+      "index": 54,
+      "timestamp": "2025-10-03T23:15:32.592059Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        1470,
+        1014,
+        1573
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#55 TAP android.view.View",
+      "index": 55,
+      "timestamp": "2025-10-03T23:15:35.236897Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        2120,
+        1014,
+        2230
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.Button"
+      },
+      "label": "#56 TAP android.widget.Button",
+      "index": 56,
+      "timestamp": "2025-10-03T23:15:46.805519Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        50,
+        202,
+        270,
+        422
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "avatar",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#57 TAP avatar",
+      "index": 57,
+      "timestamp": "2025-10-03T23:15:57.968060Z"
+    }
+  ]
+}

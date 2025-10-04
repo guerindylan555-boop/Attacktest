@@ -1,0 +1,78 @@
+{
+  "started_at": "2025-10-03T23:02:01.263029Z",
+  "updated_at": "2025-10-03T23:05:02.791557Z",
+  "actions": [
+    {
+      "action": "tap",
+      "bounds": [
+        59,
+        157,
+        1021,
+        1685
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.ViewGroup"
+      },
+      "label": "#1 TAP android.view.ViewGroup",
+      "index": 1,
+      "timestamp": "2025-10-03T23:04:36.513665Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        827,
+        1878,
+        970,
+        2010
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#2 TAP android.view.View",
+      "index": 2,
+      "timestamp": "2025-10-03T23:04:45.108915Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        827,
+        1878,
+        970,
+        2010
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#3 TAP android.view.View",
+      "index": 3,
+      "timestamp": "2025-10-03T23:04:48.407050Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        66,
+        2120,
+        1014,
+        2230
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.Button"
+      },
+      "label": "#4 TAP android.widget.Button",
+      "index": 4,
+      "timestamp": "2025-10-03T23:05:02.791474Z"
+    }
+  ]
+}

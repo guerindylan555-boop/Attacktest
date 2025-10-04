@@ -1,0 +1,46 @@
+{
+  "started_at": "2025-10-03T23:31:58.367410Z",
+  "updated_at": "2025-10-03T23:32:24.638207Z",
+  "actions": [
+    {
+      "action": "tap",
+      "index": 1,
+      "timestamp": "2025-10-03T23:32:15.267289Z",
+      "x": 62,
+      "y": 225,
+      "bounds": [
+        50,
+        202,
+        270,
+        422
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "avatar",
+        "text": "",
+        "class": "android.view.View"
+      },
+      "label": "#1 TAP avatar"
+    },
+    {
+      "action": "tap",
+      "index": 2,
+      "timestamp": "2025-10-03T23:32:24.638057Z",
+      "x": 1033,
+      "y": 480,
+      "bounds": [
+        0,
+        312,
+        1080,
+        2274
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "Y1.r"
+      },
+      "label": "#2 TAP Y1.r"
+    }
+  ]
+}

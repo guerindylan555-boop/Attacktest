@@ -1,0 +1,96 @@
+{
+  "started_at": "2025-10-03T22:37:03.791076Z",
+  "updated_at": "2025-10-03T22:37:53.704890Z",
+  "actions": [
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        1168,
+        1080,
+        2117
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.LinearLayout"
+      },
+      "label": "#1 TAP android.widget.LinearLayout",
+      "index": 1,
+      "timestamp": "2025-10-03T22:37:35.718181Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        1168,
+        1080,
+        2117
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.LinearLayout"
+      },
+      "label": "#2 TAP android.widget.LinearLayout",
+      "index": 2,
+      "timestamp": "2025-10-03T22:37:38.175734Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        95,
+        1679,
+        984,
+        1738
+      ],
+      "attributes": {
+        "resource-id": "com.google.android.gm:id/welcome_tour_text",
+        "content-desc": "",
+        "text": "All the features you love with a fresh new look",
+        "class": "android.widget.TextView"
+      },
+      "label": "#3 TAP com.google.android.gm:id/welcome_tour_text",
+      "index": 3,
+      "timestamp": "2025-10-03T22:37:40.628310Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        1168,
+        1080,
+        2117
+      ],
+      "attributes": {
+        "resource-id": "",
+        "content-desc": "",
+        "text": "",
+        "class": "android.widget.LinearLayout"
+      },
+      "label": "#4 TAP android.widget.LinearLayout",
+      "index": 4,
+      "timestamp": "2025-10-03T22:37:43.542378Z"
+    },
+    {
+      "action": "tap",
+      "bounds": [
+        0,
+        2120,
+        1080,
+        2274
+      ],
+      "attributes": {
+        "resource-id": "com.google.android.gm:id/action_done",
+        "content-desc": "",
+        "text": "TAKE ME TO GMAIL",
+        "class": "android.widget.TextView"
+      },
+      "label": "#5 TAP com.google.android.gm:id/action_done",
+      "index": 5,
+      "timestamp": "2025-10-03T22:37:53.704846Z"
+    }
+  ]
+}
