@@ -1,0 +1,3 @@
+{"type": "click", "timestamp": "2025-10-04T15:04:39.552272+00:00", "x": 540, "y": 960}
+{"type": "type", "timestamp": "2025-10-04T15:04:39.552714+00:00", "text": "hello"}
+{"type": "scroll", "timestamp": "2025-10-04T15:04:39.553145+00:00", "direction": "down", "amount": 300}

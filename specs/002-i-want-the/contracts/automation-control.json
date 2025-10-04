@@ -1,0 +1,453 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Automation Control Interface",
+    "version": "1.1.0",
+    "description": "Contract for the simplified automation UI controllers, covering record, replay, and token capture actions with service-gated readiness."
+  },
+  "components": {
+    "schemas": {
+      "ActionState": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": ["record", "replay", "capture_token"]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "disabled_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "requires_services": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["emulator", "proxy", "frida"]
+            }
+          },
+          "in_progress": {
+            "type": "boolean"
+          },
+          "last_started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["action", "enabled", "requires_services", "in_progress"]
+      },
+      "ServiceRetrySnapshot": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["emulator", "proxy", "frida"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["starting", "running", "stopped", "error"]
+          },
+          "retry_attempt": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_retries": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 3
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["name", "status", "retry_attempt", "max_retries"]
+      }
+    }
+  },
+  "paths": {
+    "/automation/actions": {
+      "get": {
+        "summary": "Fetch UI action readiness",
+        "description": "Returns the current enabled state for Record, Replay, and Capture Token buttons after applying service readiness rules.",
+        "responses": {
+          "200": {
+            "description": "Action states returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "actions": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ActionState"
+                      }
+                    }
+                  },
+                  "required": ["actions"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/automation/record": {
+      "post": {
+        "summary": "Start recording automation",
+        "description": "Begins recording user interactions when services are ready.",
+        "responses": {
+          "200": {
+            "description": "Recording started successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["success"]
+                    },
+                    "recording_id": {
+                      "type": "string"
+                    },
+                    "start_time": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "ui_state": {
+                      "$ref": "#/components/schemas/ActionState"
+                    }
+                  },
+                  "required": ["status", "recording_id", "start_time", "ui_state"]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Recording already in progress",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["error"]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "enum": ["already_recording"]
+                    },
+                    "ui_state": {
+                      "$ref": "#/components/schemas/ActionState"
+                    }
+                  },
+                  "required": ["status", "error", "reason", "ui_state"]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Services not ready",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["error"]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "enum": ["services_not_ready"]
+                    },
+                    "services": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ServiceRetrySnapshot"
+                      }
+                    }
+                  },
+                  "required": ["status", "error", "reason", "services"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/automation/stop-record": {
+      "post": {
+        "summary": "Stop recording automation",
+        "description": "Stops the active recording session and persists artefacts.",
+        "responses": {
+          "200": {
+            "description": "Recording stopped successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["success"]
+                    },
+                    "recording_id": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "number"
+                    },
+                    "interactions_count": {
+                      "type": "integer"
+                    },
+                    "file_path": {
+                      "type": "string"
+                    },
+                    "ui_state": {
+                      "$ref": "#/components/schemas/ActionState"
+                    }
+                  },
+                  "required": ["status", "recording_id", "duration", "interactions_count", "file_path", "ui_state"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/automation/replay": {
+      "post": {
+        "summary": "Replay recorded automation",
+        "description": "Replays a stored recording in the active environment.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "recording_id": {
+                    "type": "string"
+                  }
+                },
+                "required": ["recording_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Replay started successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["success"]
+                    },
+                    "replay_id": {
+                      "type": "string"
+                    },
+                    "recording_id": {
+                      "type": "string"
+                    },
+                    "start_time": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "ui_state": {
+                      "$ref": "#/components/schemas/ActionState"
+                    }
+                  },
+                  "required": ["status", "replay_id", "recording_id", "start_time", "ui_state"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recording not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["error"]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "enum": ["recording_not_found"]
+                    }
+                  },
+                  "required": ["status", "error", "reason"]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Services not ready",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["error"]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "enum": ["services_not_ready"]
+                    },
+                    "services": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ServiceRetrySnapshot"
+                      }
+                    }
+                  },
+                  "required": ["status", "error", "reason", "services"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/automation/capture-token": {
+      "post": {
+        "summary": "Capture authentication token",
+        "description": "Launches the blhack login automation and begins capturing tokens.",
+        "responses": {
+          "200": {
+            "description": "Token capture started successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["success"]
+                    },
+                    "session_id": {
+                      "type": "string"
+                    },
+                    "start_time": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "ui_state": {
+                      "$ref": "#/components/schemas/ActionState"
+                    }
+                  },
+                  "required": ["status", "session_id", "start_time", "ui_state"]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Capture already running",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["error"]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "enum": ["already_capturing"]
+                    }
+                  },
+                  "required": ["status", "error", "reason"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Credential issue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["error"]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "enum": ["credentials_missing"]
+                    }
+                  },
+                  "required": ["status", "error", "reason"]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required services not ready",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["error"]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "enum": ["services_not_ready"]
+                    },
+                    "services": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ServiceRetrySnapshot"
+                      }
+                    }
+                  },
+                  "required": ["status", "error", "reason", "services"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Automation App Service Management",
+    "version": "1.1.0",
+    "description": "Contract for automatic background service lifecycle with retry-aware status reporting."
+  },
+  "components": {
+    "schemas": {
+      "ServiceStatus": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["emulator", "proxy", "frida"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["starting", "running", "stopped", "error"]
+          },
+          "retry_attempt": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_retries": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 3
+          },
+          "startup_time": {
+            "type": "number",
+            "description": "Seconds taken for the most recent successful start."
+          },
+          "last_check": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_transition": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_error_code": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": ["name", "status", "retry_attempt", "max_retries", "last_check", "last_transition"]
+      },
+      "ServiceSnapshot": {
+        "type": "object",
+        "properties": {
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceStatus"
+            }
+          },
+          "all_ready": {
+            "type": "boolean"
+          },
+          "initializing": {
+            "type": "boolean"
+          },
+          "blocking_errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "last_updated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["services", "all_ready", "initializing", "blocking_errors", "last_updated"]
+      }
+    }
+  },
+  "paths": {
+    "/services/start": {
+      "post": {
+        "summary": "Start all managed services",
+        "description": "Triggers asynchronous startup with automatic retries (max three per service).",
+        "responses": {
+          "200": {
+            "description": "Startup initiated; initial snapshot returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceSnapshot"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Immediate startup failure (configuration or environment blocking retry loop)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["error"]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "services": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ServiceStatus"
+                      }
+                    }
+                  },
+                  "required": ["status", "error", "services"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/stop": {
+      "post": {
+        "summary": "Stop all managed services",
+        "description": "Stops emulator, proxy, and frida, returning the list of services successfully terminated.",
+        "responses": {
+          "200": {
+            "description": "Services stopped",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["success"]
+                    },
+                    "stopped_services": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": ["emulator", "proxy", "frida"]
+                      }
+                    }
+                  },
+                  "required": ["status", "stopped_services"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/status": {
+      "get": {
+        "summary": "Retrieve latest service snapshot",
+        "description": "Returns retry-aware state for each managed service along with aggregate readiness flags.",
+        "responses": {
+          "200": {
+            "description": "Snapshot returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceSnapshot"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/retry": {
+      "post": {
+        "summary": "Force retry for exhausted services",
+        "description": "Allows the UI to request another startup cycle after showing the blocking error message.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "services": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["emulator", "proxy", "frida"]
+                    }
+                  }
+                },
+                "required": ["services"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Retry accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceSnapshot"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

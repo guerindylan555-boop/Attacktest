@@ -1,444 +1,566 @@
-import sys
-import subprocess
-from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
-from typing import Dict, Optional
+from __future__ import annotations
 
-from PySide6.QtCore import (QObject, QProcess, QProcessEnvironment, QTimer,
-                            Signal, Slot, Qt)
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+from PySide6.QtCore import Qt, QThreadPool, QTimer
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
-                               QMessageBox, QPlainTextEdit, QPushButton,
-                               QSizePolicy, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (
+    QApplication,
+    QHBoxLayout,
+    QInputDialog,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QPlainTextEdit,
+    QPushButton,
+    QSizePolicy,
+    QVBoxLayout,
+    QWidget,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-ANDROID_TOOLS_DIR = Path.home() / "android-tools"
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from automation.services.automation_controller import AutomationController
+from automation.services.service_manager import ServiceManager
+from automation.services.token_controller import TokenCaptureController
+from automation.ui.qt_workers import ScreenCaptureWorker, ServiceSnapshotWorker
+
 DEFAULT_DEVICE_ID = "emulator-5554"
 
 
-class ScreenBridge(QObject):
-    frameReady = Signal(QImage)
-    error = Signal(str)
-
-
 class ControlCenter(QMainWindow):
+    """PySide6 control center UI with retry-aware service management."""
+
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("MaynDrive Control Center")
+        self.setWindowTitle("MaynDrive Control Center - Simplified")
         self.resize(1280, 720)
 
-        self.processes: Dict[str, QProcess] = {}
-        self.executor = ThreadPoolExecutor(max_workers=2)
-        self.screen_future = None
-        self.screen_error_reported = False
+        self.service_manager = ServiceManager()
+        self.automation_controller = AutomationController(self.service_manager)
+        self.token_controller = TokenCaptureController(self.service_manager)
 
-        self.emulator_script = ANDROID_TOOLS_DIR / "restart_mayndrive_emulator.sh"
-        self.frida_script = PROJECT_ROOT / "automation" / "scripts" / "run_hooks.py"
-        self.token_capture_script = PROJECT_ROOT / "capture_working_final.py"
-        self.appium_script = PROJECT_ROOT / "automation" / "scripts" / "run_appium_token_flow.py"
+        self.thread_pool = QThreadPool.globalInstance()
+        self._screen_worker_active = False
+        self._status_worker_active = False
 
-        self.screen_bridge = ScreenBridge()
-        self.screen_bridge.frameReady.connect(self.update_screen_label)
-        self.screen_bridge.error.connect(self.handle_screen_error)
+        self._record_in_progress = False
+        self._replay_in_progress = False
+        self._capture_in_progress = False
+
+        self.status_labels: Dict[str, QLabel] = {}
 
         self._build_ui()
         self._start_timers()
+        self._start_services_automatically()
+        self._refresh_action_buttons()
 
+    # ------------------------------------------------------------------
+    # UI construction
+    # ------------------------------------------------------------------
     def _build_ui(self) -> None:
         central = QWidget()
         self.setCentralWidget(central)
 
         root_layout = QHBoxLayout(central)
-
-        # Left control column
         control_column = QVBoxLayout()
-        control_column.setSpacing(10)
+        control_column.setSpacing(15)
+        root_layout.addLayout(control_column, 1)
 
-        self.btn_start_emulator = QPushButton("Start Emulator")
-        self.btn_start_emulator.clicked.connect(self.start_emulator)
-        control_column.addWidget(self.btn_start_emulator)
+        title_label = QLabel("Automation Control")
+        title_label.setStyleSheet(
+            "font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 10px;"
+        )
+        control_column.addWidget(title_label)
 
-        self.btn_stop_emulator = QPushButton("Stop Emulator")
-        self.btn_stop_emulator.clicked.connect(self.stop_emulator)
-        control_column.addWidget(self.btn_stop_emulator)
+        self.btn_record_automation = self._build_primary_button(
+            "Record Automation", "#3498db"
+        )
+        self.btn_record_automation.clicked.connect(self._on_record_clicked)
+        control_column.addWidget(self.btn_record_automation)
 
-        self.btn_start_proxy = QPushButton("Start mitmdump")
-        self.btn_start_proxy.clicked.connect(self.start_proxy)
-        control_column.addWidget(self.btn_start_proxy)
+        self.btn_replay_automation = self._build_primary_button(
+            "Replay Automation", "#27ae60"
+        )
+        self.btn_replay_automation.clicked.connect(self._on_replay_clicked)
+        control_column.addWidget(self.btn_replay_automation)
 
-        self.btn_stop_proxy = QPushButton("Stop mitmdump")
-        self.btn_stop_proxy.clicked.connect(self.stop_proxy)
-        control_column.addWidget(self.btn_stop_proxy)
+        self.btn_capture_token = self._build_primary_button(
+            "Capture Token", "#e74c3c"
+        )
+        self.btn_capture_token.clicked.connect(self._on_capture_clicked)
+        control_column.addWidget(self.btn_capture_token)
 
-        self.btn_start_frida = QPushButton("Start Frida Hooks")
-        self.btn_start_frida.clicked.connect(self.start_frida)
-        control_column.addWidget(self.btn_start_frida)
-
-        self.btn_stop_frida = QPushButton("Stop Frida Hooks")
-        self.btn_stop_frida.clicked.connect(self.stop_frida)
-        control_column.addWidget(self.btn_stop_frida)
-
-        self.btn_run_token_capture = QPushButton("Run Token Capture Script")
-        self.btn_run_token_capture.clicked.connect(self.run_token_capture)
-        control_column.addWidget(self.btn_run_token_capture)
-
-        self.btn_stop_token_capture = QPushButton("Stop Token Capture Script")
-        self.btn_stop_token_capture.clicked.connect(self.stop_token_capture)
-        control_column.addWidget(self.btn_stop_token_capture)
-
-        self.btn_run_appium_flow = QPushButton("Run Appium Flow")
-        self.btn_run_appium_flow.clicked.connect(self.run_appium_flow)
-        control_column.addWidget(self.btn_run_appium_flow)
-
-        self.btn_stop_appium_flow = QPushButton("Stop Appium Flow")
-        self.btn_stop_appium_flow.clicked.connect(self.stop_appium_flow)
-        control_column.addWidget(self.btn_stop_appium_flow)
-
-        self.btn_start_livestream = QPushButton("Start Live Stream")
-        self.btn_start_livestream.clicked.connect(self.start_live_stream)
-        control_column.addWidget(self.btn_start_livestream)
-
-        self.btn_stop_livestream = QPushButton("Stop Live Stream")
-        self.btn_stop_livestream.clicked.connect(self.stop_live_stream)
-        control_column.addWidget(self.btn_stop_livestream)
+        self._action_buttons = {
+            "record": self.btn_record_automation,
+            "replay": self.btn_replay_automation,
+            "capture_token": self.btn_capture_token,
+        }
 
         control_column.addStretch(1)
 
-        # Status labels
-        self.status_labels: Dict[str, QLabel] = {}
-        status_titles = [
+        status_title = QLabel("Service Status")
+        status_title.setStyleSheet(
+            "font-size: 14px; font-weight: bold; color: #2c3e50; margin-top: 20px;"
+        )
+        control_column.addWidget(status_title)
+
+        for key, title in [
             ("emulator", "Emulator"),
             ("proxy", "Proxy"),
             ("frida", "Frida"),
-            ("token", "Token Script"),
-            ("appium", "Appium Flow"),
-            ("livestream", "Live Stream"),
-        ]
-        for key, title in status_titles:
+        ]:
             layout = QVBoxLayout()
             label_title = QLabel(title)
-            label_title.setStyleSheet("font-weight: bold")
-            status_label = QLabel("Unknown")
-            status_label.setStyleSheet("color: #bdc3c7;")
+            label_title.setStyleSheet("font-weight: bold; color: #34495e;")
+            status_label = QLabel("Starting...")
+            status_label.setStyleSheet("color: #bdc3c7; font-size: 12px;")
             layout.addWidget(label_title)
             layout.addWidget(status_label)
             control_column.addLayout(layout)
             self.status_labels[key] = status_label
 
-        root_layout.addLayout(control_column, 1)
-
-        # Screen area
         screen_layout = QVBoxLayout()
-        self.screen_label = QLabel("Screen preview will appear here")
-        self.screen_label.setAlignment(Qt.AlignCenter)
-        self.screen_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.screen_label.setStyleSheet("background-color: #1e1e1e; color: #ecf0f1;")
-        screen_layout.addWidget(self.screen_label)
-
         root_layout.addLayout(screen_layout, 3)
 
-        # Log panel below
+        self.screen_label = QLabel("Screen preview will appear here")
+        self.screen_label.setAlignment(Qt.AlignCenter)
+        self.screen_label.setSizePolicy(
+            QSizePolicy.Expanding, QSizePolicy.Expanding
+        )
+        self.screen_label.setStyleSheet(
+            "background-color: #1e1e1e; color: #ecf0f1; border-radius: 8px;"
+        )
+        # Enable mouse tracking for interaction capture
+        self.screen_label.setMouseTracking(True)
+        self.screen_label.mousePressEvent = self._on_screen_click
+        screen_layout.addWidget(self.screen_label)
+
         log_layout = QVBoxLayout()
+        log_title = QLabel("Activity Log")
+        log_title.setStyleSheet("font-weight: bold; color: #2c3e50;")
+        log_layout.addWidget(log_title)
+
         self.log_view = QPlainTextEdit()
         self.log_view.setReadOnly(True)
         self.log_view.setMaximumHeight(200)
+        self.log_view.setStyleSheet(
+            """
+            QPlainTextEdit {
+                background-color: #2c3e50;
+                color: #ecf0f1;
+                border: 1px solid #34495e;
+                border-radius: 4px;
+                font-family: 'Courier New', monospace;
+                font-size: 11px;
+            }
+            """
+        )
         log_layout.addWidget(self.log_view)
         screen_layout.addLayout(log_layout)
 
+    def _build_primary_button(self, text: str, color: str) -> QPushButton:
+        button = QPushButton(text)
+        button.setStyleSheet(
+            f"""
+            QPushButton {{
+                background-color: {color};
+                color: white;
+                border: none;
+                padding: 12px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 6px;
+            }}
+            QPushButton:hover {{
+                background-color: {self._darken(color)};
+            }}
+            QPushButton:pressed {{
+                background-color: {self._darken(color, 0.15)};
+            }}
+            QPushButton:disabled {{
+                background-color: #bdc3c7;
+                color: #7f8c8d;
+            }}
+            """
+        )
+        button.setEnabled(False)
+        return button
+
+    @staticmethod
+    def _darken(color: str, factor: float = 0.1) -> str:
+        color = color.lstrip("#")
+        r = int(color[0:2], 16)
+        g = int(color[2:4], 16)
+        b = int(color[4:6], 16)
+        r = max(0, int(r * (1 - factor)))
+        g = max(0, int(g * (1 - factor)))
+        b = max(0, int(b * (1 - factor)))
+        return f"#{r:02x}{g:02x}{b:02x}"
+
+    # ------------------------------------------------------------------
+    # Timers and background work
+    # ------------------------------------------------------------------
     def _start_timers(self) -> None:
-        # Status refresh timer
         self.status_timer = QTimer(self)
         self.status_timer.setInterval(5000)
-        self.status_timer.timeout.connect(self.update_statuses)
+        self.status_timer.timeout.connect(self._request_service_snapshot)
         self.status_timer.start()
 
-        # Screen refresh timer
         self.screen_timer = QTimer(self)
-        self.screen_timer.setInterval(2000)
+        self.screen_timer.setInterval(100)  # 10 Hz (100ms intervals) for smooth preview
         self.screen_timer.timeout.connect(self.schedule_screen_capture)
         self.screen_timer.start()
 
-    # ------------------------------------------------------------------
-    # Command helpers
-    # ------------------------------------------------------------------
-    def _prepare_process(self) -> QProcess:
-        process = QProcess(self)
-        env = QProcessEnvironment.systemEnvironment()
-        local_bin = str(Path.home() / ".local" / "bin")
-        path_value = env.value("PATH", "")
-        if local_bin not in path_value.split(":"):
-            env.insert("PATH", f"{local_bin}:{path_value}")
-        process.setProcessEnvironment(env)
-        process.setWorkingDirectory(str(PROJECT_ROOT))
-        process.setProcessChannelMode(QProcess.SeparateChannels)
-        return process
-
-    def run_command(self, key: str, program: str, arguments: Optional[list[str]] = None,
-                    hold_reference: bool = True) -> None:
-        if arguments is None:
-            arguments = []
-        if hold_reference and key in self.processes:
-            self.append_log(f"[WARN] {key} is already running.")
+    def _request_service_snapshot(self) -> None:
+        if self._status_worker_active:
             return
+        worker = ServiceSnapshotWorker(self.service_manager, refresh=True)
+        worker.signals.snapshotReady.connect(self._handle_snapshot)
+        worker.signals.error.connect(self._handle_snapshot_error)
+        self.thread_pool.start(worker)
+        self._status_worker_active = True
 
-        process = self._prepare_process()
-        process.setProgram(program)
-        process.setArguments(arguments)
+    def schedule_screen_capture(self) -> None:
+        if self._screen_worker_active:
+            return
+        worker = ScreenCaptureWorker(device_id=DEFAULT_DEVICE_ID)
+        worker.signals.frameReady.connect(self._handle_screen_bytes)
+        worker.signals.error.connect(self._handle_screen_error)
+        self.thread_pool.start(worker)
+        self._screen_worker_active = True
 
-        process.readyReadStandardOutput.connect(
-            lambda proc=process, name=key: self.handle_output(name, proc.readAllStandardOutput().data())
+    # ------------------------------------------------------------------
+    # Event handlers
+    # ------------------------------------------------------------------
+    def _handle_snapshot(self, snapshot: Dict[str, Any]) -> None:
+        self._status_worker_active = False
+        self._apply_service_status(snapshot.get("services", []))
+        self._refresh_action_buttons()
+
+    def _handle_snapshot_error(self, message: str) -> None:
+        self._status_worker_active = False
+        self.append_log(f"[ERROR] Status refresh failed: {message}")
+
+    def _handle_screen_bytes(self, data: bytes) -> None:
+        self._screen_worker_active = False
+        image = QImage.fromData(data, "PNG")
+        if image.isNull():
+            self._handle_screen_error("Invalid screen data")
+            return
+        pixmap = QPixmap.fromImage(image)
+        self.screen_label.setPixmap(
+            pixmap.scaled(self.screen_label.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
         )
-        process.readyReadStandardError.connect(
-            lambda proc=process, name=key: self.handle_output(name, proc.readAllStandardError().data())
-        )
-        process.finished.connect(lambda code, status, name=key: self.process_finished(name, code, status))
 
-        process.start()
-
-        if hold_reference:
-            self.processes[key] = process
-        self.append_log(f"[INFO] Started {key} ({program} {' '.join(arguments)})")
-
-    def run_shell_command(self, key: str, command: str, hold_reference: bool = False) -> None:
-        self.run_command(key, "bash", ["-lc", command], hold_reference=hold_reference)
+    def _handle_screen_error(self, message: str) -> None:
+        self._screen_worker_active = False
+        self.append_log(f"[SCREEN] {message}")
 
     # ------------------------------------------------------------------
-    # Button actions
+    # Button callbacks
     # ------------------------------------------------------------------
-    def start_emulator(self) -> None:
-        if not self.emulator_script.exists():
-            QMessageBox.critical(self, "Missing script",
-                                 f"Could not find {self.emulator_script}")
+    def _on_record_clicked(self) -> None:
+        if self._record_in_progress:
+            self._stop_recording()
+        else:
+            self._start_recording()
+
+    def _on_replay_clicked(self) -> None:
+        if self._replay_in_progress:
+            self.append_log("[INFO] Replay already running; waiting for completion")
+        else:
+            self._start_replay()
+
+    def _on_capture_clicked(self) -> None:
+        if self._capture_in_progress:
+            self.append_log("[INFO] Token capture already in progress")
+        else:
+            self._start_token_capture()
+
+    def _on_screen_click(self, event) -> None:
+        """Handle click on screen preview - with recording gate check."""
+        # Check if interaction is allowed (recording must be active)
+        allowed = self.automation_controller.is_interaction_allowed()
+        
+        if not allowed.get("allowed", False):
+            # Blocked - show error message
+            QMessageBox.warning(
+                self,
+                "Recording Not Active",
+                "Recording must be started first.\n\nPlease click 'Record Automation' before interacting with the screen.",
+                QMessageBox.Ok
+            )
+            self.append_log("[ERROR] Interaction blocked: recording not active")
             return
-        self.run_shell_command("emulator_start", str(self.emulator_script))
-
-    def stop_emulator(self) -> None:
-        self.run_shell_command("emulator_stop", "pkill -f \"emulator.*MaynDriveTest\"")
-
-    def start_proxy(self) -> None:
-        command = (
-            "tmux has-session -t mitmproxy_session 2>/dev/null || "
-            "tmux new-session -d -s mitmproxy_session "
-            "\"export PATH=$PATH:/home/ubuntu/.local/bin && "
-            "mitmdump --listen-port 8080 --set block_global=false --set "
-            "save_stream_file=/home/ubuntu/android-tools/proxy/flows.mitm\""
-        )
-        self.run_shell_command("proxy_start", command)
-
-    def stop_proxy(self) -> None:
-        self.run_shell_command("proxy_stop", "tmux kill-session -t mitmproxy_session", hold_reference=False)
-
-    def start_frida(self) -> None:
-        if "frida" in self.processes:
-            self.append_log("[WARN] Frida hook process already running.")
-            return
-        self.run_command("frida", sys.executable, [str(self.frida_script)])
-
-    def stop_frida(self) -> None:
-        self.stop_process("frida")
-
-    def run_token_capture(self) -> None:
-        if "token_capture" in self.processes:
-            self.append_log("[WARN] Token capture already running.")
-            return
-        self.run_command("token_capture", sys.executable, [str(self.token_capture_script)])
-
-    def stop_token_capture(self) -> None:
-        self.stop_process("token_capture")
-
-    def run_appium_flow(self) -> None:
-        if not self.appium_script.exists():
-            QMessageBox.critical(self, "Missing script",
-                                 f"Could not find {self.appium_script}")
-            return
-        if "appium_flow" in self.processes:
-            self.append_log("[WARN] Appium flow already running.")
-            return
-        self.run_command("appium_flow", sys.executable, [str(self.appium_script)])
-
-    def stop_appium_flow(self) -> None:
-        self.stop_process("appium_flow")
-
-    def start_live_stream(self) -> None:
-        if "livestream" in self.processes:
-            self.append_log("[WARN] Live stream already active.")
-            return
-        command = (
-            f"adb -s {DEFAULT_DEVICE_ID} exec-out screenrecord --output-format=h264 - "
-            "| ffplay -loglevel error -framerate 30 -"
-        )
-        self.run_shell_command("livestream", command, hold_reference=True)
-
-    def stop_live_stream(self) -> None:
-        self.stop_process("livestream")
+        
+        # Get click coordinates relative to label
+        x = event.pos().x()
+        y = event.pos().y()
+        
+        # Add interaction to recording
+        result = self.automation_controller.add_interaction("click", x=x, y=y)
+        
+        if result.get("status") == "success":
+            self.append_log(f"[INFO] Interaction captured: click ({x}, {y})")
+            # TODO: Relay to actual Android device via ADB
+            # subprocess.run(["adb", "shell", "input", "tap", str(x), str(y)])
+        else:
+            self.append_log(f"[ERROR] Failed to capture interaction: {result.get('message', 'Unknown error')}")
 
     # ------------------------------------------------------------------
-    def stop_process(self, key: str) -> None:
-        process = self.processes.get(key)
-        if not process:
-            self.append_log(f"[WARN] No running process for {key}.")
+    # Recording handlers
+    # ------------------------------------------------------------------
+    def _start_recording(self) -> None:
+        result = self.automation_controller.start_recording()
+        self._apply_button_state(result.get("ui_state"))
+
+        if result.get("status") == "success":
+            self._record_in_progress = True
+            self.btn_record_automation.setText("Stop Recording")
+            self.append_log(
+                f"[INFO] Recording started: {result['recording_id']}"
+            )
+        else:
+            self._record_in_progress = False
+            self.btn_record_automation.setText("Record Automation")
+            self._log_error("record", result)
+
+        if "services" in result:
+            self._apply_service_status(result["services"])
+        self._refresh_action_buttons()
+
+    def _stop_recording(self) -> None:
+        if not self._record_in_progress:
+            self.append_log("[WARN] No recording in progress")
             return
-        process.terminate()
-        if not process.waitForFinished(3000):
-            process.kill()
-            process.waitForFinished(1000)
-        self.append_log(f"[INFO] Stopped {key}.")
-        self.processes.pop(key, None)
+        recording_id = self.automation_controller.current_recording.id if self.automation_controller.current_recording else None
+        if not recording_id:
+            self.append_log("[WARN] Controller missing active recording id")
+            return
+        result = self.automation_controller.stop_recording(recording_id)
+        self._apply_button_state(result.get("ui_state"))
+
+        if result.get("status") == "success":
+            self._record_in_progress = False
+            self.btn_record_automation.setText("Record Automation")
+            self.append_log(
+                f"[INFO] Recording stopped: {result['duration']:.1f}s ({result['interactions_count']} interactions)"
+            )
+            self.append_log(f"[INFO] Evidence saved: {result['file_path']}")
+        else:
+            self._log_error("record", result)
+        self._refresh_action_buttons()
 
     # ------------------------------------------------------------------
-    def handle_output(self, key: str, data: bytes) -> None:
-        if not data:
+    # Replay handlers
+    # ------------------------------------------------------------------
+    def _start_replay(self) -> None:
+        recordings = self.automation_controller.list_available_recordings()
+        if not recordings:
+            QMessageBox.information(self, "No Recordings", "No automation recordings found.")
             return
+        selected = self._choose_recording(recordings)
+        if not selected:
+            self.append_log("[INFO] Replay cancelled")
+            return
+        result = self.automation_controller.replay_recording(selected)
+        self._apply_button_state(result.get("ui_state"))
+
+        if result.get("status") == "success":
+            self._replay_in_progress = True
+            self.btn_replay_automation.setText("Replaying...")
+            self.append_log(
+                f"[INFO] Replay started: {result['replay_id']} for recording {result['recording_id']}"
+            )
+        else:
+            self._log_error("replay", result)
+        self._refresh_action_buttons()
+
+    # ------------------------------------------------------------------
+    # Token capture handlers
+    # ------------------------------------------------------------------
+    def _start_token_capture(self) -> None:
+        result = self.token_controller.start_token_capture()
+        self._apply_button_state(result.get("ui_state"))
+
+        if result.get("status") == "success":
+            self._capture_in_progress = True
+            self.btn_capture_token.setText("Capturing...")
+            self.append_log(f"[INFO] Token capture started: {result['session_id']}")
+        else:
+            self._capture_in_progress = False
+            self.btn_capture_token.setText("Capture Token")
+            self._log_error("capture_token", result)
+        self._refresh_action_buttons()
+
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
+    def _start_services_automatically(self) -> None:
+        self.append_log("=" * 60)
+        self.append_log("[STARTUP] Automatic Service Initialization")
+        self.append_log("=" * 60)
+        self.append_log("[STARTUP] Starting emulator, proxy, and Frida...")
+        self.append_log("[STARTUP] This may take 60-90 seconds if emulator needs to boot...")
+        self.append_log("[STARTUP] MaynDrive app will launch automatically...")
+        self.append_log("")
+        
+        result = self.service_manager.start_all_services()
+        snapshot = result.get("snapshot", {})
+        self._apply_service_status(snapshot.get("services", []))
+
+        self.append_log("")
+        if result.get("status") == "success":
+            self.append_log("✓ [SUCCESS] All services started successfully!")
+            self.append_log("✓ Emulator is running")
+            self.append_log("✓ Mitmproxy is capturing traffic")
+            self.append_log("✓ Frida is hooked into MaynDrive app")
+            self.append_log("")
+            self.append_log("[READY] You can now use the automation controls!")
+        else:
+            self.append_log("⚠ [WARN] Some services failed to start automatically")
+            self.append_log("   Check the service status indicators on the left")
+            self.append_log("   You may need to manually start failed services")
+        self.append_log("=" * 60)
+
+    def _apply_service_status(self, services: List[Dict[str, Any]]) -> None:
+        for entry in services:
+            label = self.status_labels.get(entry["name"])
+            if not label:
+                continue
+            status = entry.get("status", "unknown")
+            color = "#bdc3c7"
+            if status == "running":
+                color = "#27ae60"
+            elif status == "error":
+                color = "#e74c3c"
+            text = status.capitalize()
+            if entry.get("error_message"):
+                text = f"Error: {entry['error_message']}"
+            elif status == "starting":
+                text = "Starting..."
+            label.setText(text)
+            label.setStyleSheet(f"color: {color}; font-weight: bold")
+
+    def _apply_button_state(self, state: Optional[Dict[str, Any]]) -> None:
+        if not state:
+            return
+        button = self._action_buttons.get(state["action"])
+        if not button:
+            return
+        button.setEnabled(state.get("enabled", False))
+        reason = state.get("disabled_reason")
+        if reason:
+            button.setToolTip(reason)
+        else:
+            button.setToolTip("")
+
+        if state["action"] == "record":
+            self._record_in_progress = state.get("in_progress", False)
+            button.setText("Stop Recording" if state.get("in_progress") else "Record Automation")
+        elif state["action"] == "replay":
+            self._replay_in_progress = state.get("in_progress", False)
+            button.setText("Replaying..." if state.get("in_progress") else "Replay Automation")
+        elif state["action"] == "capture_token":
+            self._capture_in_progress = state.get("in_progress", False)
+            button.setText("Capturing..." if state.get("in_progress") else "Capture Token")
+
+    def _refresh_action_buttons(self) -> None:
         try:
-            text = data.decode("utf-8", errors="replace")
-        except Exception:
-            text = str(data)
-        for line in text.rstrip().splitlines():
-            self.append_log(f"[{key}] {line}")
+            payload = self.automation_controller.get_action_states()
+            for state in payload.get("actions", []):
+                self._apply_button_state(state)
+            self._apply_service_status(payload.get("services", []))
+        except Exception as exc:  # noqa: BLE001
+            self.append_log(f"[ERROR] Failed to refresh automation actions: {exc}")
 
-    def process_finished(self, key: str, exit_code: int, status: QProcess.ExitStatus) -> None:
-        if key in self.processes:
-            self.processes.pop(key, None)
-        self.append_log(f"[INFO] {key} finished with code {exit_code} (status {status}).")
+        try:
+            capture_state = self.token_controller.get_action_state()
+            self._apply_button_state(capture_state.get("action"))
+        except Exception as exc:  # noqa: BLE001
+            self.append_log(f"[ERROR] Failed to refresh token capture state: {exc}")
+
+    def _log_error(self, action: str, result: Dict[str, Any]) -> None:
+        message = result.get("error", "Unknown error")
+        reason = result.get("reason")
+        self.append_log(f"[ERROR] {action}: {message} ({reason})")
+        if "services" in result:
+            self._apply_service_status(result["services"])
 
     def append_log(self, message: str) -> None:
         self.log_view.appendPlainText(message)
-        self.log_view.verticalScrollBar().setValue(self.log_view.verticalScrollBar().maximum())
+        self.log_view.verticalScrollBar().setValue(
+            self.log_view.verticalScrollBar().maximum()
+        )
 
-    # ------------------------------------------------------------------
-    # Status updates
-    # ------------------------------------------------------------------
-    def set_status(self, name: str, text: str, ok: Optional[bool]) -> None:
-        label = self.status_labels.get(name)
-        if not label:
-            return
-        color = "#bdc3c7"
-        if ok is True:
-            color = "#27ae60"
-        elif ok is False:
-            color = "#e74c3c"
-        label.setText(text)
-        label.setStyleSheet(f"color: {color}; font-weight: bold")
-
-    def update_statuses(self) -> None:
-        # Emulator status
-        try:
-            result = subprocess.run(
-                ["adb", "-s", DEFAULT_DEVICE_ID, "get-state"],
-                capture_output=True, text=True, timeout=3
-            )
-            if result.returncode == 0 and result.stdout.strip() == "device":
-                self.set_status("emulator", "Online", True)
-            else:
-                self.set_status("emulator", "Offline", False)
-        except Exception as exc:  # noqa: BLE001
-            self.set_status("emulator", f"Error: {exc}", False)
-
-        # Proxy status
-        try:
-            proxy_result = subprocess.run(
-                ["tmux", "has-session", "-t", "mitmproxy_session"],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                timeout=2
-            )
-            if proxy_result.returncode == 0:
-                self.set_status("proxy", "Running", True)
-            else:
-                self.set_status("proxy", "Stopped", False)
-        except Exception as exc:  # noqa: BLE001
-            self.set_status("proxy", f"Error: {exc}", False)
-
-        # Frida status
-        try:
-            frida_result = subprocess.run(
-                ["adb", "-s", DEFAULT_DEVICE_ID, "shell", "ps -A | grep frida-server"],
-                capture_output=True, text=True, timeout=3
-            )
-            if frida_result.returncode == 0 and "frida-server" in frida_result.stdout:
-                self.set_status("frida", "Active", True)
-            else:
-                self.set_status("frida", "Inactive", False)
-        except Exception as exc:  # noqa: BLE001
-            self.set_status("frida", f"Error: {exc}", False)
-
-        # Token capture status
-        process = self.processes.get("token_capture")
-        if process and process.state() == QProcess.Running:
-            self.set_status("token", "Running", True)
-        else:
-            self.set_status("token", "Stopped", False)
-
-        appium_proc = self.processes.get("appium_flow")
-        if appium_proc and appium_proc.state() == QProcess.Running:
-            self.set_status("appium", "Running", True)
-        else:
-            self.set_status("appium", "Stopped", False)
-
-        livestream_proc = self.processes.get("livestream")
-        if livestream_proc and livestream_proc.state() == QProcess.Running:
-            self.set_status("livestream", "Active", True)
-        else:
-            self.set_status("livestream", "Off", False)
-
-    # ------------------------------------------------------------------
-    # Screen capture handling
-    # ------------------------------------------------------------------
-    def schedule_screen_capture(self) -> None:
-        if self.screen_future and not self.screen_future.done():
-            return
-        self.screen_future = self.executor.submit(self.capture_screen_frame)
-        self.screen_future.add_done_callback(self._handle_screen_future)
-
-    def capture_screen_frame(self) -> Optional[bytes]:
-        try:
-            result = subprocess.run(
-                ["adb", "-s", DEFAULT_DEVICE_ID, "exec-out", "screencap", "-p"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                timeout=5
-            )
-            if result.returncode == 0:
-                return result.stdout
+    def _choose_recording(self, recordings: List[Dict[str, Any]]) -> Optional[str]:
+        if len(recordings) == 1:
+            return recordings[0]["id"]
+        items = [
+            f"{record['timestamp']} — {record['id']}" for record in recordings
+        ]
+        item, ok = QInputDialog.getItem(
+            self,
+            "Select Recording",
+            "Choose an automation recording to replay:",
+            items,
+            0,
+            False,
+        )
+        if not ok:
             return None
-        except Exception:  # noqa: BLE001
-            return None
+        index = items.index(item)
+        return recordings[index]["id"]
 
-    def _handle_screen_future(self, future) -> None:  # noqa: ANN001
-        data = future.result()
-        if not data:
-            self.screen_bridge.error.emit("Failed to capture screen.")
-            return
-        image = QImage.fromData(data, "PNG")
-        if image.isNull():
-            self.screen_bridge.error.emit("Invalid screen data.")
-            return
-        self.screen_bridge.frameReady.emit(image)
-
-    @Slot(QImage)
-    def update_screen_label(self, image: QImage) -> None:
-        pixmap = QPixmap.fromImage(image)
-        self.screen_label.setPixmap(pixmap.scaled(
-            self.screen_label.size(),
-            Qt.KeepAspectRatio,
-            Qt.SmoothTransformation
-        ))
-        self.screen_error_reported = False
-
-    @Slot(str)
-    def handle_screen_error(self, message: str) -> None:
-        if not self.screen_error_reported:
-            self.append_log(f"[SCREEN] {message}")
-            self.screen_error_reported = True
-
+    # ------------------------------------------------------------------
+    # Qt events
     # ------------------------------------------------------------------
     def closeEvent(self, event) -> None:  # noqa: D401
-        """Ensure background threads shut down when the UI closes."""
+        self.append_log("[INFO] Shutting down application...")
         self.status_timer.stop()
         self.screen_timer.stop()
-        for key in list(self.processes.keys()):
-            self.stop_process(key)
-        self.executor.shutdown(wait=False)
+
+        if self._record_in_progress and self.automation_controller.current_recording:
+            self.append_log("[INFO] Stopping active recording before exit")
+            try:
+                self._stop_recording()
+            except Exception as exc:  # noqa: BLE001
+                self.append_log(f"[ERROR] Failed to stop recording: {exc}")
+
+        if self._replay_in_progress:
+            self.append_log("[INFO] Finalizing replay before exit")
+            try:
+                self.automation_controller.finalize_replay()
+            except Exception as exc:  # noqa: BLE001
+                self.append_log(f"[ERROR] Failed to finalize replay: {exc}")
+
+        if self._capture_in_progress and self.token_controller.current_session:
+            self.append_log("[INFO] Marking token capture session as cancelled")
+            try:
+                session = self.token_controller.current_session
+                session.fail_capture("Application shutdown")
+            except Exception as exc:  # noqa: BLE001
+                self.append_log(f"[ERROR] Failed to mark capture session failed: {exc}")
+            finally:
+                self._capture_in_progress = False
+                self.btn_capture_token.setText("Capture Token")
+
+        try:
+            result = self.service_manager.cleanup()
+            if isinstance(result, dict) and result.get("stopped_services"):
+                self.append_log(
+                    f"[INFO] Services stopped: {', '.join(result['stopped_services'])}"
+                )
+            else:
+                self.append_log("[INFO] Services cleanup requested")
+        except Exception as exc:  # noqa: BLE001
+            self.append_log(f"[ERROR] Error stopping services: {exc}")
+
         super().closeEvent(event)
 
 

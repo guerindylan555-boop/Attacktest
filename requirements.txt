@@ -22,3 +22,6 @@ frida-tools>=12.0.0
 # Optional: For better JSON handling and pretty printing
 rich>=13.0.0
 
+# Qt GUI framework for Control Center
+PySide6>=6.5.0
+
