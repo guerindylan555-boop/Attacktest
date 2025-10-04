@@ -7,6 +7,8 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+import os
+import subprocess
 
 from automation.models.control_action import ControlActionState, EvidenceArtifact
 from automation.models.recording import AutomationRecording
@@ -433,15 +435,97 @@ class AutomationController:
 
     def _find_recording_file(self, recording_id: str) -> Optional[Path]:
         recordings_dir = self.recordings_dir
-        pattern = f"*_automation_recording_{recording_id}.json"
+        # Support optional name slug after the id before .json
+        pattern = f"*_automation_recording_{recording_id}*.json"
         matches = list(recordings_dir.glob(pattern))
         return matches[0] if matches else None
 
     def _execute_replay(self, recording: AutomationRecording, replay_id: str) -> None:
         """Execute the replay of a recording."""
+        device_id = os.getenv("ANDROID_DEVICE_ID", "emulator-5554")
         try:
-            for interaction in recording.interactions:
-                time.sleep(0.05)
+            for step in recording.interactions:
+                itype = step.get("type")
+                if itype == "click":
+                    x = int(step.get("x", 0))
+                    y = int(step.get("y", 0))
+                    try:
+                        subprocess.run(
+                            ["adb", "-s", device_id, "shell", "input", "tap", str(x), str(y)],
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL,
+                            timeout=5,
+                        )
+                    except Exception:
+                        pass
+                    time.sleep(0.1)
+                elif itype == "type":
+                    text = str(step.get("text", ""))
+                    if text:
+                        # Convert spaces to %s for adb input text
+                        payload = text.replace(" ", "%s")
+                        try:
+                            subprocess.run(
+                                ["adb", "-s", device_id, "shell", "input", "text", payload],
+                                stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL,
+                                timeout=5,
+                            )
+                        except Exception:
+                            pass
+                        time.sleep(0.1)
+                elif itype == "scroll":
+                    # Use swipe to approximate scroll
+                    direction = step.get("direction", "down")
+                    amount = int(step.get("amount", 300))
+                    # Simple swipe from center
+                    try:
+                        # Get display size
+                        size = subprocess.run(
+                            ["adb", "-s", device_id, "shell", "wm", "size"],
+                            capture_output=True,
+                            text=True,
+                            timeout=3,
+                        ).stdout
+                        import re
+                        m = re.search(r"(\d+)x(\d+)", size or "")
+                        if m:
+                            w, h = int(m.group(1)), int(m.group(2))
+                        else:
+                            w, h = 1080, 1920
+                        cx, cy = w // 2, h // 2
+                        if direction == "down":
+                            x1, y1, x2, y2 = cx, cy - amount // 2, cx, cy + amount // 2
+                        elif direction == "up":
+                            x1, y1, x2, y2 = cx, cy + amount // 2, cx, cy - amount // 2
+                        elif direction == "left":
+                            x1, y1, x2, y2 = cx + amount // 2, cy, cx - amount // 2, cy
+                        else:  # right
+                            x1, y1, x2, y2 = cx - amount // 2, cy, cx + amount // 2, cy
+                        subprocess.run(
+                            [
+                                "adb",
+                                "-s",
+                                device_id,
+                                "shell",
+                                "input",
+                                "swipe",
+                                str(x1),
+                                str(y1),
+                                str(x2),
+                                str(y2),
+                                "150",
+                            ],
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL,
+                            timeout=5,
+                        )
+                    except Exception:
+                        pass
+                    time.sleep(0.1)
+                else:
+                    # Unknown step; small delay to keep rhythm
+                    time.sleep(0.05)
             self.finalize_replay(replay_id=replay_id)
-        except Exception:  # noqa: BLE001
+        except Exception:
             self.finalize_replay(replay_id=replay_id)
