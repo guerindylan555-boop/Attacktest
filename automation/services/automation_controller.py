@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import os
+import os
 import subprocess
 
 from automation.models.control_action import ControlActionState, EvidenceArtifact
@@ -153,6 +154,45 @@ class AutomationController:
         """Return all recorded evidence artefacts for external reporting."""
 
         return [artifact.to_dict() for artifact in self._evidence]
+
+    def delete_recording(self, recording_id: str) -> Dict[str, Any]:
+        """Delete a saved recording JSON (and its incremental JSONL if present).
+
+        Returns a status dict with details.
+        """
+        with self._lock:
+            # Prevent deleting the recording in use
+            if self.current_recording and self.current_recording.id == recording_id:
+                return {"status": "error", "error": "Recording in progress", "reason": "busy"}
+            if self.current_replay and self.current_replay.get("recording_id") == recording_id:
+                return {"status": "error", "error": "Recording is being replayed", "reason": "busy"}
+
+            path = self._find_recording_file(recording_id)
+            if not path:
+                return {"status": "error", "error": "Recording not found", "reason": "not_found"}
+
+            try:
+                # Attempt to load to find incremental file reference
+                rec = AutomationRecording.load_from_file(path)
+            except Exception:
+                rec = None
+
+            removed = []
+            errors = []
+            try:
+                os.remove(path)
+                removed.append(str(path))
+            except Exception as exc:
+                errors.append(f"{path}: {exc}")
+            if rec and rec.incremental_file:
+                try:
+                    os.remove(rec.incremental_file)
+                    removed.append(str(rec.incremental_file))
+                except Exception:
+                    pass
+            if errors:
+                return {"status": "partial", "removed": removed, "errors": errors}
+            return {"status": "success", "removed": removed}
 
     def replay_recording(self, recording_id: str) -> Dict[str, Any]:
         with self._lock:

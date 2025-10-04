@@ -28,7 +28,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from automation.services.automation_controller import AutomationController
 from automation.services.service_manager import ServiceManager
 from automation.services.token_controller import TokenCaptureController
-from automation.ui.qt_workers import ScreenCaptureWorker, ServiceSnapshotWorker
+from automation.ui.qt_workers import ScreenCaptureWorker, ServiceSnapshotWorker, ResetAppFridaWorker
 
 DEFAULT_DEVICE_ID = "emulator-5554"
 
@@ -97,6 +97,18 @@ class ControlCenter(QMainWindow):
         )
         self.btn_capture_token.clicked.connect(self._on_capture_clicked)
         control_column.addWidget(self.btn_capture_token)
+
+        self.btn_delete_recording = self._build_primary_button(
+            "Delete Recording", "#f39c12"
+        )
+        self.btn_delete_recording.clicked.connect(self._on_delete_recording_clicked)
+        control_column.addWidget(self.btn_delete_recording)
+
+        self.btn_reset_app_frida = self._build_primary_button(
+            "Reset App + Frida", "#8e44ad"
+        )
+        self.btn_reset_app_frida.clicked.connect(self._on_reset_app_frida_clicked)
+        control_column.addWidget(self.btn_reset_app_frida)
 
         self._action_buttons = {
             "record": self.btn_record_automation,
@@ -291,18 +303,7 @@ class ControlCenter(QMainWindow):
     def _on_screen_click(self, event) -> None:
         """Handle click on screen preview - with recording gate check."""
         # Check if interaction is allowed (recording must be active)
-        allowed = self.automation_controller.is_interaction_allowed()
-        
-        if not allowed.get("allowed", False):
-            # Blocked - show error message
-            QMessageBox.warning(
-                self,
-                "Recording Not Active",
-                "Recording must be started first.\n\nPlease click 'Record Automation' before interacting with the screen.",
-                QMessageBox.Ok
-            )
-            self.append_log("[ERROR] Interaction blocked: recording not active")
-            return
+        # Allow controlling the device even when not recording
         
         # Map click within label to device coordinates
         label_w = self.screen_label.width()
@@ -338,21 +339,21 @@ class ControlCenter(QMainWindow):
         except subprocess.TimeoutExpired:
             self.append_log("[ERROR] adb tap command timed out")
 
-        # Add interaction to recording (store both device and view coordinates)
-        result = self.automation_controller.add_interaction(
-            "click",
-            x=dev_x,
-            y=dev_y,
-            view_x=int(event.pos().x()),
-            view_y=int(event.pos().y()),
-        )
-        
-        if result.get("status") == "success":
-            self.append_log(f"[INFO] Interaction captured: click ({dev_x}, {dev_y})")
-            # TODO: Relay to actual Android device via ADB
-            # subprocess.run(["adb", "shell", "input", "tap", str(x), str(y)])
+        # If recording, append the interaction; otherwise just log the tap
+        if self._record_in_progress:
+            result = self.automation_controller.add_interaction(
+                "click",
+                x=dev_x,
+                y=dev_y,
+                view_x=int(event.pos().x()),
+                view_y=int(event.pos().y()),
+            )
+            if result.get("status") == "success":
+                self.append_log(f"[INFO] Interaction captured: click ({dev_x}, {dev_y})")
+            else:
+                self.append_log(f"[ERROR] Failed to capture interaction: {result.get('message', 'Unknown error')}")
         else:
-            self.append_log(f"[ERROR] Failed to capture interaction: {result.get('message', 'Unknown error')}")
+            self.append_log(f"[INFO] Tap sent: ({dev_x}, {dev_y})")
 
     # ------------------------------------------------------------------
     # Recording handlers
@@ -429,6 +430,64 @@ class ControlCenter(QMainWindow):
         else:
             self._log_error("replay", result)
         self._refresh_action_buttons()
+
+    def _on_delete_recording_clicked(self) -> None:
+        recordings = self.automation_controller.list_available_recordings()
+        if not recordings:
+            QMessageBox.information(self, "No Recordings", "No automation recordings found.")
+            return
+        # Choose recording
+        def _label(rec: Dict[str, Any]) -> str:
+            name = rec.get("name") or (rec.get("metadata") or {}).get("name") if isinstance(rec.get("metadata"), dict) else None
+            prefix = f"{name} — " if name else ""
+            return f"{prefix}{rec['timestamp']} — {rec['id']}"
+        items = [_label(r) for r in recordings]
+        item, ok = QInputDialog.getItem(
+            self,
+            "Delete Recording",
+            "Select a recording to delete:",
+            items,
+            0,
+            False,
+        )
+        if not ok:
+            self.append_log("[INFO] Delete cancelled")
+            return
+        index = items.index(item)
+        rec_id = recordings[index]["id"]
+        # Confirm
+        confirm = QMessageBox.question(
+            self,
+            "Confirm Delete",
+            f"Are you sure you want to delete recording {rec_id}?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No,
+        )
+        if confirm != QMessageBox.Yes:
+            self.append_log("[INFO] Delete aborted by user")
+            return
+        result = self.automation_controller.delete_recording(rec_id)
+        if result.get("status") == "success":
+            self.append_log(f"[INFO] Deleted: {', '.join(result.get('removed', []))}")
+        elif result.get("status") == "partial":
+            self.append_log(f"[WARN] Partially deleted: {result}")
+        else:
+            self.append_log(f"[ERROR] Delete failed: {result.get('error', 'Unknown error')}")
+        self._refresh_action_buttons()
+
+    def _on_reset_app_frida_clicked(self) -> None:
+        self.append_log("[RESET] Resetting MaynDrive app data and Frida…")
+        worker = ResetAppFridaWorker(self.service_manager)
+        worker.signals.done.connect(lambda payload: self._handle_reset_done(payload))
+        worker.signals.error.connect(lambda msg: self._handle_reset_error(msg))
+        self.thread_pool.start(worker)
+
+    def _handle_reset_done(self, payload: Dict[str, Any]) -> None:
+        self.append_log("[RESET] Success: MaynDrive relaunched fresh and Frida reattached")
+        self._request_service_snapshot()
+
+    def _handle_reset_error(self, message: str) -> None:
+        self.append_log(f"[RESET] Failed: {message}")
 
     # ------------------------------------------------------------------
     # Token capture handlers

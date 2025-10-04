@@ -1,0 +1,43 @@
+{
+  "id": "ea6f86c0-7167-45e2-a922-f49c5938d1c9",
+  "timestamp": "2025-10-04T16:24:44.716406+00:00",
+  "duration": 29.185772,
+  "duration_limit_seconds": 1800,
+  "auto_stopped": false,
+  "interactions": [
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:24:50.141614",
+      "x": 526,
+      "y": 2138,
+      "view_x": 469,
+      "view_y": 318
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:24:57.299721",
+      "x": 499,
+      "y": 2171,
+      "view_x": 465,
+      "view_y": 323
+    },
+    {
+      "type": "click",
+      "timestamp": "2025-10-04T16:25:01.616001",
+      "x": 762,
+      "y": 1324,
+      "view_x": 504,
+      "view_y": 197
+    }
+  ],
+  "metadata": {
+    "app_version": "1.0.0",
+    "device_info": "automation_app",
+    "recording_start_time": "2025-10-04T16:24:44.716406+00:00",
+    "last_updated": "2025-10-04T16:25:13.902178+00:00",
+    "recording_end_time": "2025-10-04T16:25:13.902178+00:00",
+    "name": "jjjjjj"
+  },
+  "state": "completed",
+  "incremental_file": "automation/recordings/20251004_162444_automation_recording_ea6f86c0-7167-45e2-a922-f49c5938d1c9.jsonl"
+}

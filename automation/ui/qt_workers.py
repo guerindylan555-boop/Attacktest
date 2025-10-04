@@ -68,3 +68,27 @@ class ServiceSnapshotWorker(QRunnable):
             self.signals.snapshotReady.emit(snapshot)
         except Exception as exc:  # noqa: BLE001
             self.signals.error.emit(str(exc))
+
+
+class ResetSignals(QObject):
+    done = Signal(dict)
+    error = Signal(str)
+
+
+class ResetAppFridaWorker(QRunnable):
+    """Run reset_app_and_frida in background and emit result."""
+
+    def __init__(self, service_manager: ServiceManager) -> None:
+        super().__init__()
+        self.service_manager = service_manager
+        self.signals = ResetSignals()
+
+    def run(self) -> None:  # noqa: D401
+        try:
+            result = self.service_manager.reset_app_and_frida()
+            if result.get("status") == "success":
+                self.signals.done.emit(result)
+            else:
+                self.signals.error.emit(result.get("error", "reset failed"))
+        except Exception as exc:  # noqa: BLE001
+            self.signals.error.emit(str(exc))

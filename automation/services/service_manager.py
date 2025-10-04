@@ -180,6 +180,51 @@ class ServiceManager:
         self._stop_frida_server()
         return result
 
+    def reset_app_and_frida(self) -> Dict[str, Any]:
+        """Stop frida, reset MaynDrive app to a fresh state, and relaunch hooks.
+
+        Fresh state is ensured by clearing app data (pm clear). If that fails, fallback to uninstall+reinstall.
+        """
+        with self._lock:
+            package = self.MAYNDRIVE_PACKAGE_NAME
+            if not self._ensure_device_ready(timeout=30):
+                return {"status": "error", "error": "Device not ready"}
+
+            # Stop frida-server and app
+            try:
+                subprocess.run(["adb", "-s", "emulator-5554", "shell", "pkill -f frida-server"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+            except Exception:
+                pass
+            try:
+                subprocess.run(["adb", "-s", "emulator-5554", "shell", "am", "force-stop", package], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+            except Exception:
+                pass
+
+            # Clear app data
+            cleared = False
+            try:
+                result = subprocess.run(["adb", "-s", "emulator-5554", "shell", "pm", "clear", package], capture_output=True, text=True, timeout=10)
+                cleared = (result.returncode == 0 and "Success" in (result.stdout or ""))
+            except Exception:
+                cleared = False
+
+            if not cleared:
+                # Fallback to uninstall + reinstall
+                try:
+                    subprocess.run(["adb", "-s", "emulator-5554", "uninstall", package], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=20)
+                except Exception:
+                    pass
+                ensure = self._install_mayndrive_from_local_sources()
+                if ensure.get("status") == "error":
+                    return {"status": "error", "error": ensure.get("error"), "details": ensure.get("details")}
+
+            # Re-start frida (this launches/app or attaches)
+            fr = self._start_frida()
+            if isinstance(fr, dict) and not fr.get("success"):
+                return {"status": "error", "error": fr.get("error"), "details": fr.get("error_message")}
+
+            return {"status": "success"}
+
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
